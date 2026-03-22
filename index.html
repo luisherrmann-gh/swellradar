@@ -531,6 +531,7 @@
       border-radius: 16px; background: rgba(255,255,255,0.88);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       box-shadow: 0 2px 16px rgba(123,47,190,0.09);
+      overflow: hidden;
     }
     .chart-hdr {
       display: flex; justify-content: space-between; align-items: baseline;
@@ -542,7 +543,7 @@
     .chart-shell { height: 260px; position: relative; }
 
     /* ── Wind flow canvas section ── */
-    .wf-axis-canvas { display: block; width: 100%; }
+    .wf-axis-canvas { display: block; width: 100%; max-width: 100%; overflow: hidden; }
     .wf-legend-row  { margin-top: 9px; }
     .wf-leg-bar {
       height: 6px; border-radius: 3px;
@@ -564,7 +565,8 @@
       color: #006600; text-align: center; font-weight: 600;
     }
     #wfScrubber {
-      width: 100%; cursor: pointer; accent-color: #006600;
+      width: 100%; max-width: 100%; cursor: pointer; accent-color: #006600;
+      display: block;
     }
 
     /* ═══ FOOTER ═════════════════════════════════════════════════ */
@@ -625,6 +627,7 @@
       border-radius: 8px;
       overflow: hidden;
       margin-bottom: 0;
+      max-width: 100%;
     }
     #windFlowCanvas {
       position: absolute;
@@ -777,7 +780,7 @@
   .stat-val { font-size: clamp(0.9rem, 4.5vw, 1.4rem) !important; }
   /* Tides */
   .tides-head { padding-left: 1.2rem; padding-right: 1.2rem; }
-  .tides-canvas-wrap { height: 140px; }
+  .tides-canvas-wrap { height: 150px; }
   .tides-sun-col { width: 100px; padding: 0.5rem 0.5rem; font-size: 0.38rem; }
   .sun-row .sun-time { font-size: 0.44rem; }
   /* Timeline */
@@ -786,15 +789,15 @@
   .tl-h { font-size: 0.7rem; }
   .tl-bar-wrap { height: 46px; }
   /* Charts */
-  .chart-section { padding: 1rem 1rem 1.4rem; border-radius: 14px; }
+  .chart-section { padding: 1rem 0.85rem 1.4rem; border-radius: 14px; overflow: hidden; }
   .chart-shell { height: 200px; }
   .chart-title { font-size: 0.62rem; }
   /* Wind flow */
-  #wfMap { height: 160px !important; }
+  #wfMap { height: 160px !important; max-width: 100% !important; overflow: hidden !important; }
   .wf-canvas-wrap canvas { height: 160px !important; }
   #windFlowCanvas { height: 160px !important; }
-  .wf-map-shell { height: 160px !important; }
-  .wf-scrubber { margin-top: 6px; padding: 0 0.9rem; }
+  .wf-map-shell { height: 160px !important; overflow: hidden !important; max-width: 100% !important; }
+  .wf-scrubber { margin-top: 6px; padding: 0; }
   /* Footer */
   footer {
     padding: 1rem 1.2rem;
@@ -1421,7 +1424,7 @@
           responsive: true,
           maintainAspectRatio: false,
           animation: false,
-          layout: { padding: { top: 30, bottom: 2 } },
+          layout: { padding: { top: 36, bottom: 4 } },
           scales: {
             x: {
               type: 'linear',
