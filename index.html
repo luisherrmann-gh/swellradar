@@ -1207,8 +1207,9 @@
 
         updateHero(data, windData, lat, lon);
         renderTides(data);
-        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 200);
-        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 500);
+        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 150);
+        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 400);
+        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 900);
         renderTimeline(data, windData);
         renderChart(data);
         renderWindChart(windData, data.hourly.time);
@@ -1392,7 +1393,7 @@
               grid:   { display: false },
               border: { color: '#e8e8e8', width: 1 },
             },
-            y: { display: false, grace: '40%' },
+            y: { display: false, grace: '60%' },
           },
           plugins: {
             legend: { display: false },
@@ -1732,7 +1733,8 @@
 
       /* ── Create Leaflet sub-map centered on selected spot ── */
       var mapEl = document.getElementById('wfMap');
-      mapEl.style.height = '200px';
+      var isMob = window.innerWidth <= 768;
+      mapEl.style.height = isMob ? '160px' : '200px';
       var spotLat = selLat || 39.3557, spotLon = selLon || -9.3814;
       windMapInst = L.map('wfMap', {
         center: [spotLat, spotLon], zoom: 11,
@@ -1746,7 +1748,7 @@
 
       /* ── Draw static time axis ── */
       var shell = document.getElementById('wfMapShell');
-      var W  = shell.clientWidth || 400;
+      var W  = Math.min(shell.clientWidth || window.innerWidth - 30, window.innerWidth - 30);
       var axCanvas = document.getElementById('windFlowAxis');
       var AH = 36;
       var dprAx = window.devicePixelRatio || 1;
@@ -1798,8 +1800,9 @@
       setTimeout(function() {
         PW = shell.clientWidth || window.innerWidth - 30;
       }, 350);
-      var PW  = shell.clientWidth  || window.innerWidth - 30;
-      var PH  = 200;
+      var isMob2 = window.innerWidth <= 768;
+      var PW  = Math.min(shell.clientWidth || window.innerWidth - 30, window.innerWidth - 30);
+      var PH  = isMob2 ? 160 : 200;
 
       canvas.width        = PW * dpr;
       canvas.height       = PH * dpr;
