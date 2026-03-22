@@ -216,7 +216,7 @@
       display: flex; align-items: center; gap: 1.2rem;
     }
     @media (min-width: 769px) { .bottom-sheet { display: none !important; } }
-    .bs-spot { font-size: 0.56rem; letter-spacing: 0.22em; text-transform: uppercase; font-weight: 700; color: #CC0000; flex: 1; }
+    .bs-spot { font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #CC0000; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .bs-wave-row { display: flex; align-items: baseline; gap: 3px; }
     .bs-wave { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.7rem; font-weight: 800; color: #CC0000; line-height: 1; }
     .bs-unit, .bs-sub { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
@@ -756,8 +756,8 @@
   .firing-badge { font-size: 0.42rem; padding: 2px 8px; }
   /* Forecast panel sections */
   .wave-hero, .stats-row, .tides-section, .tl-section, .chart-section {
-    margin-left: 0.9rem;
-    margin-right: 0.9rem;
+    margin-left: 0.75rem;
+    margin-right: 0.75rem;
   }
   .wave-hero { padding: 1.4rem 1.2rem 1.2rem; border-radius: 14px; }
   .wave-num { font-size: clamp(56px, 18vw, 90px) !important; }
@@ -767,8 +767,9 @@
   .stats-row {
     grid-template-columns: repeat(2, 1fr);
     border-radius: 14px;
+    overflow: hidden;
   }
-  .stat { padding: 1rem 0.9rem; border-right: none; border-bottom: 1px solid rgba(123,47,190,0.12); }
+  .stat { padding: 0.85rem 0.75rem; border-right: none; border-bottom: 1px solid rgba(123,47,190,0.12); }
   .stat:nth-child(odd) { border-right: 1px solid rgba(123,47,190,0.12); }
   .stat:last-child { border-bottom: none; }
   .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
@@ -776,8 +777,8 @@
   .stat-val { font-size: clamp(0.9rem, 4.5vw, 1.4rem) !important; }
   /* Tides */
   .tides-head { padding-left: 1.2rem; padding-right: 1.2rem; }
-  .tides-canvas-wrap { height: 110px; }
-  .tides-sun-col { width: 110px; padding: 0.5rem 0.6rem; }
+  .tides-canvas-wrap { height: 140px; }
+  .tides-sun-col { width: 100px; padding: 0.5rem 0.5rem; font-size: 0.38rem; }
   .sun-row .sun-time { font-size: 0.44rem; }
   /* Timeline */
   .tl-head { padding-left: 1.2rem; padding-right: 1.2rem; font-size: 0.44rem; }
@@ -792,7 +793,8 @@
   #wfMap { height: 160px !important; }
   .wf-canvas-wrap canvas { height: 160px !important; }
   #windFlowCanvas { height: 160px !important; }
-  .wf-scrubber { margin-top: 8px; }
+  .wf-map-shell { height: 160px !important; }
+  .wf-scrubber { margin-top: 6px; padding: 0 0.9rem; }
   /* Footer */
   footer {
     padding: 1rem 1.2rem;
@@ -2194,7 +2196,8 @@
         };
       }
 
-      var N = 260, particles = [];
+      var isMobile = window.innerWidth <= 768;
+      var N = isMobile ? 80 : 260, particles = [];
       for (var j = 0; j < N; j++) particles.push(spawnMW());
       console.log('[mapWind] spawned', N, 'particles');
 
