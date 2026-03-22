@@ -406,7 +406,7 @@
 
     /* Stats */
     .stats-row {
-      display: grid !important; grid-template-columns: repeat(5, 1fr) !important;
+      display: grid; grid-template-columns: repeat(5, 1fr);
       margin: 0 2rem 1rem; border-radius: 16px;
       background: rgba(255,255,255,0.88);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
@@ -437,9 +437,9 @@
       display: flex; align-items: stretch;
     }
     .tides-chart-wrap {
-      flex: 1; position: relative; height: 160px; min-height: 160px; overflow: visible;
+      flex: 1; position: relative; height: 160px;
     }
-    #tidesCanvas { display: block; width: 100%; height: 160px !important; background: transparent; }
+    #tidesCanvas { display: block; width: 100%; height: 100%; background: transparent; }
     #tidesHoverDot {
       position: absolute; width: 12px; height: 12px; border-radius: 50%;
       background: #ffffff; border: 2px solid #7B2FBE;
@@ -721,45 +721,38 @@
   .wave-num { font-size: clamp(56px, 18vw, 90px) !important; }
   .wave-coords { display: none; }
   .hero-condition-badge { font-size: 0.62rem; padding: 4px 13px; margin-top: 0.8rem; }
-  /* Stats: force 2-col grid */
-  .stats-row { display: grid !important; grid-template-columns: repeat(2, minmax(0, 1fr)) !important; grid-template-rows: auto !important; border-radius: 14px; overflow: hidden; width: 100%; }
-  .stat { padding: 0.85rem 0.75rem !important; border-right: none !important; border-bottom: 1px solid rgba(123,47,190,0.12) !important; border-top: 3px solid #7B2FBE !important; width: auto !important; min-width: 0 !important; }
-  .stat:nth-child(odd) { border-right: 1px solid rgba(123,47,190,0.12) !important; }
-  .stat:last-child { border-bottom: none !important; }
-  .stat:nth-last-child(2):nth-child(odd) { border-bottom: none !important; }
+  .stats-row { display: grid !important; grid-template-columns: repeat(2, 1fr) !important; border-radius: 14px; overflow: hidden; }
+  .stat { padding: 0.85rem 0.75rem; border-right: none; border-bottom: 1px solid rgba(123,47,190,0.12); border-top: 3px solid #7B2FBE; }
+  .stat:nth-child(odd) { border-right: 1px solid rgba(123,47,190,0.12); }
+  .stat:last-child { border-bottom: none; }
+  .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
   .stat-lbl { font-size: 0.4rem; letter-spacing: 0.2em; }
-  .stat-val { font-size: clamp(0.85rem, 4vw, 1.3rem) !important; }
-  /* Tides */
+  .stat-val { font-size: clamp(0.9rem, 4.5vw, 1.4rem) !important; }
   .tides-head { padding-left: 1.2rem; padding-right: 1.2rem; }
-  .tides-body { display: flex !important; flex-direction: row !important; align-items: stretch; height: 160px; min-height: 160px; }
-  .tides-chart-wrap { flex: 1 !important; position: relative; height: 160px !important; min-height: 160px !important; overflow: visible; }
-  #tidesCanvas { display: block !important; width: 100% !important; height: 160px !important; min-height: 160px !important; }
-  .tides-sun-col { width: 90px !important; flex-shrink: 0; padding: 0.4rem; }
+  .tides-body { display: flex; align-items: stretch; min-height: 160px; }
+  .tides-chart-wrap { flex: 1; position: relative; min-height: 160px; height: 160px; }
+  #tidesCanvas { display: block; width: 100%; height: 160px !important; min-height: 160px; }
+  .tides-sun-col { width: 96px; flex-shrink: 0; padding: 0.4rem 0.4rem; }
   .sun-row .sun-time { font-size: 0.42rem; }
-  .sun-row .sun-label { font-size: 0.34rem; }
-  .sun-row .sun-icon { font-size: 0.52rem; }
-  /* Timeline */
+  .sun-row .sun-label { font-size: 0.36rem; }
+  .sun-row .sun-icon { font-size: 0.55rem; }
   .tl-head { padding-left: 1.2rem; padding-right: 1.2rem; font-size: 0.44rem; }
   .tl-item { width: 82px; padding: 0.8rem 0.4rem 0.7rem; }
   .tl-h { font-size: 0.7rem; }
   .tl-bar-wrap { height: 46px; }
-  /* Charts */
-  .chart-section { padding: 1rem 0.85rem 1.4rem; border-radius: 14px; overflow: hidden; box-sizing: border-box; }
+  .chart-section { padding: 1rem 0.85rem 1.4rem; border-radius: 14px; overflow: hidden; }
   .chart-shell { height: 200px; }
   .chart-title { font-size: 0.62rem; }
-  /* Wind flow — all constrained to screen width */
-  #windFlowSection { overflow: hidden !important; max-width: 100% !important; box-sizing: border-box !important; }
-  .wf-map-header { max-width: 100% !important; box-sizing: border-box !important; overflow: hidden !important; white-space: nowrap; }
-  .wfh-right { overflow: hidden; min-width: 0; }
-  .wf-map-shell { height: 160px !important; overflow: hidden !important; max-width: 100% !important; box-sizing: border-box !important; }
-  #wfMap { height: 160px !important; max-width: 100% !important; overflow: hidden !important; }
-  #windFlowCanvas { height: 160px !important; max-width: 100% !important; }
-  #windFlowAxis { max-width: 100% !important; display: block !important; box-sizing: border-box; }
-  #wfScrubber { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; display: block; }
-  .wf-scrubber { margin-top: 6px; padding: 0; overflow: hidden; max-width: 100%; }
-  .wf-legend-row { overflow: hidden; }
-  .wf-leg-labels { flex-wrap: wrap; gap: 2px; }
-  .wf-leg-labels span { font-size: 0.34rem; }
+  #windFlowSection { overflow: hidden; max-width: 100%; box-sizing: border-box; }
+  .wf-map-header { max-width: 100%; box-sizing: border-box; overflow: hidden; }
+  .wf-map-shell { height: 160px !important; overflow: hidden !important; max-width: 100% !important; box-sizing: border-box; }
+  #wfMap { height: 160px !important; max-width: 100% !important; overflow: hidden !important; box-sizing: border-box; }
+  #windFlowCanvas { height: 160px !important; max-width: 100% !important; box-sizing: border-box; }
+  #windFlowAxis { max-width: 100%; display: block; box-sizing: border-box; }
+  #wfScrubber { width: 100%; max-width: 100%; box-sizing: border-box; }
+  .wf-scrubber { margin-top: 6px; padding: 0; overflow: hidden; }
+  .wf-leg-labels { flex-wrap: wrap; }
+  .wf-leg-labels span { font-size: 0.36rem; }
   footer { padding: 1rem 1.2rem; flex-direction: column; align-items: flex-start; gap: 0.3rem; }
   footer p { font-size: 0.44rem; }
 }
@@ -1214,10 +1207,9 @@
 
         updateHero(data, windData, lat, lon);
         renderTides(data);
-        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 100);
-        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 350);
-        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 800);
-        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 1600);
+        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 150);
+        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 400);
+        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 900);
         renderTimeline(data, windData);
         renderChart(data);
         renderWindChart(windData, data.hourly.time);
@@ -1805,6 +1797,9 @@
       /* ── Set up particle canvas (overlaid on map) ── */
       var canvas = document.getElementById('windFlowCanvas');
       var dpr = window.devicePixelRatio || 1;
+      setTimeout(function() {
+        PW = shell.clientWidth || window.innerWidth - 30;
+      }, 350);
       var isMob2 = window.innerWidth <= 768;
       var PW  = Math.min(shell.clientWidth || window.innerWidth - 30, window.innerWidth - 30);
       var PH  = isMob2 ? 160 : 200;
