@@ -280,6 +280,43 @@
       padding: 1.6rem 1.4rem 1.4rem; gap: 0.9rem;
     }
 
+    /* Region filter tabs */
+    .sp-filter-bar {
+      display: flex; gap: 0.5rem; flex-wrap: wrap;
+      padding: 0 0 0.2rem;
+    }
+    .sp-filter-btn {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.54rem; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      padding: 5px 14px; border-radius: 20px;
+      border: 1.5px solid rgba(123,47,190,0.35);
+      color: rgba(123,47,190,0.7);
+      background: transparent; cursor: pointer;
+      transition: background 0.14s, color 0.14s, border-color 0.14s;
+      white-space: nowrap;
+    }
+    .sp-filter-btn:hover { border-color: #7B2FBE; color: #7B2FBE; }
+    .sp-filter-btn.active { background: #7B2FBE; color: #fff; border-color: #7B2FBE; }
+    @media (max-width: 768px) {
+      .sp-filter-bar { gap: 0.4rem; }
+      .sp-filter-btn { font-size: 0.48rem; padding: 4px 11px; }
+    }
+    /* Best Right Now card — gold border */
+    .sp-card.sp-card--best {
+      border: 2px solid rgba(255,200,50,0.75);
+      box-shadow: 0 0 0 1px rgba(255,200,50,0.18), 0 4px 24px rgba(255,180,0,0.18);
+    }
+    .sp-best-badge {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.44rem; font-weight: 800;
+      letter-spacing: 0.18em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 20px;
+      background: rgba(255,200,50,0.18);
+      color: #ffd700;
+      border: 1.5px solid rgba(255,200,50,0.5);
+      white-space: nowrap;
+    }
     /* Big visual spot cards */
     .sp-cards { display: flex; flex-direction: column; gap: 0.75rem; width: 100%; }
 
@@ -308,15 +345,6 @@
     .sp-card:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(30,10,60,0.36); }
     .sp-card:active { transform: translateY(-1px); }
 
-    .sp-card--nazare {
-      background: linear-gradient(140deg, #1a0a2e 0%, #7B2FBE 45%, #0d0618 100%);
-    }
-    .sp-card--peniche {
-      background: linear-gradient(140deg, #1a0a2e 0%, #5a1a8a 45%, #0d0618 100%);
-    }
-    .sp-card--carcavelos {
-      background: linear-gradient(140deg, #1a0a2e 0%, #5a1a8a 45%, #0d0618 100%);
-    }
 
     /* Wave number watermark */
     .sp-card-bg-num {
@@ -646,6 +674,16 @@
       display: block;
     }
 
+    /* ─── Swell line animation canvas overlay ─── */
+    #mapSwellCanvas {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 399;
+      display: block;
+    }
+
     /* ─── Wind flow section map ─── */
     #wfMap {
       width: 100%; height: 200px;
@@ -803,7 +841,7 @@
     <div class="map-col">
       <section class="map-section">
         <div class="map-eyebrow">
-          <span><span class="num">01</span>Nazaré, Peniche &amp; Carcavelos — click a marker to load forecast</span>
+          <span><span class="num">38</span> surf spots — click a marker to load forecast</span>
           <span id="mapCoordLabel"></span>
         </div>
         <div id="map" style="position:relative;"></div>
@@ -826,99 +864,17 @@
 
       <!-- Landing spot picker -->
       <div class="spot-picker" id="spotPicker">
-        <div class="sp-cards">
-
-          <!-- Nazaré -->
-          <div class="sp-card sp-card--nazare" onclick="selectSpot(0)" tabindex="0" onkeydown="if(event.key==='Enter')selectSpot(0)">
-            <div class="sp-card-bg-num" id="spBgNum0">—</div>
-            <div class="sp-card-top">
-<div class="sp-badge-group">
-                <span class="firing-badge" id="spFiring0">🔥 FIRING</span>
-                <span class="sp-quality-badge quality-loading" id="spQuality0">—</span>
-                <span class="sp-wind-type" id="spWindType0"></span>
-              </div>
-            </div>
-            <div>
-              <div class="sp-name">Nazaré</div>
-              <div class="sp-coords">39.6045° N · 9.0642° W</div>
-            </div>
-            <div class="sp-card-bottom">
-              <div class="sp-conditions" id="spConditions0">
-                <small>Fetching conditions…</small>
-              </div>
-              <span class="sp-arrow-big">→</span>
-            </div>
-            <!-- Wind compass bottom-right -->
-            <div class="sp-wind-compass" id="spWindCompass0">
-              <svg width="24" height="24" viewBox="0 0 24 24" id="spWindArrow0">
-                <circle cx="12" cy="12" r="11" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-                <polygon points="12,2 9,15 12,12 15,15" fill="rgba(255,255,255,0.3)"/>
-              </svg>
-              <div class="sp-wind-spd" id="spWindSpd0">—</div>
-            </div>
-          </div>
-
-          <!-- Peniche -->
-          <div class="sp-card sp-card--peniche" onclick="selectSpot(1)" tabindex="0" onkeydown="if(event.key==='Enter')selectSpot(1)">
-            <div class="sp-card-bg-num" id="spBgNum1">—</div>
-            <div class="sp-card-top">
-<div class="sp-badge-group">
-                <span class="firing-badge" id="spFiring1">🔥 FIRING</span>
-                <span class="sp-quality-badge quality-loading" id="spQuality1">—</span>
-                <span class="sp-wind-type" id="spWindType1"></span>
-              </div>
-            </div>
-            <div>
-              <div class="sp-name">Peniche</div>
-              <div class="sp-coords">39.3557° N · 9.3814° W</div>
-            </div>
-            <div class="sp-card-bottom">
-              <div class="sp-conditions" id="spConditions1">
-                <small>Fetching conditions…</small>
-              </div>
-              <span class="sp-arrow-big">→</span>
-            </div>
-            <!-- Wind compass bottom-right -->
-            <div class="sp-wind-compass" id="spWindCompass1">
-              <svg width="24" height="24" viewBox="0 0 24 24" id="spWindArrow1">
-                <circle cx="12" cy="12" r="11" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-                <polygon points="12,2 9,15 12,12 15,15" fill="rgba(255,255,255,0.3)"/>
-              </svg>
-              <div class="sp-wind-spd" id="spWindSpd1">—</div>
-            </div>
-          </div>
-
-          <!-- Carcavelos -->
-          <div class="sp-card sp-card--carcavelos" onclick="selectSpot(2)" tabindex="0" onkeydown="if(event.key==='Enter')selectSpot(2)">
-            <div class="sp-card-bg-num" id="spBgNum2">—</div>
-            <div class="sp-card-top">
-<div class="sp-badge-group">
-                <span class="firing-badge" id="spFiring2">🔥 FIRING</span>
-                <span class="sp-quality-badge quality-loading" id="spQuality2">—</span>
-                <span class="sp-wind-type" id="spWindType2"></span>
-              </div>
-            </div>
-            <div>
-              <div class="sp-name">Carcavelos</div>
-              <div class="sp-coords">38.6767° N · 9.3360° W</div>
-            </div>
-            <div class="sp-card-bottom">
-              <div class="sp-conditions" id="spConditions2">
-                <small>Fetching conditions…</small>
-              </div>
-              <span class="sp-arrow-big">→</span>
-            </div>
-            <!-- Wind compass bottom-right -->
-            <div class="sp-wind-compass" id="spWindCompass2">
-              <svg width="24" height="24" viewBox="0 0 24 24" id="spWindArrow2">
-                <circle cx="12" cy="12" r="11" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-                <polygon points="12,2 9,15 12,12 15,15" fill="rgba(255,255,255,0.3)"/>
-              </svg>
-              <div class="sp-wind-spd" id="spWindSpd2">—</div>
-            </div>
-          </div>
-
+        <div class="sp-filter-bar" id="spFilterBar">
+          <button class="sp-filter-btn active" onclick="filterSpots('ALL')" id="filterAll">All · 38</button>
+          <button class="sp-filter-btn" onclick="filterSpots('NAZARÉ')" id="filterNazare">Nazaré</button>
+          <button class="sp-filter-btn" onclick="filterSpots('PENICHE')" id="filterPeniche">Peniche</button>
+          <button class="sp-filter-btn" onclick="filterSpots('SANTA CRUZ')" id="filterSantaCruz">Santa Cruz</button>
+          <button class="sp-filter-btn" onclick="filterSpots('ERICEIRA')" id="filterEriceira">Ericeira</button>
+          <button class="sp-filter-btn" onclick="filterSpots('SINTRA')" id="filterSintra">Sintra</button>
+          <button class="sp-filter-btn" onclick="filterSpots('LISBON')" id="filterLisbon">Lisbon</button>
+          <button class="sp-filter-btn" onclick="filterSpots('CAPARICA')" id="filterCaparica">Caparica</button>
         </div>
+        <div class="sp-cards" id="spCardsContainer"></div>
       </div>
 
       <!-- Forecast (hidden until loaded) -->
@@ -1094,8 +1050,8 @@
     delete L.Icon.Default.prototype._getIconUrl;
 
     var map = L.map('map', {
-      center: [38.68, -9.4], zoom: 9, minZoom: 8,
-      maxBounds: [[36.8, -10.6], [40.8, -8.0]],
+      center: [39.02, -9.35], zoom: 9, minZoom: 7,
+      maxBounds: [[37.8, -10.6], [40.8, -8.0]],
       maxBoundsViscosity: 1.0, zoomControl: true,
     });
 
@@ -1105,9 +1061,44 @@
     L.tileLayer(ESRI_TILES, { attribution: ESRI_ATTR, maxZoom: 19 }).addTo(map);
 
     var SURF_SPOTS = [
-      { name: 'Nazaré',     lat: 39.6045, lon: -9.0642 },
-      { name: 'Peniche',    lat: 39.3557, lon: -9.3814 },
-      { name: 'Carcavelos', lat: 38.6767, lon: -9.3360 },
+      { name: 'Nazaré',           lat: 39.6045, lon: -9.0642 },
+      { name: 'Almagreira',       lat: 39.4050, lon: -9.3580 },
+      { name: 'Lagide',           lat: 39.3760, lon: -9.3870 },
+      { name: 'Baleal',           lat: 39.3840, lon: -9.3530 },
+      { name: 'Cantinho da Baía', lat: 39.3650, lon: -9.3780 },
+      { name: 'Middle',           lat: 39.3620, lon: -9.3820 },
+      { name: 'Meio da Baía',     lat: 39.3600, lon: -9.3850 },
+      { name: 'Molhe Leste',      lat: 39.3470, lon: -9.3720 },
+      { name: 'Supertubos',       lat: 39.3390, lon: -9.3870 },
+      { name: 'Santa Cruz',       lat: 39.2190, lon: -9.3970 },
+      { name: 'Praia das Amoeiras', lat: 39.2130, lon: -9.3920 },
+      { name: 'Praia Azul',       lat: 39.2060, lon: -9.3900 },
+      { name: 'São Lourenço',     lat: 38.9900, lon: -9.4280 },
+      { name: 'Coxos',            lat: 38.9800, lon: -9.4260 },
+      { name: 'Cave',             lat: 38.9720, lon: -9.4240 },
+      { name: 'Ribeira D\'Ilhas', lat: 38.9680, lon: -9.4220 },
+      { name: 'Reef',             lat: 38.9590, lon: -9.4200 },
+      { name: 'Pedra Branca',     lat: 38.9540, lon: -9.4200 },
+      { name: 'Matadouro',        lat: 38.9640, lon: -9.4220 },
+      { name: 'Praia do Sul',     lat: 38.9520, lon: -9.4100 },
+      { name: 'Praia da Baleia',  lat: 38.9440, lon: -9.4200 },
+      { name: 'Foz do Lizandro',  lat: 38.9500, lon: -9.4170 },
+      { name: 'São Julião',       lat: 38.9270, lon: -9.4230 },
+      { name: 'Praia Pequena',    lat: 38.8740, lon: -9.4580 },
+      { name: 'Praia Grande',     lat: 38.8148, lon: -9.4786 },
+      { name: 'Praia do Guincho', lat: 38.7270, lon: -9.4730 },
+      { name: 'São Pedro do Estoril', lat: 38.6980, lon: -9.3750 },
+      { name: 'Parede',           lat: 38.6900, lon: -9.3570 },
+      { name: 'Praia de Torre',   lat: 38.6840, lon: -9.3490 },
+      { name: 'Santo Amaro',      lat: 38.6810, lon: -9.3400 },
+      { name: 'Paco de Arcos',    lat: 38.6940, lon: -9.2900 },
+      { name: 'Praia de Caxias',  lat: 38.7010, lon: -9.2740 },
+      { name: 'São João da Caparica', lat: 38.6350, lon: -9.2380 },
+      { name: 'Costa da Caparica', lat: 38.6400, lon: -9.2400 },
+      { name: 'Fonte da Telha',   lat: 38.5520, lon: -9.1840 },
+      { name: 'Bicas',            lat: 38.4920, lon: -9.1380 },
+      { name: 'Sesimbra',         lat: 38.4420, lon: -9.1020 },
+      { name: 'Carcavelos',       lat: 38.6767, lon: -9.3360 },
     ];
 
     SURF_SPOTS.forEach(function(spot, idx) {
@@ -1196,7 +1187,7 @@
         mapCol.removeAttribute('style');
         setTimeout(function() {
           map.invalidateSize();
-          map.setView([38.68, -9.4], 9, { animate: false });
+          map.setView([39.02, -9.35], 9, { animate: false });
         }, 120);
       }
     }
@@ -1207,9 +1198,17 @@
       windMapToken++; /* invalidate any pending setTimeout in renderWindFlow */
       if (windMapInst) { windMapInst.remove(); windMapInst = null; }
 
-      /* Restore landing layout */
-      document.getElementById('pageLayout').classList.add('landing-mode');
+      /* Restore landing layout — remove map-mode first, then add landing-mode */
+      var layout = document.getElementById('pageLayout');
+      layout.classList.remove('map-mode');
+      layout.classList.add('landing-mode');
+      document.body.classList.remove('landing-mode');
       document.body.classList.add('landing-mode');
+      mapModeActive = false;
+      var btn = document.getElementById('mapBtn');
+      if (btn) { btn.classList.remove('active'); btn.textContent = 'Map'; }
+      var mapCol = document.getElementById('mapCol') || document.querySelector('.map-col');
+      if (mapCol) mapCol.removeAttribute('style');
       setTimeout(function() { map.invalidateSize(); }, 80);
 
       /* Hide status bar, show picker, hide forecast */
@@ -1230,7 +1229,7 @@
       selLat = null; selLon = null; selectedSpotName = null;
 
       setStatus('Select a surf spot to load forecast.', 'idle');
-      map.flyTo([38.68, -9.4], 9, { duration: 0.85 });
+      map.flyTo([39.02, -9.35], 9, { duration: 0.85 });
 
       var fc = document.getElementById('forecastCol');
       if (fc) fc.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1297,6 +1296,7 @@
         renderWindChart(windData, data.hourly.time);
         renderWindFlow(windData);
         updateMapWindFromSpot(windData);
+        updateMapSwellFromSpot(data);
 
         var latStr = Math.abs(lat).toFixed(2) + '° ' + (lat >= 0 ? 'N' : 'S');
         var lonStr = Math.abs(lon).toFixed(2) + '° ' + (lon >= 0 ? 'E' : 'W');
@@ -1777,6 +1777,17 @@
       return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha.toFixed(2) + ')';
     }
 
+    /* Swell line colour — height-based spectrum, returns {r,g,b} object */
+    function swellColor(wh) {
+      if (wh < 0.5)  return { r:100, g:120, b:160 };  /* muted steel     */
+      if (wh < 1.0)  return { r:60,  g:90,  b:180 };  /* navy-blue       */
+      if (wh < 1.5)  return { r:30,  g:60,  b:200 };  /* deep navy       */
+      if (wh < 2.0)  return { r:20,  g:80,  b:220 };  /* navy-cobalt     */
+      if (wh < 3.0)  return { r:40,  g:130, b:255 };  /* bright blue     */
+      if (wh < 5.0)  return { r:255, g:160, b:0   };  /* orange (big)    */
+      return               { r:220, g:0,   b:60  };   /* red (XXL)       */
+    }
+
     /* Speed-band particle color used by both particle systems */
     function windParticleColor(ws, alpha) {
       if      (ws < 20) return 'rgba(0,200,100,'  + alpha.toFixed(2) + ')';
@@ -1946,6 +1957,22 @@
           if (p.age >= p.maxAge) { particles[pi] = spawnWF(); }
         });
 
+        /* ── Foam glow on wind flow mini-map ── */
+        var wfFoamAlpha = 0.03 + 0.08 * Math.min((mapSwell_wh * mapSwell_period) / 28, 1.0);
+        var wfTravelRad = mapSwell_travelDeg * Math.PI / 180;
+        var wfDiag      = Math.sqrt(PW * PW + PH * PH) * 0.5;
+        var wfFoamX     = PW / 2 + Math.sin(wfTravelRad) * wfDiag * 0.46;
+        var wfFoamY     = PH / 2 - Math.cos(wfTravelRad) * wfDiag * 0.46;
+        var wfGlow      = ctx.createRadialGradient(
+          wfFoamX, wfFoamY, 0,
+          wfFoamX, wfFoamY, wfDiag * 0.28
+        );
+        wfGlow.addColorStop(0,   'rgba(255,255,255,' + wfFoamAlpha + ')');
+        wfGlow.addColorStop(0.5, 'rgba(255,255,255,' + (wfFoamAlpha * 0.35) + ')');
+        wfGlow.addColorStop(1.0, 'rgba(255,255,255,0)');
+        ctx.fillStyle = wfGlow;
+        ctx.fillRect(0, 0, PW, PH);
+
         windFlowAnimId = requestAnimationFrame(frame);
       }
 
@@ -2025,9 +2052,44 @@
        LANDING PAGE — pre-fetch current conditions for spot cards
     ═══════════════════════════════════════════════════════════ */
     var SPOT_FACING = {
-      'Nazaré':     285,
-      'Peniche':    270,
-      'Carcavelos': 200
+      'Nazaré':               285,
+      'Almagreira':           270,
+      'Lagide':               260,
+      'Baleal':               315,
+      'Cantinho da Baía':     300,
+      'Middle':               290,
+      'Meio da Baía':         285,
+      'Molhe Leste':          290,
+      'Supertubos':           255,
+      'Santa Cruz':           270,
+      'Praia das Amoeiras':   270,
+      'Praia Azul':           270,
+      'São Lourenço':         285,
+      'Coxos':                280,
+      'Cave':                 275,
+      'Ribeira D\'Ilhas':     285,
+      'Reef':                 280,
+      'Pedra Branca':         265,
+      'Matadouro':            270,
+      'Praia do Sul':         265,
+      'Praia da Baleia':      270,
+      'Foz do Lizandro':      270,
+      'São Julião':           270,
+      'Praia Pequena':        255,
+      'Praia Grande':         260,
+      'Praia do Guincho':     240,
+      'São Pedro do Estoril': 225,
+      'Parede':               215,
+      'Praia de Torre':       210,
+      'Santo Amaro':          205,
+      'Paco de Arcos':        200,
+      'Praia de Caxias':      200,
+      'São João da Caparica': 195,
+      'Costa da Caparica':    195,
+      'Fonte da Telha':       195,
+      'Bicas':                200,
+      'Sesimbra':             210,
+      'Carcavelos':           200
     };
     function getWindType(windDeg, spotName) {
       var facing = SPOT_FACING[spotName];
@@ -2059,7 +2121,7 @@
       SURF_SPOTS.forEach(function(spot, idx) {
         var mUrl = 'https://marine-api.open-meteo.com/v1/marine'
           + '?latitude=' + spot.lat + '&longitude=' + spot.lon
-          + '&hourly=wave_height,wave_period&forecast_days=1';
+          + '&hourly=wave_height,wave_period,wave_direction&forecast_days=1';
         var wUrl = 'https://api.open-meteo.com/v1/forecast'
           + '?latitude=' + spot.lat + '&longitude=' + spot.lon
           + '&hourly=windspeed_10m,winddirection_10m&forecast_days=1';
@@ -2098,6 +2160,11 @@
           }
 
           updateSpotCardConditions(idx, wh, period, ws, wd);
+
+          /* Set swell state for map animation */
+          var wd_swell = marine.hourly.wave_direction && marine.hourly.wave_direction[ci2];
+          mapSwellResults[idx] = (wh != null) ? { wh: wh, per: period || 10, wd: wd_swell || 270 } : null;
+
           mapWindDone++;
           if (mapWindDone >= SURF_SPOTS.length) startMapWindParticles();
         }).catch(function() {
@@ -2169,6 +2236,12 @@
 
       /* Store wind data for map particle canvas */
       mapWindResults[idx] = (ws != null && wd != null) ? { ws: ws, wd: wd } : null;
+      /* Score for Best Right Now */
+      var scoreMap4 = { 'EPIC': 4, 'GOOD': 3, 'FAIR': 2, 'POOR': 1, 'FLAT': 0 };
+      var spotName4 = SURF_SPOTS[idx] ? SURF_SPOTS[idx].name : '';
+      var label4    = (wh != null) ? getConditionLabel(wh, period, wd, spotName4) : 'FLAT';
+      spotScores[idx] = scoreMap4[label4] || 0;
+      updateBestCards();
     }
 
     /* ═══════════════════════════════════════════════════════════
@@ -2179,7 +2252,7 @@
     ═══════════════════════════════════════════════════════════ */
     var mapWindAnimId  = null;
     var mapWindToken   = 0;
-    var mapWindResults = [null, null, null];
+    var mapWindResults = new Array(38).fill(null);
     var mapWindDone    = 0;
 
     /* Fallback defaults: 270°, 10 kph — matches updateWindState() formula */
@@ -2187,6 +2260,115 @@
     var mapWnd_dxUnit    = -Math.sin(270 * Math.PI / 180); /* = 1  */
     var mapWnd_dyUnit    =  Math.cos(270 * Math.PI / 180); /* = 0  */
     var mapWnd_baseSpd   = Math.max(1.5, (10 / 60) * 5.0); /* ≈1.5  */
+
+    /* ── Swell canvas state ── */
+    var mapSwellToken   = 0;
+    var mapSwellAnimId  = null;
+    var mapSwellResults = new Array(38).fill(null); /* { wh, per, wd } per spot */
+
+    var mapSwell_wh        = 1.2;
+    var mapSwell_period    = 10;
+    var mapSwell_dxUnit    = 0.707;   /* default NW → SE */
+    var mapSwell_dyUnit    = 0.707;
+    var mapSwell_travelDeg = 270;
+
+    /* OSM coastline via Overpass Mirror — CORS-friendly, high-res */
+    var _osmCoast = null; /* null = not loaded yet, use COAST_POLY fallback */
+    (function fetchOSMCoast() {
+      var query = '[out:json][timeout:30];'
+        + 'way["natural"="coastline"](37.8,-9.7,40.2,-8.5);'
+        + 'out geom;';
+      /* Try mirrors in order until one works */
+      var mirrors = [
+        'https://overpass-api.de/api/interpreter',
+        'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+        'https://overpass.openstreetmap.ru/api/interpreter'
+      ];
+      function tryMirror(idx) {
+        if (idx >= mirrors.length) {
+          console.warn('[coast] all mirrors failed, using inline fallback');
+          return;
+        }
+        fetch(mirrors[idx], {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: 'data=' + encodeURIComponent(query)
+        })
+        .then(function(r) {
+          var ct = r.headers.get('content-type') || '';
+          if (!ct.includes('json')) throw new Error('not JSON: ' + ct);
+          return r.json();
+        })
+        .then(function(d) {
+          if (!d || !d.elements || !d.elements.length) throw new Error('empty');
+          var ways = [];
+          d.elements.forEach(function(el) {
+            if (el.type === 'way' && el.geometry && el.geometry.length > 1) {
+              ways.push(el.geometry.map(function(n) { return [n.lat, n.lon]; }));
+            }
+          });
+          if (ways.length === 0) throw new Error('no ways');
+          _osmCoast = ways;
+          console.log('[coast] OSM loaded from', mirrors[idx], '—',
+            ways.length, 'ways,',
+            ways.reduce(function(s,w){return s+w.length;},0), 'pts');
+        })
+        .catch(function(e) {
+          console.warn('[coast] mirror', idx, 'failed:', e.message, '— trying next');
+          tryMirror(idx + 1);
+        });
+      }
+      tryMirror(0);
+    })();
+
+    /* Portugal coastline — inline [lat, lng], N→S
+       High detail: Nazaré bay, Peniche peninsula, Cabo da Roca,
+       Cascais, Tejo mouth north+south banks, Setúbal peninsula.
+       Polygon closed via east border → clip punches out land.    */
+    var COAST_POLY = [
+      /* North of Nazaré */
+      [40.00,-8.90],[39.92,-8.87],[39.85,-8.88],
+      /* Nazaré bay */
+      [39.75,-8.89],[39.72,-8.92],[39.70,-8.93],[39.68,-8.93],
+      [39.65,-8.93],[39.62,-8.93],[39.60,-8.96],
+      /* São Martinho do Porto inlet */
+      [39.52,-9.02],[39.50,-9.09],[39.48,-9.10],[39.47,-9.11],
+      [39.46,-9.10],[39.46,-9.07],[39.47,-9.04],
+      /* Peniche approach */
+      [39.40,-9.15],[39.38,-9.18],[39.36,-9.20],[39.35,-9.22],
+      [39.32,-9.24],[39.28,-9.27],[39.25,-9.29],
+      /* Peniche peninsula — full detail */
+      [39.22,-9.30],[39.19,-9.32],[39.17,-9.34],[39.14,-9.36],
+      [39.11,-9.37],[39.08,-9.38],[39.05,-9.38],[39.02,-9.37],
+      [38.99,-9.36],[38.97,-9.34],[38.96,-9.32],[38.96,-9.29],
+      [38.97,-9.27],[38.99,-9.25],[39.01,-9.24],[39.03,-9.24],
+      [39.05,-9.25],[39.06,-9.26],[39.07,-9.28],
+      /* Back to mainland south of Peniche */
+      [39.08,-9.27],[39.09,-9.26],[39.10,-9.25],[39.12,-9.24],
+      [39.00,-9.23],[38.95,-9.22],[38.90,-9.24],
+      /* Ericeira */
+      [38.88,-9.28],[38.86,-9.29],[38.84,-9.29],[38.82,-9.27],
+      [38.80,-9.26],[38.78,-9.26],
+      /* Cabo da Roca — westernmost point */
+      [38.75,-9.28],[38.72,-9.30],[38.70,-9.31],[38.68,-9.33],
+      [38.66,-9.34],[38.64,-9.33],[38.62,-9.30],
+      /* Guincho / Cascais */
+      [38.73,-9.48],[38.72,-9.46],[38.71,-9.44],[38.70,-9.42],
+      [38.69,-9.40],[38.69,-9.37],[38.69,-9.35],[38.69,-9.32],
+      [38.69,-9.29],[38.69,-9.25],
+      /* Tejo mouth north bank — Cascais→Lisboa */
+      [38.69,-9.22],[38.69,-9.18],[38.69,-9.14],[38.69,-9.10],
+      [38.70,-9.06],[38.71,-9.03],[38.72,-9.01],[38.73,-8.99],
+      [38.75,-8.97],[38.77,-8.95],
+      /* Tejo south bank — cross river mouth */
+      [38.65,-9.22],[38.63,-9.18],[38.62,-9.14],[38.62,-9.10],
+      [38.62,-9.05],[38.63,-9.00],[38.64,-8.97],
+      /* Setúbal peninsula */
+      [38.55,-8.90],[38.50,-8.88],[38.45,-8.87],[38.40,-8.87],
+      [38.35,-8.88],[38.28,-8.90],[38.22,-8.92],
+      /* South limit */
+      [38.10,-8.93]
+    ];
 
     function initMapWindCanvas() {
       mapWindToken++;
@@ -2285,6 +2467,9 @@
       if (mapWindAnimId) cancelAnimationFrame(mapWindAnimId);
       mapWindAnimId = requestAnimationFrame(frame);
       console.log('[mapWind] animation loop started with ws:', mapWnd_currentWs, 'kph');
+
+      /* Init swell canvas immediately after wind canvas is ready */
+      initMapSwellCanvas();
     }
 
     /* ── Set map wind state — mirrors updateWindState() exactly ── */
@@ -2295,6 +2480,36 @@
       mapWnd_dyUnit    =  Math.cos(rad);
       mapWnd_baseSpd   = Math.max(1.5, (ws / 60) * 5.0);
       console.log('[mapWind] wind state updated — ws:', ws, 'wd:', wd, 'spd:', mapWnd_baseSpd.toFixed(2));
+    }
+
+    function setMapSwellState(wh, period, wd) {
+      mapSwell_wh     = (wh     != null && wh     > 0) ? wh     : 1.0;
+      mapSwell_period = (period != null && period > 0) ? period : 10;
+      /* wd = direction swell comes FROM (met convention, e.g. 315 = NW).
+         Swell travels TO the OPPOSITE direction: wd + 180.
+         sin/cos give the correct x/y screen movement vector.
+         Screen coords: x+ = right (east), y+ = down (south). */
+      var travelDeg = (wd + 180) % 360;
+      var rad = travelDeg * Math.PI / 180;
+      mapSwell_dxUnit    =  Math.sin(rad);
+      mapSwell_dyUnit    = -Math.cos(rad);
+      mapSwell_travelDeg = travelDeg;
+      console.log('[mapSwell] wd:', wd, 'travel:', travelDeg,
+                  'dx:', mapSwell_dxUnit.toFixed(2),
+                  'dy:', mapSwell_dyUnit.toFixed(2));
+    }
+
+    function updateMapSwellFromSpot(marineData) {
+      if (!marineData || !marineData.hourly || !marineData.hourly.time) return;
+      var nowMs = Date.now(), ci = 0, minD = Infinity;
+      marineData.hourly.time.forEach(function(t, i) {
+        var d = Math.abs(new Date(t) - nowMs);
+        if (d < minD) { minD = d; ci = i; }
+      });
+      var wh  = (marineData.hourly.wave_height    && marineData.hourly.wave_height[ci])    || 1.0;
+      var per = (marineData.hourly.wave_period     && marineData.hourly.wave_period[ci])     || 10;
+      var wd  = (marineData.hourly.wave_direction  && marineData.hourly.wave_direction[ci])  || 270;
+      setMapSwellState(wh, per, wd);
     }
 
     /* Called when a spot is clicked and forecast wind data loads */
@@ -2322,6 +2537,276 @@
       var avgWd = Math.atan2(sinSum / n, cosSum / n) * 180 / Math.PI;
       if (avgWd < 0) avgWd += 360;
       setMapWindState(avgWs, avgWd);
+
+      /* Average swell state across all spots */
+      var whSum = 0, perSum = 0, wdSinSum = 0, wdCosSum = 0, sn = 0;
+      mapSwellResults.forEach(function(r) {
+        if (r) {
+          whSum += r.wh; perSum += r.per;
+          wdSinSum += Math.sin(r.wd * Math.PI / 180);
+          wdCosSum += Math.cos(r.wd * Math.PI / 180);
+          sn++;
+        }
+      });
+      if (sn > 0) {
+        var avgWd = Math.atan2(wdSinSum / sn, wdCosSum / sn) * 180 / Math.PI;
+        if (avgWd < 0) avgWd += 360;
+        setMapSwellState(whSum / sn, perSum / sn, avgWd);
+      }
+    }
+
+    /* ══════════════════════════════════════════════════════════
+       SWELL LINE CANVAS — crispy animated lines, ocean only
+    ══════════════════════════════════════════════════════════ */
+    function initMapSwellCanvas() {
+      mapSwellToken++;
+      var myToken = mapSwellToken;
+
+      var pane = map.getPanes().overlayPane;
+      if (!pane) return;
+
+      var old = document.getElementById('mapSwellCanvas');
+      if (old && old.parentNode) old.parentNode.removeChild(old);
+
+      var dpr  = window.devicePixelRatio || 1;
+      var size = map.getSize();
+      var PW = size.x, PH = size.y;
+
+      var canvas = document.createElement('canvas');
+      canvas.id = 'mapSwellCanvas';
+      canvas.style.cssText = 'position:absolute;top:0;left:0;pointer-events:none;';
+      canvas.width        = PW * dpr;
+      canvas.height       = PH * dpr;
+      canvas.style.width  = PW + 'px';
+      canvas.style.height = PH + 'px';
+
+      /* Insert BEFORE mapWindCanvas so swell renders under wind particles */
+      var windCanvas = document.getElementById('mapWindCanvas');
+      if (windCanvas && windCanvas.parentNode === pane) {
+        pane.insertBefore(canvas, windCanvas);
+      } else {
+        pane.appendChild(canvas);
+      }
+
+      function resetPosition() {
+        var s      = map.getSize();
+        var offset = map.containerPointToLayerPoint([0, 0]);
+        L.DomUtil.setPosition(canvas, offset);
+        var needW = s.x * dpr, needH = s.y * dpr;
+        if (canvas.width !== needW || canvas.height !== needH) {
+          canvas.width        = needW;
+          canvas.height       = needH;
+          canvas.style.width  = s.x + 'px';
+          canvas.style.height = s.y + 'px';
+          PW = s.x; PH = s.y;
+        }
+      }
+      map.on('movestart move moveend viewreset', resetPosition);
+      window.addEventListener('resize', function() {
+        map.invalidateSize(); resetPosition();
+      });
+
+      var swellOffset = 0;
+
+      function frame() {
+        if (myToken !== mapSwellToken) return;
+
+        var dx = mapSwell_dxUnit;
+        var dy = mapSwell_dyUnit;
+        var px = -dy, py = dx;
+
+        var wh     = mapSwell_wh;
+        var period = mapSwell_period;
+        var c      = swellColor(wh);
+
+        /* ══ Fully continuous parameters — no categories ══
+           All values scale smoothly with wh and period only.
+           SPEED:   period 6s→0.52  12s→0.30  18s→0.09
+           NFRONTS: period 6s→5     12s→7     20s→10   (more fronts = longer period)
+           SPACING: period drives set spacing, wh tightens it slightly
+           LW:      wh drives line weight, period adds subtle thickness
+           WAMP:    wh drives curvature amplitude
+           NPTS:    period drives curve resolution                     */
+        var speed   = Math.max(0.15, 0.72 - (period - 6) * 0.0215);
+        var nFronts = Math.round(Math.max(3, Math.min(period * 0.35 + 1.5, 8)));
+        var spacing = Math.max(80, Math.min(period * 18 - wh * 6, 380));
+        var lw      = Math.max(1.0, Math.min(wh * 1.6 + period * 0.08, 6.5));
+        var wAmp    = Math.max(8, Math.min(wh * 28 + period * 1.4, 90));
+        var nPts    = Math.round(Math.max(6, Math.min(period * 0.38 + 4, 12)));
+        var diag = Math.sqrt(PW * PW + PH * PH);
+        var cx = PW / 2, cy = PH / 2;
+        var ctx = canvas.getContext('2d');
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, PW, PH);
+        swellOffset += speed;
+        if (swellOffset >= spacing) swellOffset -= spacing;
+        ctx.save();
+        /* ── Ocean-only clip: OSM coastline (fallback: COAST_POLY) ──
+           _osmCoast = array of ways [[lat,lng],...]
+           Each way drawn as open polyline, closed via east border.
+           evenodd punches land out of full-canvas rect.             */
+        ctx.beginPath();
+        ctx.rect(0, 0, PW, PH);
+        if (_osmCoast) {
+          /* High-res OSM data — stitch connected ways into land polygon */
+          _osmCoast.forEach(function(way) {
+            if (way.length < 2) return;
+            var p0 = map.latLngToContainerPoint(L.latLng(way[0][0], way[0][1]));
+            ctx.moveTo(p0.x, p0.y);
+            for (var wi = 1; wi < way.length; wi++) {
+              var wp = map.latLngToContainerPoint(L.latLng(way[wi][0], way[wi][1]));
+              ctx.lineTo(wp.x, wp.y);
+            }
+            /* Close each way via east border anchor */
+            var waySE = map.latLngToContainerPoint(L.latLng(way[way.length-1][0], -5.00));
+            var wayNE = map.latLngToContainerPoint(L.latLng(way[0][0], -5.00));
+            ctx.lineTo(waySE.x, waySE.y);
+            ctx.lineTo(wayNE.x, wayNE.y);
+            ctx.closePath();
+          });
+        } else {
+          /* Fallback: inline COAST_POLY until OSM loads */
+          var cl0 = map.latLngToContainerPoint(L.latLng(COAST_POLY[0][0], COAST_POLY[0][1]));
+          ctx.moveTo(cl0.x, cl0.y);
+          for (var ci = 1; ci < COAST_POLY.length; ci++) {
+            var cli = map.latLngToContainerPoint(L.latLng(COAST_POLY[ci][0], COAST_POLY[ci][1]));
+            ctx.lineTo(cli.x, cli.y);
+          }
+          var ptSE = map.latLngToContainerPoint(L.latLng(38.10, -5.00));
+          var ptNE = map.latLngToContainerPoint(L.latLng(40.00, -5.00));
+          ctx.lineTo(ptSE.x, ptSE.y);
+          ctx.lineTo(ptNE.x, ptNE.y);
+          ctx.closePath();
+        }
+        ctx.clip('evenodd');
+        for (var i = 0; i < nFronts; i++) {
+          var dist = i * spacing - (nFronts * spacing / 2) + swellOffset;
+          var ox = cx + dx * dist;
+          var oy = cy + dy * dist;
+          /* Strength variation: continuous, no style categories.
+             High energy (wh>2.5 + period>14) → breaking pattern.
+             Otherwise → alternating set rhythm.                   */
+          var energy0 = Math.min((wh * period) / 28, 1.0);
+          var frontStrength;
+          if (wh > 2.5 && period > 14) {
+            var t = i / nFronts;
+            frontStrength = 0.3 + 0.7 * Math.pow(Math.sin(t * Math.PI), 1.5);
+          } else {
+            frontStrength = 0.4 + 0.6 * Math.abs(Math.sin(i * 1.05 + 0.3));
+          }
+          var pts = [];
+          for (var k = 0; k <= nPts; k++) {
+            var perpDist = -diag + (k / nPts) * diag * 2;
+            var wobble = wAmp * (
+              0.6 * Math.sin(i * 2.1 + k * 1.3) +
+              0.4 * Math.sin(i * 3.8 + k * 0.7)
+            );
+            pts.push({
+              x: ox + px * perpDist + dx * wobble,
+              y: oy + py * perpDist + dy * wobble
+            });
+          }
+          var path = new Path2D();
+          path.moveTo(pts[0].x, pts[0].y);
+          for (var k = 0; k < pts.length - 1; k++) {
+            var mx = (pts[k].x + pts[k+1].x) / 2;
+            var my = (pts[k].y + pts[k+1].y) / 2;
+            path.quadraticCurveTo(pts[k].x, pts[k].y, mx, my);
+          }
+          path.lineTo(pts[pts.length-1].x, pts[pts.length-1].y);
+          ctx.lineCap  = 'round';
+          ctx.lineJoin = 'round';
+          var energy = Math.min((wh * period) / 28, 1.0);
+          var eBoost = 0.55 + 0.45 * energy;
+          ctx.strokeStyle = 'rgba('+c.r+','+c.g+','+c.b+','+(0.09*frontStrength*eBoost)+')';
+          ctx.lineWidth   = lw * 12;
+          ctx.stroke(path);
+          ctx.strokeStyle = 'rgba('+c.r+','+c.g+','+c.b+','+(0.38*frontStrength*eBoost)+')';
+          ctx.lineWidth   = lw * 2.8;
+          ctx.stroke(path);
+          ctx.strokeStyle = 'rgba('+c.r+','+c.g+','+c.b+','+(0.72*frontStrength*eBoost)+')';
+          ctx.lineWidth   = lw;
+          ctx.stroke(path);
+        }
+        /* Fade mask: erases in travel direction — dynamic, follows travelDeg.
+           Gradient starts at canvas center offset toward origin,
+           ends past the coast edge in travel direction.              */
+        ctx.globalCompositeOperation = 'destination-out';
+        var fadeDeg = mapSwell_travelDeg !== undefined ? mapSwell_travelDeg : 270;
+        var fadeRad = fadeDeg * Math.PI / 180;
+        var diag2   = Math.sqrt(PW * PW + PH * PH) * 0.5;
+        var cx2 = PW / 2, cy2 = PH / 2;
+        var fx0 = cx2 - Math.sin(fadeRad) * diag2 * 0.25;
+        var fy0 = cy2 + Math.cos(fadeRad) * diag2 * 0.25;
+        var fx1 = cx2 + Math.sin(fadeRad) * diag2 * 0.90;
+        var fy1 = cy2 - Math.cos(fadeRad) * diag2 * 0.90;
+        var fadeGrad = ctx.createLinearGradient(fx0, fy0, fx1, fy1);
+        fadeGrad.addColorStop(0,    'rgba(0,0,0,0)');
+        fadeGrad.addColorStop(0.50, 'rgba(0,0,0,0.75)');
+        fadeGrad.addColorStop(1.0,  'rgba(0,0,0,1)');
+        ctx.fillStyle = fadeGrad;
+        ctx.fillRect(0, 0, PW, PH);
+        ctx.globalCompositeOperation = 'source-over';
+        /* ── Foam: static white glow at fade boundary ── */
+        var foamRad2 = fadeDeg * Math.PI / 180;
+        var foamDiag = Math.sqrt(PW * PW + PH * PH) * 0.5;
+        var fcx = PW / 2, fcy = PH / 2;
+        var foamEdgeX = fcx + Math.sin(foamRad2) * foamDiag * 0.48;
+        var foamEdgeY = fcy - Math.cos(foamRad2) * foamDiag * 0.48;
+        var foamGlowR = foamDiag * 0.22;
+        var foamEnergy = Math.min((wh * period) / 28, 1.0);
+        var foamAlpha  = 0.04 + 0.10 * foamEnergy;
+        var foamGlow   = ctx.createRadialGradient(
+          foamEdgeX, foamEdgeY, 0,
+          foamEdgeX, foamEdgeY, foamGlowR
+        );
+        foamGlow.addColorStop(0,   'rgba(255,255,255,' + foamAlpha + ')');
+        foamGlow.addColorStop(0.5, 'rgba(255,255,255,' + (foamAlpha * 0.4) + ')');
+        foamGlow.addColorStop(1.0, 'rgba(255,255,255,0)');
+        ctx.fillStyle = foamGlow;
+        ctx.fillRect(0, 0, PW, PH);
+        /* ── Foam: animated particle bursts ── */
+        if (!canvas._foamParticles) canvas._foamParticles = [];
+        var fp = canvas._foamParticles;
+        /* Spawn rate scales with energy */
+        var spawnCount = Math.floor(0.3 + foamEnergy * 1.8);
+        for (var s = 0; s < spawnCount; s++) {
+          var spread = foamDiag * 0.55;
+          var perpX  = -Math.cos(foamRad2);
+          var perpY  = -Math.sin(foamRad2);
+          var spawnX = foamEdgeX + (Math.random() - 0.5) * spread * perpX * 2
+                                 + (Math.random() - 0.5) * spread * Math.cos(foamRad2 + Math.PI/2) * 2;
+          var spawnY = foamEdgeY + (Math.random() - 0.5) * spread * perpY * 2
+                                 + (Math.random() - 0.5) * spread * Math.sin(foamRad2 + Math.PI/2) * 2;
+          fp.push({
+            x:    spawnX,
+            y:    spawnY,
+            vx:   (Math.random() - 0.5) * 0.6,
+            vy:   (Math.random() - 0.5) * 0.6,
+            life: 1.0,
+            size: 1.0 + Math.random() * 2.5 * (0.5 + foamEnergy)
+          });
+        }
+        /* Update + draw particles */
+        for (var pi = fp.length - 1; pi >= 0; pi--) {
+          var p = fp[pi];
+          p.x   += p.vx;
+          p.y   += p.vy;
+          p.life -= 0.022 + Math.random() * 0.012;
+          if (p.life <= 0) { fp.splice(pi, 1); continue; }
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(255,255,255,' + (p.life * 0.55) + ')';
+          ctx.fill();
+        }
+        /* Cap particle count */
+        if (fp.length > 120) fp.splice(0, fp.length - 120);
+        ctx.restore();
+        mapSwellAnimId = requestAnimationFrame(frame);
+      }
+
+      if (mapSwellAnimId) cancelAnimationFrame(mapSwellAnimId);
+      mapSwellAnimId = requestAnimationFrame(frame);
     }
 
     /* Start 500 ms after map init so Leaflet panes are fully ready */
@@ -2364,6 +2849,148 @@
 
     /* ─── Init ──────────────────────────────────────────────── */
     fetchSpotConditions();
+    /* ─── Region mapping ─── */
+    var SPOT_REGION = {
+      'Nazaré':               'NAZARÉ',
+      'Almagreira':           'PENICHE',
+      'Lagide':               'PENICHE',
+      'Baleal':               'PENICHE',
+      'Cantinho da Baía':     'PENICHE',
+      'Middle':               'PENICHE',
+      'Meio da Baía':         'PENICHE',
+      'Molhe Leste':          'PENICHE',
+      'Supertubos':           'PENICHE',
+      'Santa Cruz':           'SANTA CRUZ',
+      'Praia das Amoeiras':   'SANTA CRUZ',
+      'Praia Azul':           'SANTA CRUZ',
+      'São Lourenço':         'ERICEIRA',
+      'Coxos':                'ERICEIRA',
+      'Cave':                 'ERICEIRA',
+      'Ribeira D\'Ilhas':     'ERICEIRA',
+      'Reef':                 'ERICEIRA',
+      'Pedra Branca':         'ERICEIRA',
+      'Matadouro':            'ERICEIRA',
+      'Praia do Sul':         'ERICEIRA',
+      'Praia da Baleia':      'ERICEIRA',
+      'Foz do Lizandro':      'ERICEIRA',
+      'São Julião':           'ERICEIRA',
+      'Praia Pequena':        'SINTRA',
+      'Praia Grande':         'SINTRA',
+      'Praia do Guincho':     'LISBON',
+      'São Pedro do Estoril': 'LISBON',
+      'Parede':               'LISBON',
+      'Praia de Torre':       'LISBON',
+      'Santo Amaro':          'LISBON',
+      'Paco de Arcos':        'LISBON',
+      'Praia de Caxias':      'LISBON',
+      'Carcavelos':           'LISBON',
+      'São João da Caparica': 'CAPARICA',
+      'Costa da Caparica':    'CAPARICA',
+      'Fonte da Telha':       'CAPARICA',
+      'Bicas':                'CAPARICA',
+      'Sesimbra':             'CAPARICA'
+    };
+    var activeFilter = 'ALL';
+    var spotScores   = new Array(38).fill(-1); /* -1 = not yet loaded */
+    function updateBestCards() {
+      /* Find best idx per region AND globally */
+      var regionBest = {};
+      SURF_SPOTS.forEach(function(spot, idx) {
+        if (spotScores[idx] < 0) return;
+        var region = SPOT_REGION[spot.name] || 'OTHER';
+        if (!regionBest[region] || spotScores[idx] > regionBest[region].score)
+          regionBest[region] = { idx: idx, score: spotScores[idx] };
+        if (!regionBest['ALL'] || spotScores[idx] > regionBest['ALL'].score)
+          regionBest['ALL'] = { idx: idx, score: spotScores[idx] };
+      });
+      /* Clear previous best styling */
+      document.querySelectorAll('.sp-card--best').forEach(function(c) {
+        c.classList.remove('sp-card--best');
+      });
+      document.querySelectorAll('.sp-best-badge').forEach(function(b) { b.remove(); });
+      var best = regionBest[activeFilter];
+      if (!best || best.score <= 0) return;
+      var card = document.querySelector('[data-spot-idx="' + best.idx + '"]');
+      if (!card) return;
+      /* Gold border */
+      card.classList.add('sp-card--best');
+      /* ★ BEST NOW badge — inserted first in badge group */
+      var badgeGroup = card.querySelector('.sp-badge-group');
+      if (badgeGroup) {
+        var bb = document.createElement('span');
+        bb.className   = 'sp-best-badge';
+        bb.textContent = '★ BEST NOW';
+        badgeGroup.insertBefore(bb, badgeGroup.firstChild);
+      }
+      /* Move best card to top of visible list */
+      var container = document.getElementById('spCardsContainer');
+      if (container && card.parentElement === container)
+        container.insertBefore(card, container.firstChild);
+    }
+    var FILTER_BTN_MAP = {
+      'ALL':        'filterAll',
+      'NAZARÉ':     'filterNazare',
+      'PENICHE':    'filterPeniche',
+      'SANTA CRUZ': 'filterSantaCruz',
+      'ERICEIRA':   'filterEriceira',
+      'SINTRA':     'filterSintra',
+      'LISBON':     'filterLisbon',
+      'CAPARICA':   'filterCaparica'
+    };
+    function filterSpots(region) {
+      activeFilter = region;
+      document.querySelectorAll('.sp-filter-btn').forEach(function(b) {
+        b.classList.remove('active');
+      });
+      var btn = document.getElementById(FILTER_BTN_MAP[region]);
+      if (btn) btn.classList.add('active');
+      SURF_SPOTS.forEach(function(spot, idx) {
+        var card = document.querySelector('[data-spot-idx="' + idx + '"]');
+        if (!card) return;
+        card.style.display = (region === 'ALL' || SPOT_REGION[spot.name] === region) ? '' : 'none';
+      });
+      updateBestCards();
+    }
+
+    /* ─── Build landing page spot cards dynamically ─── */
+    (function buildSpotCards() {
+      var container = document.getElementById('spCardsContainer');
+      if (!container) return;
+      var gradients = [
+        'linear-gradient(140deg, #1a0a2e 0%, #7B2FBE 45%, #0d0618 100%)',
+      ];
+      SURF_SPOTS.forEach(function(spot, idx) {
+        var grad = gradients[idx % gradients.length];
+        var latStr = Math.abs(spot.lat).toFixed(4) + '° N · ' + Math.abs(spot.lon).toFixed(4) + '° W';
+        var card = document.createElement('div');
+        card.className = 'sp-card';
+        card.style.background = grad;
+        card.setAttribute('tabindex', '0');
+        card.setAttribute('onclick', 'selectSpot(' + idx + ')');
+        card.setAttribute('onkeydown', "if(event.key==='Enter')selectSpot(" + idx + ")");
+        card.setAttribute('data-spot-idx', idx);
+        card.innerHTML =
+          '<div class="sp-card-bg-num" id="spBgNum' + idx + '">—</div>'
+          + '<div class="sp-card-top"><div class="sp-badge-group">'
+          + '<span class="firing-badge" id="spFiring' + idx + '">🔥 FIRING</span>'
+          + '<span class="sp-quality-badge quality-loading" id="spQuality' + idx + '">—</span>'
+          + '<span class="sp-wind-type" id="spWindType' + idx + '"></span>'
+          + '</div></div>'
+          + '<div><div class="sp-name">' + spot.name + '</div>'
+          + '<div class="sp-coords">' + latStr + '</div></div>'
+          + '<div class="sp-card-bottom">'
+          + '<div class="sp-conditions" id="spConditions' + idx + '"><small>Fetching conditions…</small></div>'
+          + '<span class="sp-arrow-big">→</span></div>'
+          + '<div class="sp-wind-compass" id="spWindCompass' + idx + '">'
+          + '<svg width="24" height="24" viewBox="0 0 24 24" id="spWindArrow' + idx + '">'
+          + '<circle cx="12" cy="12" r="11" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>'
+          + '<polygon points="12,2 9,15 12,12 15,15" fill="rgba(255,255,255,0.3)"/>'
+          + '</svg>'
+          + '<div class="sp-wind-spd" id="spWindSpd' + idx + '">—</div>'
+          + '</div>';
+        container.appendChild(card);
+      });
+    })();
 
   </script>
 </body>
