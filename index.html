@@ -512,7 +512,7 @@
     .tl-bar { position: absolute; bottom: 0; left: 0; right: 0; background: var(--accent); transition: height 0.55s ease; }
     .tl-item.now .tl-bar { background: rgba(255,255,255,0.75); }
     .tl-item:not(.now) .tl-bar.high { background: #7B2FBE; }
-    .tl-item:not(.now) .tl-bar.med  { background: #CC0000; }
+    .tl-item:not(.now) .tl-bar.med  { background: #9B4FD8; }
     .tl-item:not(.now) .tl-bar.low  { background: #cceecc; }
     .tl-h { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.77rem; font-weight: 700; line-height: 1; white-space: nowrap; }
     .tl-hunit { font-family: 'DM Mono', monospace; font-size: 0.53rem; font-weight: 400; margin-left: 1px; }
@@ -685,26 +685,123 @@
 
     /* ═══ MOBILE ═════════════════════════════════════════════════ */
     @media (max-width: 768px) {
-      html, body { height: auto; overflow: auto; overflow-x: hidden; }
-      .page-layout { grid-template-columns: 1fr; grid-template-rows: 45vh auto; overflow: visible; height: auto; }
-      .map-col { height: 45vh; border-right: none; border-bottom: 1px solid rgba(123,47,190,0.18); }
-      .page-layout.landing-mode .map-col { height: 350px; flex: 0 0 350px; }
-      .forecast-col { overflow-y: visible; height: auto; }
-      .status-bar { position: sticky; top: 0; }
-      .site-spot { display: block; }
-      .spot-picker { padding: 1.2rem; }
-      .wave-hero, .stats-row, .tides-section, .tl-section, .chart-section { margin-left: 1rem; margin-right: 1rem; }
-      .wave-hero { padding: 1.6rem 1.4rem 1.4rem; }
-      .stats-row { grid-template-columns: repeat(2, 1fr); }
-      .stat { padding: 1.2rem 1rem; border-right: none; border-bottom: 1px solid rgba(123,47,190,0.12); }
-      .stat:nth-child(odd) { border-right: 1px solid rgba(123,47,190,0.12); }
-      .stat:last-child { border-bottom: none; }
-      .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
-      .wave-coords { display: none; }
-      .tl-head, .tides-head { padding-left: 1.4rem; padding-right: 1.4rem; }
-      .chart-section { padding: 1.2rem 1.2rem 1.6rem; }
-      footer { padding-left: 1.4rem; padding-right: 1.4rem; }
-    }
+  html, body { height: auto; overflow: auto; overflow-x: hidden; }
+  /* Header: stack logo on top, spot name + clock below */
+  .site-header {
+    flex-wrap: wrap;
+    padding: 0.7rem 1.2rem 0.6rem;
+    gap: 0.2rem;
+  }
+  .site-name {
+    font-size: 14px;
+    letter-spacing: 0.22em;
+    flex: 1 1 100%;
+    display: flex;
+    align-items: center;
+  }
+  .site-name svg { width: 22px; height: 22px; margin-right: 8px; }
+  .site-spot {
+    display: block;
+    font-size: 0.55rem;
+    letter-spacing: 0.14em;
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .site-clock {
+    font-size: 0.5rem;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  /* Layout */
+  .page-layout {
+    grid-template-columns: 1fr;
+    grid-template-rows: 42vh auto;
+    overflow: visible;
+    height: auto;
+  }
+  .map-col {
+    height: 42vh;
+    border-right: none;
+    border-bottom: 1px solid rgba(123,47,190,0.18);
+  }
+  .page-layout.landing-mode .map-col {
+    height: 320px;
+    flex: 0 0 320px;
+  }
+  .forecast-col { overflow-y: visible; height: auto; }
+  .status-bar { position: sticky; top: 0; padding: 0.5rem 1rem; font-size: 0.48rem; }
+  /* Spot picker cards */
+  .spot-picker { padding: 0.9rem 0.9rem 1rem; gap: 0.7rem; }
+  .sp-card { min-height: 140px; padding: 1rem 1.1rem 1rem; border-radius: 14px; }
+  .sp-name { font-size: 1.7rem; margin-top: 0.3rem; }
+  .sp-coords { font-size: 0.4rem; }
+  .sp-conditions { font-size: 0.48rem; }
+  .sp-card-bg-num {
+    font-size: 5.5rem;
+    right: 3.8rem;
+  }
+  .sp-wind-compass {
+    top: 0.8rem; right: 0.9rem;
+    width: 42px; height: 42px;
+  }
+  .sp-wind-type {
+    top: 4.0rem; right: 0.9rem;
+    width: 42px;
+    font-size: 0.34rem;
+  }
+  .sp-badge-group { flex-direction: column; align-items: flex-start; gap: 3px; }
+  .sp-quality-badge { font-size: 0.42rem; padding: 2px 8px; }
+  .firing-badge { font-size: 0.42rem; padding: 2px 8px; }
+  /* Forecast panel sections */
+  .wave-hero, .stats-row, .tides-section, .tl-section, .chart-section {
+    margin-left: 0.9rem;
+    margin-right: 0.9rem;
+  }
+  .wave-hero { padding: 1.4rem 1.2rem 1.2rem; border-radius: 14px; }
+  .wave-num { font-size: clamp(56px, 18vw, 90px) !important; }
+  .wave-coords { display: none; }
+  .hero-condition-badge { font-size: 0.62rem; padding: 4px 13px; margin-top: 0.8rem; }
+  /* Stats grid: 2 columns */
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+    border-radius: 14px;
+  }
+  .stat { padding: 1rem 0.9rem; border-right: none; border-bottom: 1px solid rgba(123,47,190,0.12); }
+  .stat:nth-child(odd) { border-right: 1px solid rgba(123,47,190,0.12); }
+  .stat:last-child { border-bottom: none; }
+  .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .stat-lbl { font-size: 0.4rem; letter-spacing: 0.2em; }
+  .stat-val { font-size: clamp(0.9rem, 4.5vw, 1.4rem) !important; }
+  /* Tides */
+  .tides-head { padding-left: 1.2rem; padding-right: 1.2rem; }
+  .tides-canvas-wrap { height: 110px; }
+  .tides-sun-col { width: 110px; padding: 0.5rem 0.6rem; }
+  .sun-row .sun-time { font-size: 0.44rem; }
+  /* Timeline */
+  .tl-head { padding-left: 1.2rem; padding-right: 1.2rem; font-size: 0.44rem; }
+  .tl-item { width: 82px; padding: 0.8rem 0.4rem 0.7rem; }
+  .tl-h { font-size: 0.7rem; }
+  .tl-bar-wrap { height: 46px; }
+  /* Charts */
+  .chart-section { padding: 1rem 1rem 1.4rem; border-radius: 14px; }
+  .chart-shell { height: 200px; }
+  .chart-title { font-size: 0.62rem; }
+  /* Wind flow */
+  #wfMap { height: 160px !important; }
+  .wf-canvas-wrap canvas { height: 160px !important; }
+  #windFlowCanvas { height: 160px !important; }
+  .wf-scrubber { margin-top: 8px; }
+  /* Footer */
+  footer {
+    padding: 1rem 1.2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+  footer p { font-size: 0.44rem; }
+}
   </style>
 </head>
 
@@ -1765,7 +1862,7 @@
       var mainArea = 760 * 700;
       var wfArea   = PW * PH;
       var N = Math.round(260 * (wfArea / mainArea));
-      N = Math.max(40, Math.min(N, 260));
+      N = Math.max(80, Math.min(N, 260));
       var particles = [];
       for (var j = 0; j < N; j++) particles.push(spawnWF());
 
