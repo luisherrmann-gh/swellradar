@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "SWELLRADAR static server",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["/tmp/swellradar_serve.py"],
+      "port": 8080
+    }
+  ]
+}
