@@ -565,8 +565,13 @@
       color: #006600; text-align: center; font-weight: 600;
     }
     #wfScrubber {
-      width: 100%; max-width: 100%; cursor: pointer; accent-color: #006600;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      cursor: pointer;
+      accent-color: #006600;
       display: block;
+      box-sizing: border-box;
     }
 
     /* ═══ FOOTER ═════════════════════════════════════════════════ */
@@ -684,6 +689,7 @@
     /* When header present, remove top radius from the shell itself */
     .wf-map-shell.has-header { border-radius: 0 0 8px 8px; }
 
+    #windFlowSection { max-width: 100%; overflow: hidden; }
     .hidden { display: none !important; }
 
     /* ═══ MOBILE ═════════════════════════════════════════════════ */
@@ -768,19 +774,26 @@
   .hero-condition-badge { font-size: 0.62rem; padding: 4px 13px; margin-top: 0.8rem; }
   /* Stats grid: 2 columns */
   .stats-row {
-    grid-template-columns: repeat(2, 1fr);
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
     border-radius: 14px;
     overflow: hidden;
   }
-  .stat { padding: 0.85rem 0.75rem; border-right: none; border-bottom: 1px solid rgba(123,47,190,0.12); }
-  .stat:nth-child(odd) { border-right: 1px solid rgba(123,47,190,0.12); }
-  .stat:last-child { border-bottom: none; }
-  .stat:nth-last-child(2):nth-child(odd) { border-bottom: none; }
+  .stat {
+    padding: 0.85rem 0.75rem !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(123,47,190,0.12) !important;
+    border-top: 3px solid #7B2FBE !important;
+  }
+  .stat:nth-child(odd) { border-right: 1px solid rgba(123,47,190,0.12) !important; }
+  .stat:last-child { border-bottom: none !important; }
+  .stat:nth-last-child(2):nth-child(odd) { border-bottom: none !important; }
   .stat-lbl { font-size: 0.4rem; letter-spacing: 0.2em; }
   .stat-val { font-size: clamp(0.9rem, 4.5vw, 1.4rem) !important; }
   /* Tides */
   .tides-head { padding-left: 1.2rem; padding-right: 1.2rem; }
-  .tides-canvas-wrap { height: 150px; }
+  .tides-canvas-wrap { height: 150px !important; min-height: 150px !important; }
+  #tidesCanvas { height: 150px !important; }
   .tides-sun-col { width: 100px; padding: 0.5rem 0.5rem; font-size: 0.38rem; }
   .sun-row .sun-time { font-size: 0.44rem; }
   /* Timeline */
@@ -798,6 +811,12 @@
   #windFlowCanvas { height: 160px !important; }
   .wf-map-shell { height: 160px !important; overflow: hidden !important; max-width: 100% !important; }
   .wf-scrubber { margin-top: 6px; padding: 0; }
+  #windFlowSection { overflow: hidden !important; max-width: 100% !important; }
+  .wf-map-shell { overflow: hidden !important; max-width: 100% !important; height: 160px !important; }
+  #wfMap { max-width: 100% !important; overflow: hidden !important; }
+  .wf-canvas-wrap { max-width: 100% !important; overflow: hidden !important; }
+  #windFlowCanvas { max-width: 100% !important; }
+  #windFlowAxis { max-width: 100% !important; }
   /* Footer */
   footer {
     padding: 1rem 1.2rem;
@@ -1258,6 +1277,7 @@
 
         updateHero(data, windData, lat, lon);
         renderTides(data);
+        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 80);
         renderTimeline(data, windData);
         renderChart(data);
         renderWindChart(windData, data.hourly.time);
@@ -1791,6 +1811,7 @@
       });
       L.tileLayer(ESRI_TILES, { attribution: ESRI_ATTR, maxZoom: 19 }).addTo(windMapInst);
       setTimeout(function() { if (windMapInst) windMapInst.invalidateSize(); }, 120);
+      setTimeout(function() { if (windMapInst) windMapInst.invalidateSize(); }, 400);
 
       /* ── Draw static time axis ── */
       var shell = document.getElementById('wfMapShell');
