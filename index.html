@@ -806,17 +806,16 @@
   .chart-shell { height: 200px; }
   .chart-title { font-size: 0.62rem; }
   /* Wind flow */
-  #wfMap { height: 160px !important; max-width: 100% !important; overflow: hidden !important; }
-  .wf-canvas-wrap canvas { height: 160px !important; }
-  #windFlowCanvas { height: 160px !important; }
-  .wf-map-shell { height: 160px !important; overflow: hidden !important; max-width: 100% !important; }
-  .wf-scrubber { margin-top: 6px; padding: 0; }
   #windFlowSection { overflow: hidden !important; max-width: 100% !important; }
-  .wf-map-shell { overflow: hidden !important; max-width: 100% !important; height: 160px !important; }
-  #wfMap { max-width: 100% !important; overflow: hidden !important; }
+  .wf-map-header { box-sizing: border-box; max-width: 100%; }
+  .wf-map-shell { height: 160px !important; overflow: hidden !important; max-width: 100% !important; box-sizing: border-box; }
+  #wfMap { height: 160px !important; max-width: 100% !important; overflow: hidden !important; box-sizing: border-box; }
+  #windFlowCanvas { height: 160px !important; max-width: 100% !important; box-sizing: border-box; }
   .wf-canvas-wrap { max-width: 100% !important; overflow: hidden !important; }
-  #windFlowCanvas { max-width: 100% !important; }
-  #windFlowAxis { max-width: 100% !important; }
+  #windFlowAxis { max-width: 100% !important; display: block; box-sizing: border-box; }
+  #wfScrubber { width: 100% !important; max-width: 100% !important; box-sizing: border-box !important; }
+  .wf-scrubber { margin-top: 6px; padding: 0; overflow: hidden; }
+  .wf-leg-labels span { font-size: 0.36rem; }
   /* Footer */
   footer {
     padding: 1rem 1.2rem;
@@ -1277,7 +1276,8 @@
 
         updateHero(data, windData, lat, lon);
         renderTides(data);
-        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 80);
+        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 250);
+        setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 600);
         renderTimeline(data, windData);
         renderChart(data);
         renderWindChart(windData, data.hourly.time);
@@ -1461,7 +1461,7 @@
               grid:   { display: false },
               border: { color: '#e8e8e8', width: 1 },
             },
-            y: { display: false, grace: '12%' },
+            y: { display: false, grace: '35%' },
           },
           plugins: {
             legend: { display: false },
@@ -1810,8 +1810,8 @@
         boxZoom: false, keyboard: false,
       });
       L.tileLayer(ESRI_TILES, { attribution: ESRI_ATTR, maxZoom: 19 }).addTo(windMapInst);
-      setTimeout(function() { if (windMapInst) windMapInst.invalidateSize(); }, 120);
-      setTimeout(function() { if (windMapInst) windMapInst.invalidateSize(); }, 400);
+      setTimeout(function() { if (windMapInst) windMapInst.invalidateSize(); }, 300);
+      setTimeout(function() { if (windMapInst) windMapInst.invalidateSize(); }, 700);
 
       /* ── Draw static time axis ── */
       var shell = document.getElementById('wfMapShell');
@@ -1864,7 +1864,10 @@
       /* ── Set up particle canvas (overlaid on map) ── */
       var canvas = document.getElementById('windFlowCanvas');
       var dpr = window.devicePixelRatio || 1;
-      var PW  = shell.clientWidth  || 400;
+      setTimeout(function() {
+        PW = shell.clientWidth || window.innerWidth - 30;
+      }, 350);
+      var PW  = shell.clientWidth  || window.innerWidth - 30;
       var PH  = 200;
 
       canvas.width        = PW * dpr;
