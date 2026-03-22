@@ -154,6 +154,7 @@
       color: rgba(255,255,255,0.55) !important;
       font-size: 9px !important;
       font-family: 'DM Mono', monospace !important;
+      margin-bottom: 58px !important;
     }
     .leaflet-control-attribution a { color: #CC0000 !important; }
     .leaflet-bar {
@@ -209,14 +210,14 @@
     /* Bottom sheet (mobile) */
     .bottom-sheet {
       position: absolute; bottom: 0; left: 0; right: 0; z-index: 810;
-      background: rgba(13,6,24,0.92);
+      background: rgba(13,6,24,0.95);
       backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
       border-top: 3px solid #7B2FBE;
-      padding: 0.75rem 1.6rem 0.9rem;
-      display: flex; align-items: center; gap: 1.2rem;
+      padding: 0.6rem 1.4rem 0.7rem;
+      display: flex; align-items: center; gap: 1rem;
     }
     @media (min-width: 769px) { .bottom-sheet { display: none !important; } }
-    .bs-spot { font-size: 0.56rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700; color: #CC0000; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .bs-spot { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #fff; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .bs-wave-row { display: flex; align-items: baseline; gap: 3px; }
     .bs-wave { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.7rem; font-weight: 800; color: #CC0000; line-height: 1; }
     .bs-unit, .bs-sub { font-size: 0.7rem; color: rgba(255,255,255,0.5); }
@@ -1288,7 +1289,7 @@
 
       document.getElementById('bsSpot').textContent = selectedSpotName || '';
       document.getElementById('bsWave').textContent = h.toFixed(1);
-      document.getElementById('bsSub').textContent  = swellSub;
+      document.getElementById('bsSub').textContent  = (p != null ? p.toFixed(0) + 's' : '—') + ' · ' + (ws != null ? Math.round(ws) + ' km/h wind' : '—');
       document.getElementById('bottomSheet').classList.remove('hidden');
     }
 
