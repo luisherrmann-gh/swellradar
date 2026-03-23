@@ -175,13 +175,17 @@
     /* Leaflet overrides */
     .leaflet-container { font-family: 'DM Mono', monospace !important; background: #0d0618 !important; }
     .leaflet-control-attribution {
-      background: rgba(0,0,0,0.62) !important;
-      color: rgba(255,255,255,0.55) !important;
-      font-size: 9px !important;
+      background: rgba(0,0,0,0.35) !important;
+      color: rgba(255,255,255,0.28) !important;
+      font-size: 7px !important;
       font-family: 'DM Mono', monospace !important;
-      margin-bottom: 58px !important;
+      margin-bottom: 4px !important;
+      padding: 1px 4px !important;
+      line-height: 1.2 !important;
+      border-radius: 2px 0 0 0 !important;
     }
-    .leaflet-control-attribution a { color: #CC0000 !important; }
+    .leaflet-control-attribution a { color: rgba(255,255,255,0.28) !important; text-decoration: none !important; }
+    .leaflet-control-attribution svg { display: none !important; }
     .leaflet-bar {
       border: 1px solid rgba(123,47,190,0.25) !important;
       border-radius: 8px !important;
@@ -212,6 +216,16 @@
       border: 2.5px solid #fff;
       border-radius: 50%;
       animation: spotPulse 2.8s ease-in-out infinite;
+    }
+    .spot-dot.spot-dot--best {
+      background: #CC0000;
+      border: 2.5px solid #ffd700;
+      box-shadow: 0 0 0 2px rgba(255,215,0,0.45), 0 0 10px rgba(255,200,0,0.5);
+    }
+    .spot-label.spot-label--best {
+      background: rgba(180,130,0,0.82);
+      color: #fff8dc;
+      box-shadow: 0 0 6px rgba(255,200,0,0.4);
     }
     .spot-label {
       font-family: 'Plus Jakarta Sans', sans-serif;
@@ -601,7 +615,7 @@
     .wf-legend-row  { margin-top: 9px; }
     .wf-leg-bar {
       height: 6px; border-radius: 3px;
-      background: linear-gradient(to right, #00cc00, #ffcc00, #ff6600, #cc0000);
+      background: linear-gradient(to right, #7B2FBE, #00D2C8, #00B450, #E6C800, #FF6E00, #DC1E1E, #8C0000);
       margin-bottom: 5px;
     }
     .wf-leg-labels {
@@ -865,7 +879,7 @@
       <!-- Landing spot picker -->
       <div class="spot-picker" id="spotPicker">
         <div class="sp-filter-bar" id="spFilterBar">
-          <button class="sp-filter-btn active" onclick="filterSpots('ALL')" id="filterAll">All · 38</button>
+          <button class="sp-filter-btn active" onclick="filterSpots('ALL')" id="filterAll">All · 37</button>
           <button class="sp-filter-btn" onclick="filterSpots('NAZARÉ')" id="filterNazare">Nazaré</button>
           <button class="sp-filter-btn" onclick="filterSpots('PENICHE')" id="filterPeniche">Peniche</button>
           <button class="sp-filter-btn" onclick="filterSpots('SANTA CRUZ')" id="filterSantaCruz">Santa Cruz</button>
@@ -974,10 +988,10 @@
           <div class="wf-legend-row">
             <div class="wf-leg-bar"></div>
             <div class="wf-leg-labels">
-              <span>Calm (0–20)</span>
-              <span>Moderate (20–40)</span>
-              <span>Strong (40–60)</span>
-              <span>Very Strong (60+)</span>
+              <span>Epic</span>
+              <span>Good</span>
+              <span>Fair</span>
+              <span>Poor</span>
             </div>
           </div>
         </div>
@@ -1061,51 +1075,51 @@
     L.tileLayer(ESRI_TILES, { attribution: ESRI_ATTR, maxZoom: 19 }).addTo(map);
 
     var SURF_SPOTS = [
-      { name: 'Nazaré',           lat: 39.6045, lon: -9.0642 },
-      { name: 'Almagreira',       lat: 39.4050, lon: -9.3580 },
-      { name: 'Lagide',           lat: 39.3760, lon: -9.3870 },
-      { name: 'Baleal',           lat: 39.3840, lon: -9.3530 },
-      { name: 'Cantinho da Baía', lat: 39.3650, lon: -9.3780 },
-      { name: 'Middle',           lat: 39.3620, lon: -9.3820 },
-      { name: 'Meio da Baía',     lat: 39.3600, lon: -9.3850 },
-      { name: 'Molhe Leste',      lat: 39.3470, lon: -9.3720 },
-      { name: 'Supertubos',       lat: 39.3390, lon: -9.3870 },
-      { name: 'Santa Cruz',       lat: 39.2190, lon: -9.3970 },
-      { name: 'Praia das Amoeiras', lat: 39.2130, lon: -9.3920 },
-      { name: 'Praia Azul',       lat: 39.2060, lon: -9.3900 },
-      { name: 'São Lourenço',     lat: 38.9900, lon: -9.4280 },
-      { name: 'Coxos',            lat: 38.9800, lon: -9.4260 },
-      { name: 'Cave',             lat: 38.9720, lon: -9.4240 },
-      { name: 'Ribeira D\'Ilhas', lat: 38.9680, lon: -9.4220 },
-      { name: 'Reef',             lat: 38.9590, lon: -9.4200 },
-      { name: 'Pedra Branca',     lat: 38.9540, lon: -9.4200 },
-      { name: 'Matadouro',        lat: 38.9640, lon: -9.4220 },
-      { name: 'Praia do Sul',     lat: 38.9520, lon: -9.4100 },
-      { name: 'Praia da Baleia',  lat: 38.9440, lon: -9.4200 },
-      { name: 'Foz do Lizandro',  lat: 38.9500, lon: -9.4170 },
-      { name: 'São Julião',       lat: 38.9270, lon: -9.4230 },
-      { name: 'Praia Pequena',    lat: 38.8740, lon: -9.4580 },
-      { name: 'Praia Grande',     lat: 38.8148, lon: -9.4786 },
-      { name: 'Praia do Guincho', lat: 38.7270, lon: -9.4730 },
-      { name: 'São Pedro do Estoril', lat: 38.6980, lon: -9.3750 },
-      { name: 'Parede',           lat: 38.6900, lon: -9.3570 },
-      { name: 'Praia de Torre',   lat: 38.6840, lon: -9.3490 },
-      { name: 'Santo Amaro',      lat: 38.6810, lon: -9.3400 },
-      { name: 'Paco de Arcos',    lat: 38.6940, lon: -9.2900 },
-      { name: 'Praia de Caxias',  lat: 38.7010, lon: -9.2740 },
-      { name: 'São João da Caparica', lat: 38.6350, lon: -9.2380 },
-      { name: 'Costa da Caparica', lat: 38.6400, lon: -9.2400 },
-      { name: 'Fonte da Telha',   lat: 38.5520, lon: -9.1840 },
-      { name: 'Bicas',            lat: 38.4920, lon: -9.1380 },
-      { name: 'Sesimbra',         lat: 38.4420, lon: -9.1020 },
-      { name: 'Carcavelos',       lat: 38.6767, lon: -9.3360 },
+      { name: 'Nazaré',           lat: 39.6080, lon: -9.0849 },
+      { name: 'Almagreira',       lat: 39.3789, lon: -9.3148 },
+      { name: 'Baleal',           lat: 39.3745, lon: -9.3392 },
+      { name: 'Lagide',           lat: 39.3738, lon: -9.3360 },
+      { name: 'Cantinho da Baía', lat: 39.3701, lon: -9.3395 },
+      { name: 'Middle',           lat: 39.3625, lon: -9.3507 },
+      { name: 'Meio da Baía',     lat: 39.3618, lon: -9.3669 },
+      { name: 'Molhe Leste',      lat: 39.3501, lon: -9.3678 },
+      { name: 'Supertubos',       lat: 39.3443, lon: -9.3636 },
+      { name: 'Santa Cruz',       lat: 39.1340, lon: -9.3845 },
+      { name: 'Praia das Amoeiras', lat: 39.1267, lon: -9.3894 },
+      { name: 'Praia Azul',       lat: 39.1078, lon: -9.3977 },
+      { name: 'São Lourenço',     lat: 39.0120, lon: -9.4218 },
+      { name: 'Coxos',            lat: 39.0019, lon: -9.4275 },
+      { name: 'Cave',             lat: 38.9970, lon: -9.4265 },
+      { name: 'Ribeira D\'Ilhas', lat: 38.9878, lon: -9.4196 },
+      { name: 'Reef',             lat: 38.9824, lon: -9.4223 },
+      { name: 'Pedra Branca',     lat: 38.9793, lon: -9.4228 },
+      { name: 'Matadouro',        lat: 38.9759, lon: -9.4202 },
+      { name: 'Praia do Sul',     lat: 38.9592, lon: -9.4163 },
+      { name: 'Foz do Lizandro',  lat: 38.9421, lon: -9.4161 },
+      { name: 'São Julião',       lat: 38.9320, lon: -9.4197 },
+      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741 },
+      { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783 },
+      { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726 },
+      { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694 },
+      { name: 'Carcavelos',       lat: 38.6796, lon: -9.3359 },
+      { name: 'Parede',           lat: 38.6857, lon: -9.3538 },
+      { name: 'Praia de Torre',   lat: 38.6757, lon: -9.3230 },
+      { name: 'Santo Amaro',      lat: 38.6848, lon: -9.3121 },
+      { name: 'Paco de Arcos',    lat: 38.6905, lon: -9.2966 },
+      { name: 'Praia de Caxias',  lat: 38.6987, lon: -9.2792 },
+      { name: 'São João da Caparica', lat: 38.6562, lon: -9.2501 },
+      { name: 'Costa da Caparica', lat: 38.6449, lon: -9.2419 },
+      { name: 'Fonte da Telha',   lat: 38.5733, lon: -9.1969 },
+      { name: 'Bicas',            lat: 38.4637, lon: -9.1929 },
+      { name: 'Sesimbra',         lat: 38.4431, lon: -9.1052 },
     ];
 
+    var spotMarkers = [];
     SURF_SPOTS.forEach(function(spot, idx) {
       var spotIcon = L.divIcon({
         className: '',
-        html: '<div class="spot-marker"><div class="spot-dot"></div>'
-            + '<div class="spot-label">' + spot.name.toUpperCase() + '</div></div>',
+        html: '<div class="spot-marker"><div class="spot-dot" id="mapDot' + idx + '"></div>'
+            + '<div class="spot-label" id="mapLabel' + idx + '">' + spot.name.toUpperCase() + '</div></div>',
         iconSize: [80, 38], iconAnchor: [40, 7], popupAnchor: [0, -14],
       });
       var marker = L.marker([spot.lat, spot.lon], { icon: spotIcon, zIndexOffset: 200 }).addTo(map);
@@ -1118,6 +1132,7 @@
         marker.closePopup();
         selectSpot(idx);
       });
+      spotMarkers.push(marker);
     });
 
     var pinIcon = L.divIcon({
@@ -1137,7 +1152,7 @@
         mapCol.style.visibility = '';
         setTimeout(function() { map.invalidateSize(); }, 50);
       }
-      map.flyTo([spot.lat, spot.lon], 13, { duration: 0.9 });
+      map.flyTo([spot.lat, spot.lon], 14, { duration: 0.9 });
       placePin(spot.lat, spot.lon, spot.name);
       fetchForecast(spot.lat, spot.lon);
     }
@@ -1795,6 +1810,44 @@
       else if (ws < 60) return 'rgba(255,100,0,'  + alpha.toFixed(2) + ')';
       else              return 'rgba(255,30,30,'   + alpha.toFixed(2) + ')';
     }
+    /* Wind quality color — combines direction (windType) + speed
+       Purple=epic, Teal=great, Green=good, Yellow=ok, Orange=bad, Red=poor, DarkRed=unsurfable
+       windType: 'offshore'|'cross-off'|'cross'|'cross-on'|'onshore'
+       ws: wind speed in kph */
+    function windQualityColor(ws, windType, alpha) {
+      var a = alpha.toFixed(2);
+      /* Score matrix rows=windType, cols=speed band */
+      /* speed bands: calm<10, mid 10-25, strong>25 */
+      var calm   = ws < 10;
+      var mid    = ws >= 10 && ws < 25;
+      /* strong = ws >= 25 */
+      if (windType === 'offshore') {
+        if (calm) return 'rgba(123,47,190,'  + a + ')'; /* purple  */
+        if (mid)  return 'rgba(0,210,200,'   + a + ')'; /* teal    */
+        return          'rgba(0,180,80,'     + a + ')'; /* green   */
+      }
+      if (windType === 'cross-off') {
+        if (calm) return 'rgba(0,210,200,'   + a + ')'; /* teal    */
+        if (mid)  return 'rgba(0,180,80,'    + a + ')'; /* green   */
+        return          'rgba(230,200,0,'    + a + ')'; /* yellow  */
+      }
+      if (windType === 'cross') {
+        if (calm) return 'rgba(0,180,80,'    + a + ')'; /* green   */
+        if (mid)  return 'rgba(230,200,0,'   + a + ')'; /* yellow  */
+        return          'rgba(255,110,0,'    + a + ')'; /* orange  */
+      }
+      if (windType === 'cross-on') {
+        if (calm) return 'rgba(230,200,0,'   + a + ')'; /* yellow  */
+        if (mid)  return 'rgba(255,110,0,'   + a + ')'; /* orange  */
+        return          'rgba(220,30,30,'    + a + ')'; /* red     */
+      }
+      /* onshore */
+      if (calm) return   'rgba(255,110,0,'   + a + ')'; /* orange  */
+      if (mid)  return   'rgba(220,30,30,'   + a + ')'; /* red     */
+      return             'rgba(140,0,0,'     + a + ')'; /* darkred */
+    }
+    /* Global average wind quality color across all spots for main map */
+    var mapWnd_qualityColor = 'rgba(0,180,80,'; /* default green, updated after spot fetch */
 
     /* ═══════════════════════════════════════════════════════════
        WIND FLOW — Leaflet map + particle canvas overlay (Windy-style)
@@ -1830,7 +1883,7 @@
       mapEl.style.height = isMob ? '160px' : '200px';
       var spotLat = selLat || 39.3557, spotLon = selLon || -9.3814;
       windMapInst = L.map('wfMap', {
-        center: [spotLat, spotLon], zoom: 11,
+        center: [spotLat, spotLon], zoom: 14,
         zoomControl: false, scrollWheelZoom: false,
         dragging: false, touchZoom: false, doubleClickZoom: false,
         boxZoom: false, keyboard: false,
@@ -1854,36 +1907,40 @@
       drawWindFlowAxis(axCtx, wTimes, W, AH);
 
       var wf_currentWs = 0, wf_dxUnit = 0, wf_dyUnit = 1, wf_baseSpd = 1.5;
+      var wf_windType = 'cross'; /* updated per scrubber tick */
       function updateWindState(idx) {
         var ws = wsArr[idx] != null ? wsArr[idx] : 0;
         var wd = wdArr[idx] != null ? wdArr[idx] : 0;
         wf_currentWs = ws;
+        wf_windType  = getWindType(wd, selectedSpotName || '');
         var rad = wd * Math.PI / 180;
         wf_dxUnit  = -Math.sin(rad);
         wf_dyUnit  =  Math.cos(rad);
         wf_baseSpd = Math.max(1.5, (ws / 60) * 5.0);
-
+        var qualColor = windQualityColor(ws, wf_windType, 1.0);
         var compassDir = toCompass(wd);
         document.getElementById('wfMeta').textContent =
           compassDir + ' wind · ' + Math.round(ws) + ' km/h · spot view';
-
         /* Update frosted header bar */
         var hdrSpot = document.getElementById('wfSpotName');
         if (hdrSpot) hdrSpot.textContent = selectedSpotName || '—';
         var hdrSpd = document.getElementById('wfHeaderSpeed');
         if (hdrSpd) {
           hdrSpd.textContent = Math.round(ws) + ' km/h';
-          hdrSpd.style.color = windyColor(ws, 1.0);
+          hdrSpd.style.color = qualColor;
         }
         var hdrDir = document.getElementById('wfHeaderDir');
         if (hdrDir) hdrDir.textContent = compassDir;
-
         var t2 = new Date(wTimes[idx]);
         var lblEl = document.getElementById('wfScrubLabel');
         if (lblEl) {
           lblEl.textContent = DAYS[t2.getUTCDay()] + ' ' +
             String(t2.getUTCHours()).padStart(2, '0') + ':00';
+          lblEl.style.color = qualColor;
         }
+        /* Scrubber accent color matches quality */
+        var scrubEl = document.getElementById('wfScrubber');
+        if (scrubEl) scrubEl.style.accentColor = qualColor;
       }
 
       updateWindState(curHourIdx);
@@ -1918,39 +1975,34 @@
 
       var mainArea = 760 * 700;
       var wfArea   = PW * PH;
-      var N = Math.round(260 * (wfArea / mainArea));
-      N = Math.max(80, Math.min(N, 260));
+      var N = Math.round(320 * (wfArea / mainArea));
+      N = Math.max(100, Math.min(N, 320));
       var particles = [];
       for (var j = 0; j < N; j++) particles.push(spawnWF());
 
       function frame() {
         if (myToken !== windMapToken) return;
-
         var ws  = wf_currentWs;
         var dx  = wf_dxUnit;
         var dy  = wf_dyUnit;
         var spd = wf_baseSpd;
-
-        ctx.clearRect(0, 0, PW, PH);
-
+        /* destination-out fade: erases toward transparent so map tiles show through */
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = 'rgba(0,0,0,0.12)';
+        ctx.fillRect(0, 0, PW, PH);
+        ctx.globalCompositeOperation = 'source-over';
         particles.forEach(function(p, pi) {
-          /* Teardrop tail — 6px line behind particle in movement direction */
+          var life = 1 - Math.min(p.age / p.maxAge, 1);
+          var alpha = 0.12 + life * 0.7;
           ctx.beginPath();
-          ctx.moveTo(p.x - dx * 6, p.y - dy * 6);
+          ctx.moveTo(p.x, p.y);
+          p.x += dx * spd;
+          p.y += dy * spd;
           ctx.lineTo(p.x, p.y);
-          ctx.strokeStyle = windParticleColor(ws, 0.3);
-          ctx.lineWidth   = 2;
+          ctx.strokeStyle = windQualityColor(ws, wf_windType, alpha);
+          ctx.lineWidth   = 1.0 + life * 0.6;
           ctx.lineCap     = 'round';
           ctx.stroke();
-
-          /* Dot at full opacity */
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = windParticleColor(ws, 1.0);
-          ctx.fill();
-
-          p.x  += dx * spd;
-          p.y  += dy * spd;
           p.age++;
           if (p.x < 0) p.x += PW; if (p.x > PW) p.x -= PW;
           if (p.y < 0) p.y += PH; if (p.y > PH) p.y -= PH;
@@ -2252,7 +2304,7 @@
     ═══════════════════════════════════════════════════════════ */
     var mapWindAnimId  = null;
     var mapWindToken   = 0;
-    var mapWindResults = new Array(38).fill(null);
+    var mapWindResults = new Array(37).fill(null);
     var mapWindDone    = 0;
 
     /* Fallback defaults: 270°, 10 kph — matches updateWindState() formula */
@@ -2264,7 +2316,7 @@
     /* ── Swell canvas state ── */
     var mapSwellToken   = 0;
     var mapSwellAnimId  = null;
-    var mapSwellResults = new Array(38).fill(null); /* { wh, per, wd } per spot */
+    var mapSwellResults = new Array(37).fill(null); /* { wh, per, wd } per spot */
 
     var mapSwell_wh        = 1.2;
     var mapSwell_period    = 10;
@@ -2417,13 +2469,13 @@
         return {
           x: Math.random() * PW, y: Math.random() * PH,
           px: null, py: null,
-          age: Math.floor(Math.random() * 90),
-          maxAge: 90 + Math.floor(Math.random() * 130),
+          age: Math.floor(Math.random() * 100),
+          maxAge: 120 + Math.floor(Math.random() * 160),
         };
       }
 
       var isMobile = window.innerWidth <= 768;
-      var N = isMobile ? 80 : 260, particles = [];
+      var N = isMobile ? 150 : 400, particles = [];
       for (var j = 0; j < N; j++) particles.push(spawnMW());
       console.log('[mapWind] spawned', N, 'particles');
 
@@ -2432,35 +2484,30 @@
       /* ── Frame loop — exact port of renderWindFlow's frame() ── */
       function frame() {
         if (myToken !== mapWindToken) return; /* stale loop — stop */
-
-        /* setTransform each frame to survive canvas resize resets */
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        ctx.clearRect(0, 0, PW, PH);
-
+        /* Fade trails via destination-out: erases canvas pixels toward transparent
+           so the satellite map below stays visible at all times */
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.fillStyle = 'rgba(0,0,0,0.12)';
+        ctx.fillRect(0, 0, PW, PH);
+        ctx.globalCompositeOperation = 'source-over';
         particles.forEach(function(p, pi) {
-          /* Teardrop tail — 6px line behind particle in movement direction */
+          var life = 1 - Math.min(p.age / p.maxAge, 1);
+          var alpha = 0.12 + life * 0.7;
           ctx.beginPath();
-          ctx.moveTo(p.x - mapWnd_dxUnit * 6, p.y - mapWnd_dyUnit * 6);
+          ctx.moveTo(p.x, p.y);
+          p.x += mapWnd_dxUnit * mapWnd_baseSpd;
+          p.y += mapWnd_dyUnit * mapWnd_baseSpd;
           ctx.lineTo(p.x, p.y);
-          ctx.strokeStyle = windParticleColor(mapWnd_currentWs, 0.3);
-          ctx.lineWidth   = 2;
+          ctx.strokeStyle = mapWnd_qualityColor + alpha.toFixed(2) + ')';
+          ctx.lineWidth   = 1.0 + life * 0.6;
           ctx.lineCap     = 'round';
           ctx.stroke();
-
-          /* Dot at full opacity */
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2);
-          ctx.fillStyle = windParticleColor(mapWnd_currentWs, 1.0);
-          ctx.fill();
-
-          p.x  += mapWnd_dxUnit * mapWnd_baseSpd;
-          p.y  += mapWnd_dyUnit * mapWnd_baseSpd;
           p.age++;
           if (p.x < 0) p.x += PW; if (p.x > PW) p.x -= PW;
           if (p.y < 0) p.y += PH; if (p.y > PH) p.y -= PH;
           if (p.age >= p.maxAge) { particles[pi] = spawnMW(); }
         });
-
         mapWindAnimId = requestAnimationFrame(frame);
       }
 
@@ -2524,6 +2571,9 @@
       var ws = (windData.hourly.windspeed_10m    && windData.hourly.windspeed_10m[ci])    || 0;
       var wd = (windData.hourly.winddirection_10m && windData.hourly.winddirection_10m[ci]) || 0;
       setMapWindState(ws, wd);
+      /* Sync main map quality color to clicked spot */
+      var wt = getWindType(wd, selectedSpotName || '');
+      mapWnd_qualityColor = windQualityColor(ws, wt, 1.0).replace(/,[^,]+\)$/, ',');
     }
 
     /* Called once all landing-page spot fetches complete — uses average of all spots */
@@ -2537,6 +2587,26 @@
       var avgWd = Math.atan2(sinSum / n, cosSum / n) * 180 / Math.PI;
       if (avgWd < 0) avgWd += 360;
       setMapWindState(avgWs, avgWd);
+      /* Compute average wind quality color across all spots */
+      var qualScoreSum = 0, qn = 0;
+      mapWindResults.forEach(function(r, idx) {
+        if (!r) return;
+        var spotName = SURF_SPOTS[idx] ? SURF_SPOTS[idx].name : '';
+        var wt = getWindType(r.wd, spotName);
+        var wtScore = { 'offshore':2, 'cross-off':1, 'cross':0, 'cross-on':-1, 'onshore':-2 }[wt] || 0;
+        var wsScore = r.ws < 10 ? 1 : r.ws < 25 ? 0 : -1;
+        qualScoreSum += wtScore + wsScore;
+        qn++;
+      });
+      var avgQual = qn > 0 ? qualScoreSum / qn : 0;
+      /* Map avg score to color base string */
+      if      (avgQual >= 2.5)  mapWnd_qualityColor = 'rgba(123,47,190,';  /* purple  */
+      else if (avgQual >= 1.5)  mapWnd_qualityColor = 'rgba(0,210,200,';   /* teal    */
+      else if (avgQual >= 0.5)  mapWnd_qualityColor = 'rgba(0,180,80,';    /* green   */
+      else if (avgQual >= -0.5) mapWnd_qualityColor = 'rgba(230,200,0,';   /* yellow  */
+      else if (avgQual >= -1.5) mapWnd_qualityColor = 'rgba(255,110,0,';   /* orange  */
+      else if (avgQual >= -2.5) mapWnd_qualityColor = 'rgba(220,30,30,';   /* red     */
+      else                      mapWnd_qualityColor = 'rgba(140,0,0,';     /* darkred */
 
       /* Average swell state across all spots */
       var whSum = 0, perSum = 0, wdSinSum = 0, wdCosSum = 0, sn = 0;
@@ -2588,6 +2658,7 @@
         pane.appendChild(canvas);
       }
 
+      var mapDirty = false;
       function resetPosition() {
         var s      = map.getSize();
         var offset = map.containerPointToLayerPoint([0, 0]);
@@ -2601,7 +2672,13 @@
           PW = s.x; PH = s.y;
         }
       }
-      map.on('movestart move moveend viewreset', resetPosition);
+      map.on('movestart',  function() { mapDirty = true;  resetPosition(); });
+      map.on('move',       function() { resetPosition(); });
+      map.on('moveend viewreset', function() {
+        resetPosition();
+        /* Small delay so Leaflet fully settles before clip recalculates */
+        setTimeout(function() { mapDirty = false; }, 80);
+      });
       window.addEventListener('resize', function() {
         map.invalidateSize(); resetPosition();
       });
@@ -2641,6 +2718,13 @@
         swellOffset += speed;
         if (swellOffset >= spacing) swellOffset -= spacing;
         ctx.save();
+        /* ── Ocean-only clip: skip during pan/zoom to avoid misalignment ── */
+        if (mapDirty) {
+          /* During movement: clip to full canvas (no coastline punch-out) */
+          ctx.beginPath();
+          ctx.rect(0, 0, PW, PH);
+          ctx.clip();
+        } else {
         /* ── Ocean-only clip: OSM coastline (fallback: COAST_POLY) ──
            _osmCoast = array of ways [[lat,lng],...]
            Each way drawn as open polyline, closed via east border.
@@ -2679,6 +2763,7 @@
           ctx.closePath();
         }
         ctx.clip('evenodd');
+        } /* end !mapDirty clip block */
         for (var i = 0; i < nFronts; i++) {
           var dist = i * spacing - (nFronts * spacing / 2) + swellOffset;
           var ox = cx + dx * dist;
@@ -2871,7 +2956,6 @@
       'Pedra Branca':         'ERICEIRA',
       'Matadouro':            'ERICEIRA',
       'Praia do Sul':         'ERICEIRA',
-      'Praia da Baleia':      'ERICEIRA',
       'Foz do Lizandro':      'ERICEIRA',
       'São Julião':           'ERICEIRA',
       'Praia Pequena':        'SINTRA',
@@ -2891,7 +2975,7 @@
       'Sesimbra':             'CAPARICA'
     };
     var activeFilter = 'ALL';
-    var spotScores   = new Array(38).fill(-1); /* -1 = not yet loaded */
+    var spotScores   = new Array(37).fill(-1); /* -1 = not yet loaded */
     function updateBestCards() {
       /* Find best idx per region AND globally */
       var regionBest = {};
@@ -2908,6 +2992,23 @@
         c.classList.remove('sp-card--best');
       });
       document.querySelectorAll('.sp-best-badge').forEach(function(b) { b.remove(); });
+      /* Reset all map markers to default style */
+      SURF_SPOTS.forEach(function(spot, idx) {
+        var dot   = document.getElementById('mapDot'   + idx);
+        var label = document.getElementById('mapLabel' + idx);
+        if (dot)   dot.classList.remove('spot-dot--best');
+        if (label) label.classList.remove('spot-label--best');
+      });
+      /* Apply gold marker to best per region */
+      Object.keys(regionBest).forEach(function(region) {
+        if (region === 'ALL') return;
+        var rb = regionBest[region];
+        if (!rb || rb.score <= 0) return;
+        var dot   = document.getElementById('mapDot'   + rb.idx);
+        var label = document.getElementById('mapLabel' + rb.idx);
+        if (dot)   dot.classList.add('spot-dot--best');
+        if (label) label.classList.add('spot-label--best');
+      });
       var best = regionBest[activeFilter];
       if (!best || best.score <= 0) return;
       var card = document.querySelector('[data-spot-idx="' + best.idx + '"]');
