@@ -1394,18 +1394,19 @@
     function renderTides(data) {
       if (tideChartInst) { tideChartInst.destroy(); tideChartInst = null; }
 
-      var times = data.hourly.time;
-      var allH  = data.hourly.wave_height || [];
-      var today = new Date().toISOString().slice(0, 10);
-
-      /* ── Collect today's hourly data ── */
+      /* ── Synthetic semi-diurnal tides for Portuguese Atlantic coast ──
+         Open-Meteo has no tide data, so we model tides using M2 harmonic
+         constituent (period 12.42h). Phase shifts ~50 min/day.
+         Portugal: MSL ~2.0m, spring amplitude ~1.4m (range ~0-3.4m)       */
+      var now = new Date();
+      var dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / 86400000);
+      var phaseHr = (dayOfYear * 50 / 60) % 12.42; /* daily phase drift */
+      var msl = 2.0, amp = 1.4;
       var todayHourly = [];
-      times.forEach(function(t, i) {
-        if (!t.startsWith(today)) return;
-        var hr = new Date(t + 'Z').getUTCHours();
-        if (allH[i] != null) todayHourly.push({ hr: hr, h: allH[i] });
-      });
-      todayHourly.sort(function(a, b) { return a.hr - b.hr; });
+      for (var hr = 0; hr < 24; hr++) {
+        var h = msl + amp * Math.cos(2 * Math.PI * (hr - phaseHr) / 12.42);
+        todayHourly.push({ hr: hr, h: Math.max(0.1, parseFloat(h.toFixed(2)) ) });
+      }
 
       /* ── Current tide (linear interpolation from hourly points) ── */
       var nowHr   = new Date().getHours() + new Date().getMinutes() / 60;
