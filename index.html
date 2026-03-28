@@ -144,17 +144,24 @@
       position: relative;
       overflow: hidden;
       border-right: 1px solid rgba(123,47,190,0.18);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
     }
 
     .map-section {
-      height: 100%;
+      flex: 1;
+      min-height: 0;
       display: flex;
       flex-direction: column;
       position: relative;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 16px rgba(123,47,190,0.09);
     }
 
     .map-eyebrow {
-      padding: 0.58rem 2.4rem;
+      padding: 0.58rem 1.4rem;
       font-size: 0.5rem;
       letter-spacing: 0.28em;
       text-transform: uppercase;
@@ -169,6 +176,16 @@
     }
 
     .map-eyebrow .num { color: var(--accent); margin-right: 0.4em; }
+    #mapCamToggle { display: flex; gap: 3px; }
+    .map-cam-tab {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.42rem; font-weight: 700; letter-spacing: 0.14em;
+      padding: 3px 10px; border-radius: 20px; cursor: pointer;
+      border: 1px solid rgba(123,47,190,0.3);
+      background: transparent; color: rgba(0,0,0,0.45);
+      transition: background 0.15s, color 0.15s;
+    }
+    .map-cam-tab.active { background: #7B2FBE; color: #fff; border-color: #7B2FBE; }
 
     #map { flex: 1; min-height: 0; width: 100%; display: block; cursor: grab; }
 
@@ -794,7 +811,7 @@
   .site-spot { display: block; font-size: 0.55rem; letter-spacing: 0.14em; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .site-clock { font-size: 0.5rem; text-align: right; flex-shrink: 0; }
   .page-layout { grid-template-columns: 1fr !important; grid-template-rows: 42vh auto !important; overflow: visible; height: auto; }
-  .map-col { height: 42vh; border-right: none; border-bottom: 1px solid rgba(123,47,190,0.18); }
+  .map-col { height: 42vh; border-right: none; border-bottom: none; padding: 0.75rem 0.75rem 0; }
   .page-layout.landing-mode .map-col { position: fixed; left: -9999px; width: 100vw; height: 100vh; visibility: hidden; }
   .forecast-col { overflow-y: visible !important; height: auto !important; max-width: 100% !important; overflow-x: hidden !important; box-sizing: border-box !important; }
   .status-bar { position: sticky; top: 0; padding: 0.5rem 1rem; font-size: 0.48rem; }
@@ -861,7 +878,7 @@
     </div>
     <button class="map-btn" id="mapBtn" onclick="toggleMapMode()">Map</button>
     <div class="site-spot hidden" id="siteSpot"></div>
-    <div class="site-clock" id="clock">——:——:—— UTC</div>
+    <div class="site-clock" id="clock">——:—���:—— UTC</div>
   </header>
 
   <div class="page-layout landing-mode" id="pageLayout">
@@ -872,8 +889,22 @@
         <div class="map-eyebrow">
           <span><span class="num">38</span> surf spots — click a marker to load forecast</span>
           <span id="mapCoordLabel"></span>
+          <div id="mapCamToggle" style="display:none;">
+            <button class="map-cam-tab active" id="tabMap" onclick="switchMapCam('map')">MAP</button>
+            <button class="map-cam-tab" id="tabCam" onclick="switchMapCam('cam')">LIVE CAM</button>
+          </div>
         </div>
-        <div id="map" style="position:relative;"></div>
+        <div style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;">
+        <div id="map" style="flex:1;min-height:0;"></div>
+        <div id="camView" style="display:none;position:absolute;inset:0;background:#000;z-index:10;">
+          <video id="mapCamVideo" autoplay muted playsinline controls style="width:100%;height:100%;object-fit:cover;"></video>
+          <div id="mapCamError" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:0.6rem;background:#0d0618;">
+            <span style="font-size:2rem;">📡</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.5);letter-spacing:0.12em;">STREAM UNAVAILABLE</span>
+            <span style="font-family:'DM Mono',monospace;font-size:0.45rem;color:rgba(255,255,255,0.3);">CORS or stream offline</span>
+          </div>
+        </div>
+        </div><!-- /.map-cam-wrapper -->
 <div class="bottom-sheet hidden" id="bottomSheet">
           <div class="bs-spot" id="bsSpot"></div>
           <div class="bs-wave-row"><span class="bs-wave" id="bsWave">0.0</span><span class="bs-unit">m</span></div>
@@ -1192,6 +1223,58 @@
       map.flyTo([spot.lat, spot.lon], 14, { duration: 0.9 });
       placePin(spot.lat, spot.lon, spot.name);
       fetchForecast(spot.lat, spot.lon);
+      /* Show cam toggle only for spots with a live cam */
+      var toggle = document.getElementById('mapCamToggle');
+      if (spot.camUrl) {
+        toggle.style.display = 'flex';
+      } else {
+        toggle.style.display = 'none';
+        switchMapCam('map');
+      }
+    }
+
+    var _mapCamHls = null;
+    function switchMapCam(mode) {
+      var mapEl  = document.getElementById('map');
+      var camEl  = document.getElementById('camView');
+      var video  = document.getElementById('mapCamVideo');
+      var errEl  = document.getElementById('mapCamError');
+      var tabMap = document.getElementById('tabMap');
+      var tabCam = document.getElementById('tabCam');
+      if (mode === 'cam') {
+        var selSpot = null;
+        SURF_SPOTS.forEach(function(s) { if (s.name === selectedSpotName) selSpot = s; });
+        if (!selSpot || !selSpot.camUrl) return;
+        mapEl.style.display = 'none';
+        camEl.style.display = 'block';
+        errEl.style.display = 'none';
+        video.style.display = 'block';
+        tabMap.classList.remove('active');
+        tabCam.classList.add('active');
+        if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
+        if (Hls.isSupported()) {
+          _mapCamHls = new Hls();
+          _mapCamHls.loadSource(selSpot.camUrl);
+          _mapCamHls.attachMedia(video);
+          _mapCamHls.on(Hls.Events.ERROR, function(e, data) {
+            if (data.fatal) { errEl.style.display = 'flex'; video.style.display = 'none'; }
+          });
+          video.play().catch(function() {});
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = selSpot.camUrl;
+          video.play().catch(function() {});
+        } else {
+          errEl.style.display = 'flex'; video.style.display = 'none';
+        }
+      } else {
+        camEl.style.display = 'none';
+        mapEl.style.display = 'block';
+        tabMap.classList.add('active');
+        tabCam.classList.remove('active');
+        video.pause(); video.src = '';
+        if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
+        setTimeout(function() { map.invalidateSize(); }, 50);
+      }
     }
 
     function placePin(lat, lon, spotName) {
