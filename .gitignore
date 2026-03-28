@@ -1,0 +1,23 @@
+CLAUDE.md
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# SSH keys (just in case)
+*.pub
+id_ed25519
+id_rsa
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local
