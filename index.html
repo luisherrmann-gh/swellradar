@@ -436,6 +436,21 @@
     .sp-conditions small { display: block; font-size: 0.42rem; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; margin-top: 1px; }
     .sp-arrow-big { font-size: 1.1rem; color: rgba(255,255,255,0.5); transition: transform 0.16s ease; line-height: 1; flex-shrink: 0; }
     .sp-card:hover .sp-arrow-big { transform: translateX(6px); }
+    .sp-cam-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      margin-top: 0.5rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.42rem; font-weight: 700; letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px;
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: background 0.15s;
+      position: relative; z-index: 2;
+    }
+    .sp-cam-btn:hover { background: rgba(123,47,190,0.45); border-color: rgba(123,47,190,0.6); color: #fff; }
 
     /* ═══ FORECAST SECTION ══════════════════════════════════════ */
     #forecastSection { padding: 0.5rem 0 2rem; max-width: 100%; overflow-x: hidden; box-sizing: border-box; }
@@ -891,6 +906,27 @@
         <div class="sp-cards" id="spCardsContainer"></div>
       </div>
 
+      <!-- Cam Modal -->
+      <div id="camModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;">
+        <div style="position:relative;width:min(720px,96vw);background:#0d0618;border-radius:14px;overflow:hidden;border:1px solid rgba(123,47,190,0.4);">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:0.7rem 1rem;border-bottom:1px solid rgba(123,47,190,0.2);">
+            <span id="camModalTitle" style="font-family:'Plus Jakarta Sans',sans-serif;font-size:0.75rem;font-weight:700;letter-spacing:0.12em;color:#fff;text-transform:uppercase;"></span>
+            <div style="display:flex;gap:0.5rem;align-items:center;">
+              <span style="font-size:0.42rem;letter-spacing:0.14em;color:#ff4444;font-family:'DM Mono',monospace;animation:firingPulse 1.1s ease-in-out infinite;">● LIVE</span>
+              <button onclick="closeCamModal()" style="background:none;border:none;color:rgba(255,255,255,0.6);font-size:1.2rem;cursor:pointer;padding:0 0.2rem;line-height:1;">&times;</button>
+            </div>
+          </div>
+          <div style="position:relative;padding-top:56.25%;background:#000;">
+            <video id="camVideo" autoplay muted playsinline controls style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"></video>
+            <div id="camError" style="display:none;position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:0.5rem;">
+              <span style="font-size:1.5rem;">📡</span>
+              <span style="font-family:'DM Mono',monospace;font-size:0.55rem;color:rgba(255,255,255,0.5);letter-spacing:0.1em;">STREAM UNAVAILABLE</span>
+              <span style="font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(255,255,255,0.3);">CORS or stream offline</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Forecast (hidden until loaded) -->
       <section id="forecastSection" class="hidden">
 
@@ -1008,6 +1044,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.js"></script>
 
   <script>
     'use strict';
@@ -1101,7 +1138,7 @@
       { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783 },
       { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726 },
       { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694 },
-      { name: 'Carcavelosss',       lat: 38.6796, lon: -9.3359 },
+      { name: 'Carcavelos',         lat: 38.6796, lon: -9.3359, camUrl: 'https://video-auth1.iol.pt/beachcam/carcavelos/chunks.m3u8' },
       { name: 'Parede',           lat: 38.6857, lon: -9.3538 },
       { name: 'Praia de Torre',   lat: 38.6757, lon: -9.3230 },
       { name: 'Santo Amaro',      lat: 38.6848, lon: -9.3121 },
@@ -2174,7 +2211,7 @@
       SURF_SPOTS.forEach(function(spot, idx) {
         var mUrl = 'https://marine-api.open-meteo.com/v1/marine'
           + '?latitude=' + spot.lat + '&longitude=' + spot.lon
-          + '&hourly=wave_height,wave_period,wave_direction&forecast_days=1';
+          + '&hourly=wave_height,wave_period,wave_direction,swell_wave_height&forecast_days=1';
         var wUrl = 'https://api.open-meteo.com/v1/forecast'
           + '?latitude=' + spot.lat + '&longitude=' + spot.lon
           + '&hourly=windspeed_10m,winddirection_10m&forecast_days=1';
@@ -2200,6 +2237,7 @@
 
           var wh     = marine.hourly.wave_height && marine.hourly.wave_height[ci2];
           var period = marine.hourly.wave_period && marine.hourly.wave_period[ci2];
+          var swellH = marine.hourly.swell_wave_height && marine.hourly.swell_wave_height[ci2];
           var ws     = null, wd = null;
 
           if (wind && wind.hourly && wind.hourly.time) {
@@ -2212,7 +2250,7 @@
             wd = wind.hourly.winddirection_10m && wind.hourly.winddirection_10m[wi2];
           }
 
-          updateSpotCardConditions(idx, wh, period, ws, wd);
+          updateSpotCardConditions(idx, wh, period, ws, wd, swellH);
 
           /* Set swell state for map animation */
           var wd_swell = marine.hourly.wave_direction && marine.hourly.wave_direction[ci2];
@@ -2227,7 +2265,7 @@
       });
     }
 
-    function updateSpotCardConditions(idx, wh, period, ws, wd) {
+    function updateSpotCardConditions(idx, wh, period, ws, wd, swellH) {
       var qualEl    = document.getElementById('spQuality'    + idx);
       var condEl    = document.getElementById('spConditions' + idx);
       var fireEl    = document.getElementById('spFiring'     + idx);
@@ -2255,7 +2293,8 @@
       /* Conditions text */
       if (condEl) {
         if (wh != null) {
-          var parts = [wh.toFixed(1) + 'm'];
+          var parts = [wh.toFixed(1) + 'm wave'];
+          if (swellH != null) parts.push(swellH.toFixed(1) + 'm swell');
           if (period != null) parts.push(period.toFixed(0) + 's period');
           if (ws     != null) parts.push(Math.round(ws) + ' kph wind');
           condEl.innerHTML = parts.join(' · ') + '<small>current conditions</small>';
@@ -2933,6 +2972,48 @@
       });
     })();
 
+    /* ─── Cam Modal ─────────────────────────────────────────── */
+    var _camHls = null;
+    function openCamModal(idx) {
+      var spot = SURF_SPOTS[idx];
+      if (!spot || !spot.camUrl) return;
+      var modal = document.getElementById('camModal');
+      var video = document.getElementById('camVideo');
+      var errEl = document.getElementById('camError');
+      var title = document.getElementById('camModalTitle');
+      title.textContent = spot.name + ' — Live Cam';
+      errEl.style.display = 'none';
+      modal.style.display = 'flex';
+      if (_camHls) { _camHls.destroy(); _camHls = null; }
+      if (Hls.isSupported()) {
+        _camHls = new Hls();
+        _camHls.loadSource(spot.camUrl);
+        _camHls.attachMedia(video);
+        _camHls.on(Hls.Events.ERROR, function(e, data) {
+          if (data.fatal) { errEl.style.display = 'flex'; video.style.display = 'none'; }
+        });
+        video.style.display = 'block';
+        video.play().catch(function() {});
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = spot.camUrl;
+        video.style.display = 'block';
+        video.play().catch(function() {});
+      } else {
+        errEl.style.display = 'flex';
+      }
+    }
+    function closeCamModal() {
+      var modal = document.getElementById('camModal');
+      var video = document.getElementById('camVideo');
+      modal.style.display = 'none';
+      video.pause();
+      video.src = '';
+      if (_camHls) { _camHls.destroy(); _camHls = null; }
+    }
+    document.getElementById('camModal').addEventListener('click', function(e) {
+      if (e.target === this) closeCamModal();
+    });
+
     /* ─── Init ──────────────────────────────────────────────── */
     fetchSpotConditions();
     /* ─── Region mapping ─── */
@@ -3080,6 +3161,7 @@
           + '</div></div>'
           + '<div><div class="sp-name">' + spot.name + '</div>'
           + '<div class="sp-coords">' + latStr + '</div></div>'
+          + (spot.camUrl ? '<button class="sp-cam-btn" onclick="event.stopPropagation();openCamModal(' + idx + ')">&#128247; LIVE CAM</button>' : '')
           + '<div class="sp-card-bottom">'
           + '<div class="sp-conditions" id="spConditions' + idx + '"><small>Fetching conditions…</small></div>'
           + '<span class="sp-arrow-big">→</span></div>'
