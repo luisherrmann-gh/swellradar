@@ -89,7 +89,7 @@
       { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783 },
       { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726 },
       { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694 },
-      { name: 'Carcavelosss',       lat: 38.6796, lon: -9.3359 },
+      { name: 'Carcavelos',         lat: 38.6796, lon: -9.3359, camUrl: 'https://video-auth1.iol.pt/beachcam/carcavelos/chunks.m3u8' },
       { name: 'Parede',           lat: 38.6857, lon: -9.3538 },
       { name: 'Praia de Torre',   lat: 38.6757, lon: -9.3230 },
       { name: 'Santo Amaro',      lat: 38.6848, lon: -9.3121 },
@@ -143,7 +143,99 @@
       map.flyTo([spot.lat, spot.lon], 14, { duration: 0.9 });
       placePin(spot.lat, spot.lon, spot.name);
       fetchForecast(spot.lat, spot.lon);
+      /* Show cam toggle only for spots with a live cam */
+      var toggle = document.getElementById('mapCamToggle');
+      if (spot.camUrl) {
+        toggle.style.display = 'flex';
+      } else {
+        toggle.style.display = 'none';
+        switchMapCam('map');
+      }
     }
+
+    var _mapCamHls = null;
+    function switchMapCam(mode) {
+      var mapEl  = document.getElementById('map');
+      var camEl  = document.getElementById('camView');
+      var video  = document.getElementById('mapCamVideo');
+      var errEl  = document.getElementById('mapCamError');
+      var tabMap = document.getElementById('tabMap');
+      var tabCam = document.getElementById('tabCam');
+      if (mode === 'cam') {
+        var selSpot = null;
+        SURF_SPOTS.forEach(function(s) { if (s.name === selectedSpotName) selSpot = s; });
+        if (!selSpot || !selSpot.camUrl) return;
+        mapEl.style.display = 'none';
+        camEl.style.display = 'block';
+        errEl.style.display = 'none';
+        video.style.display = 'block';
+        tabMap.classList.remove('active');
+        tabCam.classList.add('active');
+        if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
+        if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+          _mapCamHls = new Hls();
+          _mapCamHls.loadSource(selSpot.camUrl);
+          _mapCamHls.attachMedia(video);
+          _mapCamHls.on(Hls.Events.ERROR, function(e, data) {
+            if (data.fatal) { errEl.style.display = 'flex'; video.style.display = 'none'; }
+          });
+          video.play().catch(function() {});
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = selSpot.camUrl;
+          video.play().catch(function() {});
+        } else {
+          errEl.style.display = 'flex'; video.style.display = 'none';
+        }
+      } else {
+        camEl.style.display = 'none';
+        mapEl.style.display = 'block';
+        tabMap.classList.add('active');
+        tabCam.classList.remove('active');
+        video.pause(); video.src = '';
+        if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
+        setTimeout(function() { map.invalidateSize(); }, 50);
+      }
+    }
+
+    var _camHls = null;
+    function openCamModal(idx) {
+      var spot = SURF_SPOTS[idx];
+      if (!spot || !spot.camUrl) return;
+      var modal = document.getElementById('camModal');
+      var video = document.getElementById('camVideo');
+      var errEl = document.getElementById('camError');
+      var title = document.getElementById('camModalTitle');
+      title.textContent = spot.name + ' — Live Cam';
+      errEl.style.display = 'none';
+      modal.style.display = 'flex';
+      if (_camHls) { _camHls.destroy(); _camHls = null; }
+      if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        _camHls = new Hls();
+        _camHls.loadSource(spot.camUrl);
+        _camHls.attachMedia(video);
+        _camHls.on(Hls.Events.ERROR, function(e, data) {
+          if (data.fatal) { errEl.style.display = 'flex'; video.style.display = 'none'; }
+        });
+        video.style.display = 'block';
+        video.play().catch(function() {});
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = spot.camUrl;
+        video.style.display = 'block';
+        video.play().catch(function() {});
+      } else {
+        errEl.style.display = 'flex';
+      }
+    }
+    function closeCamModal() {
+      var modal = document.getElementById('camModal');
+      var video = document.getElementById('camVideo');
+      modal.style.display = 'none';
+      video.pause(); video.src = '';
+      if (_camHls) { _camHls.destroy(); _camHls = null; }
+    }
+    document.getElementById('camModal').addEventListener('click', function(e) {
+      if (e.target === this) closeCamModal();
+    });
 
     function placePin(lat, lon, spotName) {
       selLat = lat; selLon = lon;
@@ -1244,7 +1336,8 @@
       /* Conditions text */
       if (condEl) {
         if (wh != null) {
-          var parts = [wh.toFixed(1) + 'm'];
+          var parts = [wh.toFixed(1) + 'm wave'];
+          if (swellH != null) parts.push(swellH.toFixed(1) + 'm swell');
           if (period != null) parts.push(period.toFixed(0) + 's period');
           if (ws     != null) parts.push(Math.round(ws) + ' kph wind');
           condEl.innerHTML = parts.join(' · ') + '<small>current conditions</small>';
@@ -2069,6 +2162,7 @@
           + '</div></div>'
           + '<div><div class="sp-name">' + spot.name + '</div>'
           + '<div class="sp-coords">' + latStr + '</div></div>'
+          + (spot.camUrl ? '<button class="sp-cam-btn" onclick="event.stopPropagation();openCamModal(' + idx + ')">&#128247; LIVE CAM</button>' : '')
           + '<div class="sp-card-bottom">'
           + '<div class="sp-conditions" id="spConditions' + idx + '"><small>Fetching conditions…</small></div>'
           + '<span class="sp-arrow-big">→</span></div>'
