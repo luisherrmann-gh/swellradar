@@ -296,6 +296,8 @@
         mapModeActive = true;
         btn.classList.add('active');
         btn.textContent = 'Close';
+        /* If cam view is active, restore map first so #map is visible */
+        switchMapCam('map');
         /* Remove landing-mode so map-col CSS becomes visible, add map-mode */
         layout.classList.remove('landing-mode');
         document.body.classList.remove('landing-mode');
@@ -318,6 +320,24 @@
       if (windFlowAnimId) { cancelAnimationFrame(windFlowAnimId); windFlowAnimId = null; }
       windMapToken++; /* invalidate any pending setTimeout in renderWindFlow */
       if (windMapInst) { windMapInst.remove(); windMapInst = null; }
+
+      /* Reset cam state — switchMapCam('cam') hides #map and shows #camView with inline
+         styles. goHome must undo this so map.flyTo() can run on a visible element. */
+      var mapEl2  = document.getElementById('map');
+      var camEl2  = document.getElementById('camView');
+      var camVid2 = document.getElementById('mapCamVideo');
+      if (mapEl2)  mapEl2.style.display  = '';
+      if (camEl2)  camEl2.style.display  = '';
+      if (camVid2) { camVid2.pause(); camVid2.src = ''; }
+      if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
+      var eggImg = camEl2 && camEl2.querySelector('.cam-easter-img');
+      if (eggImg) eggImg.remove();
+      var tabMap2 = document.getElementById('tabMap');
+      var tabCam2 = document.getElementById('tabCam');
+      if (tabMap2) tabMap2.classList.add('active');
+      if (tabCam2) tabCam2.classList.remove('active');
+      var toggle2 = document.getElementById('mapCamToggle');
+      if (toggle2) toggle2.style.display = 'none';
 
       /* Restore landing layout — remove map-mode first, then add landing-mode */
       var layout = document.getElementById('pageLayout');
