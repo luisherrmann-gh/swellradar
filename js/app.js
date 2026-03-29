@@ -2311,7 +2311,7 @@
       'Santo Amaro':          'LISBON',
       'Paco de Arcos':        'LISBON',
       'Praia de Caxias':      'LISBON',
-      'Carcavelosss':           'LISBON',
+      'Carcavelos':             'LISBON',
       'São João da Caparica': 'CAPARICA',
       'Costa da Caparica':    'CAPARICA',
       'Fonte da Telha':       'CAPARICA',
@@ -2436,4 +2436,48 @@
         container.appendChild(card);
       });
     })();
+
+    /* ─── Spot Search ───────────────────────────────────────── */
+    function toggleSearch() {
+      var overlay = document.getElementById('searchOverlay');
+      if (overlay.style.display === 'none') {
+        overlay.style.display = 'block';
+        var inp = document.getElementById('searchInput');
+        inp.value = '';
+        filterSearchResults('');
+        setTimeout(function() { inp.focus(); }, 60);
+      } else {
+        closeSearch();
+      }
+    }
+
+    function closeSearch() {
+      document.getElementById('searchOverlay').style.display = 'none';
+    }
+
+    function filterSearchResults(query) {
+      var list = document.getElementById('searchResults');
+      var q = query.trim().toLowerCase();
+      var matches = q === ''
+        ? SURF_SPOTS.slice(0, 20)
+        : SURF_SPOTS.filter(function(s) { return s.name.toLowerCase().indexOf(q) !== -1; });
+
+      list.innerHTML = matches.length === 0
+        ? '<div style="padding:0.7rem 1rem;font-family:\'DM Mono\',monospace;font-size:0.6rem;color:rgba(30,10,60,0.4);letter-spacing:0.08em;">No spots found</div>'
+        : matches.map(function(s) {
+            var idx = SURF_SPOTS.indexOf(s);
+            var region = SPOT_REGION[s.name] || '';
+            return '<div onclick="pickSearchSpot(' + idx + ')" style="display:flex;justify-content:space-between;align-items:center;padding:0.52rem 1rem;cursor:pointer;transition:background 0.1s;" onmouseover="this.style.background=\'rgba(123,47,190,0.07)\'" onmouseout="this.style.background=\'\'"><span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.75rem;font-weight:700;color:#1a0a2e;letter-spacing:0.04em;">' + s.name + '</span><span style="font-family:\'DM Mono\',monospace;font-size:0.55rem;color:rgba(30,10,60,0.4);letter-spacing:0.08em;">' + region + '</span></div>';
+          }).join('');
+    }
+
+    function pickSearchSpot(idx) {
+      closeSearch();
+      selectSpot(idx);
+    }
+
+    /* Close search on Escape */
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeSearch();
+    });
 
