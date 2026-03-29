@@ -596,22 +596,22 @@
           labels: hrLabels,
           datasets: [{
             data: hValues,
-            borderColor: '#7B2FBE',
+            borderColor: '#5E60CE',
             borderWidth: 2,
             fill: true,
             backgroundColor: function(context) {
               var ch = context.chart, ca = ch.chartArea;
-              if (!ca) return 'rgba(123,47,190,0.08)';
+              if (!ca) return 'rgba(94,96,206,0.08)';
               var g = ch.ctx.createLinearGradient(0, ca.top, 0, ca.bottom);
-              g.addColorStop(0, 'rgba(123,47,190,0.12)');
-              g.addColorStop(1, 'rgba(123,47,190,0.03)');
+              g.addColorStop(0, 'rgba(94,96,206,0.12)');
+              g.addColorStop(1, 'rgba(94,96,206,0.03)');
               return g;
             },
             tension: 0.4,
             pointRadius: 0,
             pointHoverRadius: 5,
             pointHoverBackgroundColor: '#ffffff',
-            pointHoverBorderColor: '#7B2FBE',
+            pointHoverBorderColor: '#5E60CE',
             pointHoverBorderWidth: 2,
           }]
         },
@@ -668,7 +668,7 @@
               if (nowX < ca.left || nowX > ca.right) return;
               ctx2.save();
               ctx2.setLineDash([4, 4]);
-              ctx2.strokeStyle = 'rgba(123,47,190,0.5)'; ctx2.lineWidth = 1;
+              ctx2.strokeStyle = 'rgba(94,96,206,0.5)'; ctx2.lineWidth = 1;
               ctx2.beginPath(); ctx2.moveTo(nowX, ca.top); ctx2.lineTo(nowX, ca.bottom); ctx2.stroke();
               ctx2.setLineDash([]);
               /* Pill */
@@ -677,7 +677,7 @@
               ctx2.textAlign = 'center';
               var tw = ctx2.measureText(txt).width, pw = tw + 14, ph = 16, r = 8;
               var bx = nowX - pw / 2, by = ca.top - ph - 6;
-              ctx2.fillStyle = '#7B2FBE';
+              ctx2.fillStyle = '#5E60CE';
               ctx2.beginPath();
               ctx2.moveTo(bx + r, by); ctx2.lineTo(bx + pw - r, by);
               ctx2.quadraticCurveTo(bx + pw, by,      bx + pw, by + r);
@@ -691,7 +691,7 @@
               ctx2.fillStyle = '#ffffff'; ctx2.textBaseline = 'middle';
               ctx2.fillText(txt, nowX, by + ph / 2);
               ctx2.font = '7px "DM Mono", monospace';
-              ctx2.fillStyle = 'rgba(123,47,190,0.65)'; ctx2.textBaseline = 'bottom';
+              ctx2.fillStyle = 'rgba(94,96,206,0.65)'; ctx2.textBaseline = 'bottom';
               ctx2.fillText('NOW', nowX, ca.top - 2);
               ctx2.restore();
             },
@@ -772,7 +772,7 @@
               ctx2.arc(hx, dotY, 4, 0, Math.PI * 2);
               ctx2.fillStyle = '#ffffff';
               ctx2.fill();
-              ctx2.strokeStyle = '#7B2FBE';
+              ctx2.strokeStyle = '#5E60CE';
               ctx2.lineWidth = 2;
               ctx2.stroke();
               /* Pill label: "3:30pm  1.8m" */
@@ -936,7 +936,7 @@
           if (nowX >= ca.left && nowX <= ca.right) {
             ctx2.save();
             ctx2.setLineDash([4, 4]);
-            ctx2.strokeStyle = 'rgba(123,47,190,0.45)';
+            ctx2.strokeStyle = 'rgba(94,96,206,0.45)';
             ctx2.lineWidth = 1;
             ctx2.beginPath(); ctx2.moveTo(nowX, ca.top); ctx2.lineTo(nowX, ca.bottom); ctx2.stroke();
             ctx2.setLineDash([]);
@@ -947,7 +947,7 @@
               ctx2.textAlign = 'center';
               var tw = ctx2.measureText(txt).width, pw = tw + 14, ph = 16, r = 8;
               var bx = nowX - pw / 2, by = ca.top - ph - 6;
-              ctx2.fillStyle = '#7B2FBE';
+              ctx2.fillStyle = '#5E60CE';
               ctx2.beginPath();
               ctx2.moveTo(bx+r,by); ctx2.lineTo(bx+pw-r,by);
               ctx2.quadraticCurveTo(bx+pw,by,bx+pw,by+r);
@@ -960,7 +960,7 @@
               ctx2.fillStyle = '#fff'; ctx2.textBaseline = 'middle';
               ctx2.fillText(txt, nowX, by + ph / 2);
               ctx2.font = '7px "DM Mono", monospace';
-              ctx2.fillStyle = 'rgba(123,47,190,0.65)'; ctx2.textBaseline = 'bottom';
+              ctx2.fillStyle = 'rgba(94,96,206,0.65)'; ctx2.textBaseline = 'bottom';
               ctx2.fillText('NOW', nowX, ca.top - 2);
             }
             ctx2.restore();
@@ -986,7 +986,7 @@
             var dotY = ys.getPixelForValue(hVal);
             ctx2.beginPath(); ctx2.arc(hxSnapped, dotY, 4, 0, Math.PI * 2);
             ctx2.fillStyle = '#fff'; ctx2.fill();
-            ctx2.strokeStyle = '#7B2FBE'; ctx2.lineWidth = 2; ctx2.stroke();
+            ctx2.strokeStyle = '#5E60CE'; ctx2.lineWidth = 2; ctx2.stroke();
 
             var d = new Date(times[hIdx]);
             var z = function(v) { return String(v).padStart(2, '0'); };
@@ -1025,7 +1025,7 @@
       var ctx2 = document.getElementById('waveChart').getContext('2d');
       if (chartInst) { chartInst.destroy(); chartInst = null; }
       var grad = ctx2.createLinearGradient(0, 0, 0, 260);
-      grad.addColorStop(0, 'rgba(123,47,190,0.22)'); grad.addColorStop(1, 'rgba(123,47,190,0)');
+      grad.addColorStop(0, 'rgba(94,96,206,0.22)'); grad.addColorStop(1, 'rgba(94,96,206,0)');
       /* ── Find NOW index ── */
       var nowMs2 = Date.now();
       var nowIdx2 = 0, minD2 = Infinity;
@@ -1033,7 +1033,7 @@
 
       chartInst = new Chart(ctx2, {
         type: 'line',
-        data: { labels: labels, datasets: [{ data: hData, borderColor: '#7B2FBE', borderWidth: 2, backgroundColor: grad, fill: true, pointRadius: 0, pointHoverRadius: 5, pointHoverBackgroundColor: '#7B2FBE', pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2, tension: 0.35, spanGaps: true }] },
+        data: { labels: labels, datasets: [{ data: hData, borderColor: '#5E60CE', borderWidth: 2, backgroundColor: grad, fill: true, pointRadius: 0, pointHoverRadius: 5, pointHoverBackgroundColor: '#5E60CE', pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2, tension: 0.35, spanGaps: true }] },
         options: {
           responsive: true, maintainAspectRatio: false,
           layout: { padding: { top: 52 } },
@@ -1066,9 +1066,9 @@
       var ctx2 = document.getElementById('windChart').getContext('2d');
       if (windChartInst) { windChartInst.destroy(); windChartInst = null; }
       var grad = ctx2.createLinearGradient(0, 0, 0, 260);
-      grad.addColorStop(0, 'rgba(123,47,190,0.18)'); grad.addColorStop(1, 'rgba(123,47,190,0)');
-      var datasets = [{ label: 'Wind Speed', data: wsData, borderColor: '#7B2FBE', borderWidth: 2, backgroundColor: grad, fill: true, pointRadius: 0, pointHoverRadius: 4, pointHoverBackgroundColor: '#7B2FBE', pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2, tension: 0.35, spanGaps: true, order: 2 }];
-      if (hasGusts) datasets.push({ label: 'Gusts', data: wgData, borderColor: 'rgba(30,10,60,0.22)', borderWidth: 1.5, borderDash: [5, 4], backgroundColor: 'transparent', fill: false, pointRadius: 0, pointHoverRadius: 3, tension: 0.35, spanGaps: true, order: 1 });
+      grad.addColorStop(0, 'rgba(94,96,206,0.18)'); grad.addColorStop(1, 'rgba(94,96,206,0)');
+      var datasets = [{ label: 'Wind Speed', data: wsData, borderColor: '#5E60CE', borderWidth: 2, backgroundColor: grad, fill: true, pointRadius: 0, pointHoverRadius: 4, pointHoverBackgroundColor: '#5E60CE', pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2, tension: 0.35, spanGaps: true, order: 2 }];
+      if (hasGusts) datasets.push({ label: 'Gusts', data: wgData, borderColor: 'rgba(116,0,184,0.22)', borderWidth: 1.5, borderDash: [5, 4], backgroundColor: 'transparent', fill: false, pointRadius: 0, pointHoverRadius: 3, tension: 0.35, spanGaps: true, order: 1 });
       /* ── Find NOW index ── */
       var nowMsW = Date.now();
       var nowIdxW = 0, minDW = Infinity;
@@ -2402,7 +2402,7 @@
       var container = document.getElementById('spCardsContainer');
       if (!container) return;
       var gradients = [
-        'linear-gradient(140deg, #1a0a2e 0%, #7B2FBE 45%, #0d0618 100%)',
+        'linear-gradient(140deg, #7400B8 0%, #5E60CE 45%, #7400B8 100%)',
       ];
       SURF_SPOTS.forEach(function(spot, idx) {
         var grad = gradients[idx % gradients.length];
@@ -2463,11 +2463,11 @@
         : SURF_SPOTS.filter(function(s) { return s.name.toLowerCase().indexOf(q) !== -1; });
 
       list.innerHTML = matches.length === 0
-        ? '<div style="padding:0.7rem 1rem;font-family:\'DM Mono\',monospace;font-size:0.6rem;color:rgba(30,10,60,0.4);letter-spacing:0.08em;">No spots found</div>'
+        ? '<div style="padding:0.7rem 1rem;font-family:\'DM Mono\',monospace;font-size:0.6rem;color:rgba(116,0,184,0.4);letter-spacing:0.08em;">No spots found</div>'
         : matches.map(function(s) {
             var idx = SURF_SPOTS.indexOf(s);
             var region = SPOT_REGION[s.name] || '';
-            return '<div onclick="pickSearchSpot(' + idx + ')" style="display:flex;justify-content:space-between;align-items:center;padding:0.52rem 1rem;cursor:pointer;transition:background 0.1s;" onmouseover="this.style.background=\'rgba(123,47,190,0.07)\'" onmouseout="this.style.background=\'\'"><span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.75rem;font-weight:700;color:#1a0a2e;letter-spacing:0.04em;">' + s.name + '</span><span style="font-family:\'DM Mono\',monospace;font-size:0.55rem;color:rgba(30,10,60,0.4);letter-spacing:0.08em;">' + region + '</span></div>';
+            return '<div onclick="pickSearchSpot(' + idx + ')" style="display:flex;justify-content:space-between;align-items:center;padding:0.52rem 1rem;cursor:pointer;transition:background 0.1s;" onmouseover="this.style.background=\'rgba(94,96,206,0.07)\'" onmouseout="this.style.background=\'\'"><span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.75rem;font-weight:700;color:#7400B8;letter-spacing:0.04em;">' + s.name + '</span><span style="font-family:\'DM Mono\',monospace;font-size:0.55rem;color:rgba(116,0,184,0.4);letter-spacing:0.08em;">' + region + '</span></div>';
           }).join('');
     }
 
