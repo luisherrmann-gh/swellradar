@@ -48,6 +48,7 @@
     /* ─── Map ───────────────────────────────────────────────── */
     var selLat = null, selLon = null, pinMarker = null;
     var selectedSpotName = null;
+    var selScale = 1.0; /* nearshore scaling factor for current spot */
 
     delete L.Icon.Default.prototype._getIconUrl;
 
@@ -63,43 +64,44 @@
     L.tileLayer(ESRI_TILES, { attribution: ESRI_ATTR, maxZoom: 19 }).addTo(map);
 
     var SURF_SPOTS = [
-      { name: 'Nazaré',           lat: 39.6080, lon: -9.0849 },
-      { name: 'Almagreira',       lat: 39.3789, lon: -9.3148 },
-      { name: 'Baleal',           lat: 39.3745, lon: -9.3392 },
-      { name: 'Lagide',           lat: 39.3738, lon: -9.3360 },
-      { name: 'Cantinho da Baía', lat: 39.3701, lon: -9.3395 },
-      { name: 'Middle',           lat: 39.3625, lon: -9.3507 },
-      { name: 'Meio da Baía',     lat: 39.3618, lon: -9.3669 },
-      { name: 'Molhe Leste',      lat: 39.3501, lon: -9.3678 },
-      { name: 'Supertubos',       lat: 39.3443, lon: -9.3636 },
-      { name: 'Santa Cruz',       lat: 39.1340, lon: -9.3845 },
-      { name: 'Praia das Amoeiras', lat: 39.1267, lon: -9.3894 },
-      { name: 'Praia Azul',       lat: 39.1078, lon: -9.3977 },
-      { name: 'São Lourenço',     lat: 39.0120, lon: -9.4218 },
-      { name: 'Coxos',            lat: 39.0019, lon: -9.4275 },
-      { name: 'Cave',             lat: 38.9970, lon: -9.4265 },
-      { name: 'Ribeira D\'Ilhas', lat: 38.9878, lon: -9.4196 },
-      { name: 'Reef',             lat: 38.9824, lon: -9.4223 },
-      { name: 'Pedra Branca',     lat: 38.9793, lon: -9.4228 },
-      { name: 'Matadouro',        lat: 38.9759, lon: -9.4202 },
-      { name: 'Praia do Sul',     lat: 38.9592, lon: -9.4163 },
-      { name: 'Foz do Lizandro',  lat: 38.9421, lon: -9.4161 },
-      { name: 'São Julião',       lat: 38.9320, lon: -9.4197 },
-      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741 },
-      { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783 },
-      { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726 },
-      { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694 },
-      { name: 'Carcavelos',         lat: 38.6796, lon: -9.3359, camUrl: 'https://video-auth1.iol.pt/beachcam/carcavelos/chunks.m3u8' },
-      { name: 'Parede',           lat: 38.6857, lon: -9.3538 },
-      { name: 'Praia de Torre',   lat: 38.6757, lon: -9.3230 },
-      { name: 'Santo Amaro',      lat: 38.6848, lon: -9.3121 },
-      { name: 'Paco de Arcos',    lat: 38.6905, lon: -9.2966 },
-      { name: 'Praia de Caxias',  lat: 38.6987, lon: -9.2792 },
-      { name: 'São João da Caparica', lat: 38.6562, lon: -9.2501 },
-      { name: 'Costa da Caparica', lat: 38.6449, lon: -9.2419 },
-      { name: 'Fonte da Telha',   lat: 38.5733, lon: -9.1969 },
-      { name: 'Bicas',            lat: 38.4637, lon: -9.1929 },
-      { name: 'Sesimbra',         lat: 38.4431, lon: -9.1052 },
+      /* scale = nearshore factor: offshore model → actual rideable surf height */
+      { name: 'Nazaré',           lat: 39.6080, lon: -9.0849, scale: 0.80 }, /* canyon amplifies — higher retention */
+      { name: 'Almagreira',       lat: 39.3789, lon: -9.3148, scale: 0.55 },
+      { name: 'Baleal',           lat: 39.3745, lon: -9.3392, scale: 0.55 },
+      { name: 'Lagide',           lat: 39.3738, lon: -9.3360, scale: 0.55 },
+      { name: 'Cantinho da Baía', lat: 39.3701, lon: -9.3395, scale: 0.55 },
+      { name: 'Middle',           lat: 39.3625, lon: -9.3507, scale: 0.55 },
+      { name: 'Meio da Baía',     lat: 39.3618, lon: -9.3669, scale: 0.55 },
+      { name: 'Molhe Leste',      lat: 39.3501, lon: -9.3678, scale: 0.55 },
+      { name: 'Supertubos',       lat: 39.3443, lon: -9.3636, scale: 0.60 }, /* exposed reef — retains more energy */
+      { name: 'Santa Cruz',       lat: 39.1340, lon: -9.3845, scale: 0.55 },
+      { name: 'Praia das Amoeiras', lat: 39.1267, lon: -9.3894, scale: 0.50 },
+      { name: 'Praia Azul',       lat: 39.1078, lon: -9.3977, scale: 0.50 },
+      { name: 'São Lourenço',     lat: 39.0120, lon: -9.4218, scale: 0.55 },
+      { name: 'Coxos',            lat: 39.0019, lon: -9.4275, scale: 0.60 }, /* deep-water reef */
+      { name: 'Cave',             lat: 38.9970, lon: -9.4265, scale: 0.55 },
+      { name: 'Ribeira D\'Ilhas', lat: 38.9878, lon: -9.4196, scale: 0.55 },
+      { name: 'Reef',             lat: 38.9824, lon: -9.4223, scale: 0.55 },
+      { name: 'Pedra Branca',     lat: 38.9793, lon: -9.4228, scale: 0.55 },
+      { name: 'Matadouro',        lat: 38.9759, lon: -9.4202, scale: 0.50 },
+      { name: 'Praia do Sul',     lat: 38.9592, lon: -9.4163, scale: 0.50 },
+      { name: 'Foz do Lizandro',  lat: 38.9421, lon: -9.4161, scale: 0.50 },
+      { name: 'São Julião',       lat: 38.9320, lon: -9.4197, scale: 0.50 },
+      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50 },
+      { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783, scale: 0.50 },
+      { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726, scale: 0.50 },
+      { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694, scale: 0.45 },
+      { name: 'Carcavelos',         lat: 38.6796, lon: -9.3359, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/carcavelos/chunks.m3u8' },
+      { name: 'Parede',           lat: 38.6857, lon: -9.3538, scale: 0.45 },
+      { name: 'Praia de Torre',   lat: 38.6757, lon: -9.3230, scale: 0.45 },
+      { name: 'Santo Amaro',      lat: 38.6848, lon: -9.3121, scale: 0.45 },
+      { name: 'Paco de Arcos',    lat: 38.6905, lon: -9.2966, scale: 0.45 },
+      { name: 'Praia de Caxias',  lat: 38.6987, lon: -9.2792, scale: 0.45 },
+      { name: 'São João da Caparica', lat: 38.6562, lon: -9.2501, scale: 0.50 },
+      { name: 'Costa da Caparica', lat: 38.6449, lon: -9.2419, scale: 0.50 },
+      { name: 'Fonte da Telha',   lat: 38.5733, lon: -9.1969, scale: 0.50 },
+      { name: 'Bicas',            lat: 38.4637, lon: -9.1929, scale: 0.50 },
+      { name: 'Sesimbra',         lat: 38.4431, lon: -9.1052, scale: 0.45, camUrl: 'Henrik Easter Egg Sesimbra.JPG', camType: 'image' }, /* sheltered bay + easter egg */
     ];
 
     var spotMarkers = [];
@@ -142,6 +144,7 @@
       }
       map.flyTo([spot.lat, spot.lon], 14, { duration: 0.9 });
       placePin(spot.lat, spot.lon, spot.name);
+      selScale = spot.scale != null ? spot.scale : 1.0;
       fetchForecast(spot.lat, spot.lon);
       /* Show cam toggle only for spots with a live cam */
       var toggle = document.getElementById('mapCamToggle');
@@ -172,7 +175,17 @@
         tabMap.classList.remove('active');
         tabCam.classList.add('active');
         if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
-        if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        /* Remove any existing easter egg image */
+        var oldImg = camEl.querySelector('.cam-easter-img');
+        if (oldImg) oldImg.remove();
+        if (selSpot.camType === 'image') {
+          video.style.display = 'none';
+          var img = document.createElement('img');
+          img.src = selSpot.camUrl;
+          img.className = 'cam-easter-img';
+          img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:top center;position:absolute;inset:0;';
+          camEl.appendChild(img);
+        } else if (typeof Hls !== 'undefined' && Hls.isSupported()) {
           _mapCamHls = new Hls();
           _mapCamHls.loadSource(selSpot.camUrl);
           _mapCamHls.attachMedia(video);
@@ -193,6 +206,8 @@
         tabCam.classList.remove('active');
         video.pause(); video.src = '';
         if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
+        var oldImg2 = camEl.querySelector('.cam-easter-img');
+        if (oldImg2) oldImg2.remove();
         setTimeout(function() { map.invalidateSize(); }, 50);
       }
     }
@@ -209,7 +224,16 @@
       errEl.style.display = 'none';
       modal.style.display = 'flex';
       if (_camHls) { _camHls.destroy(); _camHls = null; }
-      if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+      var oldModalImg = modal.querySelector('.cam-easter-img');
+      if (oldModalImg) oldModalImg.remove();
+      if (spot.camType === 'image') {
+        video.style.display = 'none';
+        var mImg = document.createElement('img');
+        mImg.src = spot.camUrl;
+        mImg.className = 'cam-easter-img';
+        mImg.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;';
+        modal.querySelector('[style*="padding-top:56.25%"]').appendChild(mImg);
+      } else if (typeof Hls !== 'undefined' && Hls.isSupported()) {
         _camHls = new Hls();
         _camHls.loadSource(spot.camUrl);
         _camHls.attachMedia(video);
@@ -230,8 +254,10 @@
       var modal = document.getElementById('camModal');
       var video = document.getElementById('camVideo');
       modal.style.display = 'none';
-      video.pause(); video.src = '';
+      video.pause(); video.src = ''; video.style.display = 'block';
       if (_camHls) { _camHls.destroy(); _camHls = null; }
+      var oldModalImg2 = modal.querySelector('.cam-easter-img');
+      if (oldModalImg2) oldModalImg2.remove();
     }
     document.getElementById('camModal').addEventListener('click', function(e) {
       if (e.target === this) closeCamModal();
@@ -354,7 +380,7 @@
 
       var marineUrl = 'https://marine-api.open-meteo.com/v1/marine'
         + '?latitude=' + lat + '&longitude=' + lon
-        + '&hourly=wave_height,wave_period,wave_direction,wind_wave_height&forecast_days=7';
+        + '&hourly=wave_height,wave_period,wave_direction,wind_wave_height,swell_wave_height&forecast_days=7';
       var windUrl = 'https://api.open-meteo.com/v1/forecast'
         + '?latitude=' + lat + '&longitude=' + lon
         + '&hourly=windspeed_10m,winddirection_10m,windgusts_10m&forecast_days=7';
@@ -408,7 +434,7 @@
       });
     }
 
-    /* ─── Update hero ───────────────────────────────────────── */
+    /* ─── Update hero ────��──────────────────────────────────── */
     function updateHero(data, windData, lat, lon) {
       var now = Date.now();
       var ci = 0, minD = Infinity;
@@ -416,13 +442,32 @@
         var d = Math.abs(new Date(t) - now);
         if (d < minD) { minD = d; ci = i; }
       });
-      var h   = (data.hourly.wave_height    && data.hourly.wave_height[ci])   || 0;
-      var p   =  data.hourly.wave_period    && data.hourly.wave_period[ci];
-      var dir =  data.hourly.wave_direction && data.hourly.wave_direction[ci];
-      var wh  =  data.hourly.wind_wave_height && data.hourly.wind_wave_height[ci];
+      var sc     = selScale;
+      var h      = ((data.hourly.wave_height       && data.hourly.wave_height[ci])    || 0) * sc;
+      var p      =  data.hourly.wave_period       && data.hourly.wave_period[ci];
+      var dir    =  data.hourly.wave_direction    && data.hourly.wave_direction[ci];
+      var wh     =  data.hourly.wind_wave_height  && data.hourly.wind_wave_height[ci];
+      var swellH =  data.hourly.swell_wave_height && data.hourly.swell_wave_height[ci];
+      if (swellH != null) swellH = swellH * sc;
 
-      countUp(document.getElementById('waveNum'), h);
-      var swellSub = toCompass(dir) + ' swell · ' + (p != null ? p.toFixed(0) + 's period' : '—');
+      /* Daily wave height range (today only, scaled) */
+      var todayStr = new Date().toISOString().slice(0, 10);
+      var todayHeights = [];
+      (data.hourly.time || []).forEach(function(t, i) {
+        if (t.slice(0, 10) === todayStr) {
+          var v = data.hourly.wave_height && data.hourly.wave_height[i];
+          if (v != null) todayHeights.push(v * sc);
+        }
+      });
+      var waveMin = todayHeights.length ? Math.min.apply(null, todayHeights) : h;
+      var waveMax = todayHeights.length ? Math.max.apply(null, todayHeights) : h;
+
+      var waveNumEl = document.getElementById('waveNum');
+      waveNumEl.textContent = waveMin.toFixed(1) + '–' + waveMax.toFixed(1);
+      document.querySelector('.wave-unit').textContent = 'm';
+
+      var swellPart = swellH != null ? ' · ' + swellH.toFixed(1) + 'm swell' : '';
+      var swellSub = toCompass(dir) + ' swell · ' + (p != null ? p.toFixed(0) + 's period' : '—') + swellPart;
       document.getElementById('waveSub').textContent = swellSub;
       document.getElementById('statPeriod').textContent = p  != null ? p.toFixed(0)  + 's'  : '—';
       document.getElementById('statDir').textContent    = toCompass(dir);
@@ -575,20 +620,7 @@
           },
           plugins: {
             legend: { display: false },
-            tooltip: {
-              displayColors: false,
-              backgroundColor: '#0a0a0a',
-              titleColor: '#aaaaaa',
-              bodyColor:  '#ffffff',
-              padding: 8,
-              cornerRadius: 6,
-              titleFont: { family: '"DM Mono", monospace', size: 10 },
-              bodyFont:  { family: '"DM Mono", monospace', size: 11 },
-              callbacks: {
-                title: function(items) { return fmtHr(items[0].parsed.x); },
-                label: function(item)  { return item.parsed.y.toFixed(1) + 'm'; },
-              },
-            },
+            tooltip: { enabled: false },
           },
         },
         plugins: [
@@ -683,8 +715,88 @@
               ctx2.restore();
             },
           },
+          {
+            /* Interactive hover: vertical dashed line + interpolated tide pill */
+            id: 'tideHoverLine',
+            afterDraw: function(chart) {
+              if (chart._hoverX == null) return;
+              var ctx2 = chart.ctx, ca = chart.chartArea;
+              var xs = chart.scales.x, ys = chart.scales.y;
+              var hx = chart._hoverX;
+              if (hx < ca.left || hx > ca.right) return;
+              var dataVal = xs.getValueForPixel(hx);
+              /* Interpolate tide height at cursor position */
+              var labels = chart.data.labels;
+              var vals   = chart.data.datasets[0].data;
+              var tideH  = vals[0];
+              for (var i = 0; i < labels.length - 1; i++) {
+                if (dataVal >= labels[i] && dataVal <= labels[i + 1]) {
+                  var frac = (dataVal - labels[i]) / (labels[i + 1] - labels[i]);
+                  tideH = vals[i] + frac * (vals[i + 1] - vals[i]);
+                  break;
+                }
+              }
+              ctx2.save();
+              /* Vertical dashed line */
+              ctx2.setLineDash([4, 4]);
+              ctx2.strokeStyle = 'rgba(180,120,240,0.75)';
+              ctx2.lineWidth = 1;
+              ctx2.beginPath();
+              ctx2.moveTo(hx, ca.top);
+              ctx2.lineTo(hx, ca.bottom);
+              ctx2.stroke();
+              ctx2.setLineDash([]);
+              /* Dot on the curve */
+              var dotY = ys.getPixelForValue(tideH);
+              ctx2.beginPath();
+              ctx2.arc(hx, dotY, 4, 0, Math.PI * 2);
+              ctx2.fillStyle = '#ffffff';
+              ctx2.fill();
+              ctx2.strokeStyle = '#7B2FBE';
+              ctx2.lineWidth = 2;
+              ctx2.stroke();
+              /* Pill label: "3:30pm  1.8m" */
+              var hh = Math.floor(dataVal), mm = Math.round((dataVal - hh) * 60);
+              if (mm === 60) { hh += 1; mm = 0; }
+              var ap = hh < 12 ? 'am' : 'pm', h12 = hh % 12 || 12;
+              var timeStr = h12 + ':' + (mm < 10 ? '0' : '') + mm + ap;
+              var txt = timeStr + '  ' + tideH.toFixed(1) + 'm';
+              ctx2.font = 'bold 9px "DM Mono", monospace';
+              ctx2.textAlign = 'center';
+              var tw = ctx2.measureText(txt).width, pw = tw + 16, ph = 16, r = 8;
+              var pillX = Math.max(ca.left + pw / 2, Math.min(ca.right - pw / 2, hx));
+              var bx = pillX - pw / 2, by = ca.top - ph - 6;
+              ctx2.fillStyle = 'rgba(40,12,70,0.9)';
+              ctx2.beginPath();
+              ctx2.moveTo(bx + r, by); ctx2.lineTo(bx + pw - r, by);
+              ctx2.quadraticCurveTo(bx + pw, by,      bx + pw, by + r);
+              ctx2.lineTo(bx + pw, by + ph - r);
+              ctx2.quadraticCurveTo(bx + pw, by + ph, bx + pw - r, by + ph);
+              ctx2.lineTo(bx + r,  by + ph);
+              ctx2.quadraticCurveTo(bx, by + ph, bx, by + ph - r);
+              ctx2.lineTo(bx, by + r);
+              ctx2.quadraticCurveTo(bx, by, bx + r, by);
+              ctx2.closePath(); ctx2.fill();
+              ctx2.fillStyle = '#ffffff'; ctx2.textBaseline = 'middle';
+              ctx2.fillText(txt, pillX, by + ph / 2);
+              ctx2.restore();
+            },
+          },
         ],
       });
+
+      /* ── Hover interaction: vertical line follows mouse ── */
+      canvas._tidesMM = function(e) {
+        var rect = canvas.getBoundingClientRect();
+        tideChartInst._hoverX = e.clientX - rect.left;
+        tideChartInst.update('none');
+      };
+      canvas._tidesML = function() {
+        tideChartInst._hoverX = null;
+        tideChartInst.update('none');
+      };
+      canvas.addEventListener('mousemove',  canvas._tidesMM);
+      canvas.addEventListener('mouseleave', canvas._tidesML);
 
       /* ── Fetch real sun times; update chart night-zone shading ── */
       if (selLat !== null && selLon !== null) {
@@ -722,7 +834,7 @@
       var scroll = document.getElementById('tlScroll');
       scroll.innerHTML = '';
       var times = data.hourly.time;
-      var allH  = data.hourly.wave_height || [];
+      var allH  = (data.hourly.wave_height || []).map(function(v) { return v != null ? v * selScale : v; });
       var validH = allH.filter(function(v) { return v != null; });
       var maxH  = Math.max(0.01, Math.max.apply(null, validH));
       var avgH  = validH.reduce(function(a, b) { return a + b; }, 0) / (validH.length || 1);
@@ -791,9 +903,101 @@
     }
 
     /* ─── Wave chart ────────────────────────────────────────── */
+    /* ─── Shared hover plugin factory for line charts ────────── */
+    function makeChartHoverPlugin(times, values, nowIdx, fmtVal) {
+      return {
+        id: 'chartHoverLine',
+        afterDraw: function(chart) {
+          var ctx2 = chart.ctx, ca = chart.chartArea;
+          var xs = chart.scales.x, ys = chart.scales.y;
+
+          /* ── Static NOW line ── */
+          var nowX = xs.getPixelForValue(nowIdx);
+          if (nowX >= ca.left && nowX <= ca.right) {
+            ctx2.save();
+            ctx2.setLineDash([4, 4]);
+            ctx2.strokeStyle = 'rgba(123,47,190,0.45)';
+            ctx2.lineWidth = 1;
+            ctx2.beginPath(); ctx2.moveTo(nowX, ca.top); ctx2.lineTo(nowX, ca.bottom); ctx2.stroke();
+            ctx2.setLineDash([]);
+            var nowVal = values[nowIdx];
+            if (nowVal != null) {
+              var txt = fmtVal(nowVal);
+              ctx2.font = 'bold 9px "DM Mono", monospace';
+              ctx2.textAlign = 'center';
+              var tw = ctx2.measureText(txt).width, pw = tw + 14, ph = 16, r = 8;
+              var bx = nowX - pw / 2, by = ca.top - ph - 6;
+              ctx2.fillStyle = '#7B2FBE';
+              ctx2.beginPath();
+              ctx2.moveTo(bx+r,by); ctx2.lineTo(bx+pw-r,by);
+              ctx2.quadraticCurveTo(bx+pw,by,bx+pw,by+r);
+              ctx2.lineTo(bx+pw,by+ph-r);
+              ctx2.quadraticCurveTo(bx+pw,by+ph,bx+pw-r,by+ph);
+              ctx2.lineTo(bx+r,by+ph);
+              ctx2.quadraticCurveTo(bx,by+ph,bx,by+ph-r);
+              ctx2.lineTo(bx,by+r);
+              ctx2.quadraticCurveTo(bx,by,bx+r,by); ctx2.closePath(); ctx2.fill();
+              ctx2.fillStyle = '#fff'; ctx2.textBaseline = 'middle';
+              ctx2.fillText(txt, nowX, by + ph / 2);
+              ctx2.font = '7px "DM Mono", monospace';
+              ctx2.fillStyle = 'rgba(123,47,190,0.65)'; ctx2.textBaseline = 'bottom';
+              ctx2.fillText('NOW', nowX, ca.top - 2);
+            }
+            ctx2.restore();
+          }
+
+          /* ── Hover line ── */
+          if (chart._hoverX == null) return;
+          var hx = chart._hoverX;
+          if (hx < ca.left || hx > ca.right) return;
+          var hIdx = Math.round(xs.getValueForPixel(hx));
+          hIdx = Math.max(0, Math.min(values.length - 1, hIdx));
+          var hVal = values[hIdx];
+          var hxSnapped = xs.getPixelForValue(hIdx);
+
+          ctx2.save();
+          ctx2.setLineDash([4, 4]);
+          ctx2.strokeStyle = 'rgba(180,120,240,0.75)';
+          ctx2.lineWidth = 1;
+          ctx2.beginPath(); ctx2.moveTo(hxSnapped, ca.top); ctx2.lineTo(hxSnapped, ca.bottom); ctx2.stroke();
+          ctx2.setLineDash([]);
+
+          if (hVal != null) {
+            var dotY = ys.getPixelForValue(hVal);
+            ctx2.beginPath(); ctx2.arc(hxSnapped, dotY, 4, 0, Math.PI * 2);
+            ctx2.fillStyle = '#fff'; ctx2.fill();
+            ctx2.strokeStyle = '#7B2FBE'; ctx2.lineWidth = 2; ctx2.stroke();
+
+            var d = new Date(times[hIdx]);
+            var z = function(v) { return String(v).padStart(2, '0'); };
+            var timeStr = DAYS[d.getUTCDay()] + ' ' + z(d.getUTCHours()) + ':00';
+            var ptxt = timeStr + '  ' + fmtVal(hVal);
+            ctx2.font = 'bold 9px "DM Mono", monospace';
+            ctx2.textAlign = 'center';
+            var ptw = ctx2.measureText(ptxt).width, ppw = ptw + 16, pph = 16, prr = 8;
+            var pillX = Math.max(ca.left + ppw / 2, Math.min(ca.right - ppw / 2, hxSnapped));
+            var pbx = pillX - ppw / 2, pby = ca.top - pph - 6;
+            ctx2.fillStyle = 'rgba(40,12,70,0.9)';
+            ctx2.beginPath();
+            ctx2.moveTo(pbx+prr,pby); ctx2.lineTo(pbx+ppw-prr,pby);
+            ctx2.quadraticCurveTo(pbx+ppw,pby,pbx+ppw,pby+prr);
+            ctx2.lineTo(pbx+ppw,pby+pph-prr);
+            ctx2.quadraticCurveTo(pbx+ppw,pby+pph,pbx+ppw-prr,pby+pph);
+            ctx2.lineTo(pbx+prr,pby+pph);
+            ctx2.quadraticCurveTo(pbx,pby+pph,pbx,pby+pph-prr);
+            ctx2.lineTo(pbx,pby+prr);
+            ctx2.quadraticCurveTo(pbx,pby,pbx+prr,pby); ctx2.closePath(); ctx2.fill();
+            ctx2.fillStyle = '#fff'; ctx2.textBaseline = 'middle';
+            ctx2.fillText(ptxt, pillX, pby + pph / 2);
+          }
+          ctx2.restore();
+        },
+      };
+    }
+
     function renderChart(data) {
       var times = data.hourly.time;
-      var hData = data.hourly.wave_height || [];
+      var hData = (data.hourly.wave_height || []).map(function(v) { return v != null ? v * selScale : v; });
       var labels = times.map(function(t) {
         var d = new Date(t), h = d.getUTCHours();
         return h === 0 ? DAYS[d.getUTCDay()] : h === 12 ? '12' : '';
@@ -802,17 +1006,33 @@
       if (chartInst) { chartInst.destroy(); chartInst = null; }
       var grad = ctx2.createLinearGradient(0, 0, 0, 260);
       grad.addColorStop(0, 'rgba(123,47,190,0.22)'); grad.addColorStop(1, 'rgba(123,47,190,0)');
+      /* ── Find NOW index ── */
+      var nowMs2 = Date.now();
+      var nowIdx2 = 0, minD2 = Infinity;
+      times.forEach(function(t, i) { var d = Math.abs(new Date(t) - nowMs2); if (d < minD2) { minD2 = d; nowIdx2 = i; } });
+
       chartInst = new Chart(ctx2, {
         type: 'line',
         data: { labels: labels, datasets: [{ data: hData, borderColor: '#7B2FBE', borderWidth: 2, backgroundColor: grad, fill: true, pointRadius: 0, pointHoverRadius: 5, pointHoverBackgroundColor: '#7B2FBE', pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2, tension: 0.35, spanGaps: true }] },
         options: {
           responsive: true, maintainAspectRatio: false,
+          layout: { padding: { top: 52 } },
           interaction: { mode: 'index', intersect: false },
           animation: { duration: 700, easing: 'easeOutCubic' },
-          plugins: { legend: { display: false }, tooltip: { backgroundColor: '#1a0a2e', titleColor: 'rgba(220,200,255,0.6)', bodyColor: '#CC0000', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, padding: 10, titleFont: { family: "'DM Mono', monospace", size: 10 }, bodyFont: { family: "'DM Mono', monospace", size: 13, weight: '500' }, callbacks: { title: function(items) { var d = new Date(times[items[0].dataIndex]); var z = function(v) { return String(v).padStart(2,'0'); }; return DAYS[d.getUTCDay()] + ' ' + z(d.getUTCHours()) + ':00 UTC'; }, label: function(item) { return item.parsed.y != null ? ' ' + item.parsed.y.toFixed(2) + ' m' : ' —'; } } } },
+          plugins: { legend: { display: false }, tooltip: { enabled: false } },
           scales: { x: { grid: { display: false }, border: { color: 'rgba(0,0,0,0.1)' }, ticks: { color: 'rgba(0,0,0,0.4)', font: { family: "'DM Mono', monospace", size: 10 }, maxRotation: 0, autoSkip: false } }, y: { grid: { color: 'rgba(0,0,0,0.06)', drawTicks: false }, border: { display: false }, ticks: { color: 'rgba(0,0,0,0.4)', font: { family: "'DM Mono', monospace", size: 10 }, callback: function(v) { return v.toFixed(1) + 'm'; } }, beginAtZero: true } },
         },
+        plugins: [makeChartHoverPlugin(times, hData, nowIdx2, function(v) { return v.toFixed(2) + 'm'; })],
       });
+
+      /* Attach hover listeners */
+      var wCanvas = document.getElementById('waveChart');
+      if (wCanvas._hoverMM) wCanvas.removeEventListener('mousemove', wCanvas._hoverMM);
+      if (wCanvas._hoverML) wCanvas.removeEventListener('mouseleave', wCanvas._hoverML);
+      wCanvas._hoverMM = function(e) { var r = wCanvas.getBoundingClientRect(); chartInst._hoverX = e.clientX - r.left; chartInst.update('none'); };
+      wCanvas._hoverML = function() { chartInst._hoverX = null; chartInst.update('none'); };
+      wCanvas.addEventListener('mousemove', wCanvas._hoverMM);
+      wCanvas.addEventListener('mouseleave', wCanvas._hoverML);
     }
 
     /* ─── Wind speed chart ──────────────────────────────────── */
@@ -829,17 +1049,33 @@
       grad.addColorStop(0, 'rgba(123,47,190,0.18)'); grad.addColorStop(1, 'rgba(123,47,190,0)');
       var datasets = [{ label: 'Wind Speed', data: wsData, borderColor: '#7B2FBE', borderWidth: 2, backgroundColor: grad, fill: true, pointRadius: 0, pointHoverRadius: 4, pointHoverBackgroundColor: '#7B2FBE', pointHoverBorderColor: '#fff', pointHoverBorderWidth: 2, tension: 0.35, spanGaps: true, order: 2 }];
       if (hasGusts) datasets.push({ label: 'Gusts', data: wgData, borderColor: 'rgba(30,10,60,0.22)', borderWidth: 1.5, borderDash: [5, 4], backgroundColor: 'transparent', fill: false, pointRadius: 0, pointHoverRadius: 3, tension: 0.35, spanGaps: true, order: 1 });
+      /* ── Find NOW index ── */
+      var nowMsW = Date.now();
+      var nowIdxW = 0, minDW = Infinity;
+      wTimes.forEach(function(t, i) { var d = Math.abs(new Date(t) - nowMsW); if (d < minDW) { minDW = d; nowIdxW = i; } });
+
       windChartInst = new Chart(ctx2, {
         type: 'line',
         data: { labels: wLabels, datasets: datasets },
         options: {
           responsive: true, maintainAspectRatio: false,
+          layout: { padding: { top: 52 } },
           interaction: { mode: 'index', intersect: false },
           animation: { duration: 700, easing: 'easeOutCubic' },
-          plugins: { legend: { display: hasGusts, labels: { color: 'rgba(0,0,0,0.5)', font: { family: "'DM Mono', monospace", size: 10 }, boxWidth: 20, padding: 12 } }, tooltip: { backgroundColor: '#1a0a2e', titleColor: 'rgba(220,200,255,0.6)', bodyColor: '#CC0000', borderColor: 'rgba(255,255,255,0.08)', borderWidth: 1, padding: 10, titleFont: { family: "'DM Mono', monospace", size: 10 }, bodyFont: { family: "'DM Mono', monospace", size: 13, weight: '500' }, callbacks: { title: function(items) { var d = new Date(wTimes[items[0].dataIndex]); var z = function(v) { return String(v).padStart(2,'0'); }; return DAYS[d.getUTCDay()] + ' ' + z(d.getUTCHours()) + ':00 UTC'; }, label: function(item) { return item.parsed.y != null ? ' ' + item.dataset.label + ': ' + item.parsed.y.toFixed(1) + ' km/h' : ' ' + item.dataset.label + ': —'; } } } },
+          plugins: { legend: { display: hasGusts, labels: { color: 'rgba(0,0,0,0.5)', font: { family: "'DM Mono', monospace", size: 10 }, boxWidth: 20, padding: 12 } }, tooltip: { enabled: false } },
           scales: { x: { grid: { display: false }, border: { color: 'rgba(0,0,0,0.1)' }, ticks: { color: 'rgba(0,0,0,0.4)', font: { family: "'DM Mono', monospace", size: 10 }, maxRotation: 0, autoSkip: false } }, y: { grid: { color: 'rgba(0,0,0,0.06)', drawTicks: false }, border: { display: false }, ticks: { color: 'rgba(0,0,0,0.4)', font: { family: "'DM Mono', monospace", size: 10 }, callback: function(v) { return v.toFixed(0) + ' kph'; } }, beginAtZero: true } },
         },
+        plugins: [makeChartHoverPlugin(wTimes, wsData, nowIdxW, function(v) { return v.toFixed(1) + ' km/h'; })],
       });
+
+      /* Attach hover listeners */
+      var wndCanvas = document.getElementById('windChart');
+      if (wndCanvas._hoverMM) wndCanvas.removeEventListener('mousemove', wndCanvas._hoverMM);
+      if (wndCanvas._hoverML) wndCanvas.removeEventListener('mouseleave', wndCanvas._hoverML);
+      wndCanvas._hoverMM = function(e) { var r = wndCanvas.getBoundingClientRect(); windChartInst._hoverX = e.clientX - r.left; windChartInst.update('none'); };
+      wndCanvas._hoverML = function() { windChartInst._hoverX = null; windChartInst.update('none'); };
+      wndCanvas.addEventListener('mousemove', wndCanvas._hoverMM);
+      wndCanvas.addEventListener('mouseleave', wndCanvas._hoverML);
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -1278,9 +1514,12 @@
             if (d < minD3) { minD3 = d; ci2 = i; }
           });
 
+          var sc2    = spot.scale != null ? spot.scale : 1.0;
           var wh     = marine.hourly.wave_height && marine.hourly.wave_height[ci2];
+          if (wh != null) wh = wh * sc2;
           var period = marine.hourly.wave_period && marine.hourly.wave_period[ci2];
           var swellH = marine.hourly.swell_wave_height && marine.hourly.swell_wave_height[ci2];
+          if (swellH != null) swellH = swellH * sc2;
           var ws     = null, wd = null;
 
           if (wind && wind.hourly && wind.hourly.time) {
@@ -1460,49 +1699,51 @@
        High detail: Nazaré bay, Peniche peninsula, Cabo da Roca,
        Cascais, Tejo mouth north+south banks, Setúbal peninsula.
        Polygon closed via east border → clip punches out land.    */
+    /* Portugal Atlantic coastline — traced strictly N→S, no backtracking.
+       Cabo da Roca at correct lon -9.50. Tejo estuary closed as land.
+       Polygon closed via east anchor (-5.00) in the draw code → evenodd
+       punches land out of the full-canvas rect.                         */
     var COAST_POLY = [
-      /* North of Nazaré */
-      [40.00,-8.90],[39.92,-8.87],[39.85,-8.88],
+      /* North edge */
+      [40.00,-8.88],[39.92,-8.88],[39.85,-8.89],
       /* Nazaré bay */
-      [39.75,-8.89],[39.72,-8.92],[39.70,-8.93],[39.68,-8.93],
-      [39.65,-8.93],[39.62,-8.93],[39.60,-8.96],
+      [39.75,-8.90],[39.70,-8.92],[39.65,-8.94],[39.62,-8.96],
       /* São Martinho do Porto inlet */
-      [39.52,-9.02],[39.50,-9.09],[39.48,-9.10],[39.47,-9.11],
-      [39.46,-9.10],[39.46,-9.07],[39.47,-9.04],
-      /* Peniche approach */
-      [39.40,-9.15],[39.38,-9.18],[39.36,-9.20],[39.35,-9.22],
-      [39.32,-9.24],[39.28,-9.27],[39.25,-9.29],
-      /* Peniche peninsula — full detail */
-      [39.22,-9.30],[39.19,-9.32],[39.17,-9.34],[39.14,-9.36],
-      [39.11,-9.37],[39.08,-9.38],[39.05,-9.38],[39.02,-9.37],
-      [38.99,-9.36],[38.97,-9.34],[38.96,-9.32],[38.96,-9.29],
-      [38.97,-9.27],[38.99,-9.25],[39.01,-9.24],[39.03,-9.24],
-      [39.05,-9.25],[39.06,-9.26],[39.07,-9.28],
-      /* Back to mainland south of Peniche */
-      [39.08,-9.27],[39.09,-9.26],[39.10,-9.25],[39.12,-9.24],
-      [39.00,-9.23],[38.95,-9.22],[38.90,-9.24],
-      /* Ericeira */
-      [38.88,-9.28],[38.86,-9.29],[38.84,-9.29],[38.82,-9.27],
-      [38.80,-9.26],[38.78,-9.26],
-      /* Cabo da Roca — westernmost point */
-      [38.75,-9.28],[38.72,-9.30],[38.70,-9.31],[38.68,-9.33],
-      [38.66,-9.34],[38.64,-9.33],[38.62,-9.30],
-      /* Guincho / Cascais */
-      [38.73,-9.48],[38.72,-9.46],[38.71,-9.44],[38.70,-9.42],
-      [38.69,-9.40],[38.69,-9.37],[38.69,-9.35],[38.69,-9.32],
-      [38.69,-9.29],[38.69,-9.25],
-      /* Tejo mouth north bank — Cascais→Lisboa */
-      [38.69,-9.22],[38.69,-9.18],[38.69,-9.14],[38.69,-9.10],
-      [38.70,-9.06],[38.71,-9.03],[38.72,-9.01],[38.73,-8.99],
-      [38.75,-8.97],[38.77,-8.95],
-      /* Tejo south bank — cross river mouth */
-      [38.65,-9.22],[38.63,-9.18],[38.62,-9.14],[38.62,-9.10],
-      [38.62,-9.05],[38.63,-9.00],[38.64,-8.97],
-      /* Setúbal peninsula */
-      [38.55,-8.90],[38.50,-8.88],[38.45,-8.87],[38.40,-8.87],
-      [38.35,-8.88],[38.28,-8.90],[38.22,-8.92],
+      [39.55,-9.02],[39.52,-9.05],[39.50,-9.10],[39.48,-9.12],
+      [39.47,-9.11],[39.46,-9.09],[39.44,-9.14],
+      /* Approaching Peniche */
+      [39.42,-9.18],[39.38,-9.22],[39.36,-9.26],
+      /* Peniche peninsula — tip at -9.40, traced west then back SE */
+      [39.37,-9.33],[39.36,-9.38],[39.35,-9.40],
+      [39.33,-9.38],[39.30,-9.36],[39.26,-9.34],[39.22,-9.33],
+      /* South side of Peniche back to mainland */
+      [39.17,-9.34],[39.13,-9.36],[39.10,-9.38],
+      /* Santa Cruz / Ericeira — heading south */
+      [39.05,-9.39],[39.00,-9.42],[38.97,-9.43],
+      [38.93,-9.43],[38.89,-9.43],[38.86,-9.43],[38.83,-9.43],
+      /* Sintra coast heading west toward Cabo da Roca */
+      [38.81,-9.44],[38.80,-9.46],[38.79,-9.48],
+      /* Cabo da Roca — actual westernmost: 38.783N, 9.498W */
+      [38.78,-9.50],
+      /* SE from Cabo da Roca toward Cascais — no backtrack */
+      [38.76,-9.49],[38.74,-9.47],[38.73,-9.47],
+      [38.71,-9.45],[38.70,-9.42],
+      /* Cascais → Estoril → Carcavelos → Parede */
+      [38.69,-9.40],[38.69,-9.37],[38.69,-9.35],
+      [38.69,-9.32],[38.69,-9.26],
+      /* North bank of Tagus mouth */
+      [38.69,-9.22],[38.68,-9.18],[38.67,-9.15],
+      /* Cross to south bank (Tejo estuary treated as land) */
+      [38.66,-9.22],
+      /* Costa da Caparica heading south */
+      [38.65,-9.23],[38.63,-9.24],[38.60,-9.23],
+      [38.56,-9.21],[38.52,-9.17],[38.48,-9.13],
+      [38.44,-9.10],[38.43,-9.08],
+      /* Setúbal / Sesimbra */
+      [38.40,-9.00],[38.38,-8.98],[38.35,-8.94],
+      [38.28,-8.91],[38.22,-8.90],
       /* South limit */
-      [38.10,-8.93]
+      [38.10,-8.90]
     ];
 
     function initMapWindCanvas() {
@@ -1708,7 +1949,7 @@
       }
     }
 
-    /* ══════════════════════════════════════════════════════════
+    /* ═════════════════════════════════════════��════════════════
        SWELL LINE CANVAS — crispy animated lines, ocean only
     ══════════════════════════════════════════════════════════ */
     function initMapSwellCanvas() {
@@ -2162,7 +2403,6 @@
           + '</div></div>'
           + '<div><div class="sp-name">' + spot.name + '</div>'
           + '<div class="sp-coords">' + latStr + '</div></div>'
-          + (spot.camUrl ? '<button class="sp-cam-btn" onclick="event.stopPropagation();openCamModal(' + idx + ')">&#128247; LIVE CAM</button>' : '')
           + '<div class="sp-card-bottom">'
           + '<div class="sp-conditions" id="spConditions' + idx + '"><small>Fetching conditions…</small></div>'
           + '<span class="sp-arrow-big">→</span></div>'
