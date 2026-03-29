@@ -1540,6 +1540,17 @@
           var period = marine.hourly.wave_period && marine.hourly.wave_period[ci2];
           var swellH = marine.hourly.swell_wave_height && marine.hourly.swell_wave_height[ci2];
           if (swellH != null) swellH = swellH * sc2;
+          /* Today's wave height range */
+          var todayStr2 = new Date().toISOString().slice(0, 10);
+          var todayHts2 = [];
+          (marine.hourly.time || []).forEach(function(t, i) {
+            if (t.slice(0, 10) === todayStr2) {
+              var v = marine.hourly.wave_height && marine.hourly.wave_height[i];
+              if (v != null) todayHts2.push(v * sc2);
+            }
+          });
+          var whMin2 = todayHts2.length ? Math.min.apply(null, todayHts2) : wh;
+          var whMax2 = todayHts2.length ? Math.max.apply(null, todayHts2) : wh;
           var ws     = null, wd = null;
 
           if (wind && wind.hourly && wind.hourly.time) {
@@ -1552,7 +1563,7 @@
             wd = wind.hourly.winddirection_10m && wind.hourly.winddirection_10m[wi2];
           }
 
-          updateSpotCardConditions(idx, wh, period, ws, wd, swellH);
+          updateSpotCardConditions(idx, wh, period, ws, wd, swellH, whMin2, whMax2);
 
           /* Set swell state for map animation */
           var wd_swell = marine.hourly.wave_direction && marine.hourly.wave_direction[ci2];
@@ -1567,7 +1578,7 @@
       });
     }
 
-    function updateSpotCardConditions(idx, wh, period, ws, wd, swellH) {
+    function updateSpotCardConditions(idx, wh, period, ws, wd, swellH, whMin, whMax) {
       var qualEl    = document.getElementById('spQuality'    + idx);
       var condEl    = document.getElementById('spConditions' + idx);
       var fireEl    = document.getElementById('spFiring'     + idx);
@@ -1575,8 +1586,12 @@
       var arrowEl   = document.getElementById('spWindArrow'  + idx);
       var wSpdEl    = document.getElementById('spWindSpd'    + idx);
 
-      /* Background watermark number */
-      if (bgNumEl && wh != null) bgNumEl.textContent = wh.toFixed(1);
+      /* Background watermark number — show today's range if available */
+      if (bgNumEl && wh != null) {
+        bgNumEl.textContent = (whMin != null && whMax != null)
+          ? whMin.toFixed(1) + '–' + whMax.toFixed(1)
+          : wh.toFixed(1);
+      }
 
       /* Quality badge */
       if (qualEl) {
@@ -2402,7 +2417,7 @@
       var container = document.getElementById('spCardsContainer');
       if (!container) return;
       var gradients = [
-        'linear-gradient(140deg, #7400B8 0%, #5E60CE 45%, #7400B8 100%)',
+        'linear-gradient(140deg, #2A6FA8 0%, #4EA8DE 45%, #2A6FA8 100%)',
       ];
       SURF_SPOTS.forEach(function(spot, idx) {
         var grad = gradients[idx % gradients.length];

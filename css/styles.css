@@ -360,7 +360,7 @@
       transition: opacity 0.16s;
     }
     .sp-card:hover::before { opacity: 1; }
-    .sp-card:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(116,0,184,0.36); }
+    .sp-card:hover { transform: translateY(-3px); box-shadow: 0 14px 40px rgba(78,168,222,0.36); }
     .sp-card:active { transform: translateY(-1px); }
 
 
@@ -373,8 +373,9 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 7rem; font-weight: 800;
       letter-spacing: -0.06em; line-height: 1;
-      color: rgba(255,255,255,0.13);
+      color: rgba(128,255,219,0.45);
       pointer-events: none; user-select: none;
+      font-size: 4.2rem;
       font-variant-numeric: tabular-nums;
     }
 
@@ -502,7 +503,7 @@
     .stat { padding: 1.5rem 1.2rem; border-top: 3px solid #5E60CE; border-right: 1px solid rgba(94,96,206,0.12); }
     .stat:last-child { border-right: none; }
     .stat-lbl { font-size: 0.44rem; letter-spacing: 0.28em; text-transform: uppercase; color: var(--dim); margin-bottom: 0.5rem; }
-    .stat-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(0.95rem, 2.2vw, 1.72rem); font-weight: 700; color: var(--ink); line-height: 1; }
+    .stat-val { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(0.95rem, 2.2vw, 1.72rem); font-weight: 700; color: var(--accent); line-height: 1; }
     .stat-val.accent { color: var(--accent); }
 
     /* ═══ TIDES CHART — Surfline clone ══════════════════════════ */
