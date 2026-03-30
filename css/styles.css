@@ -274,15 +274,7 @@
 
     /* Status bar */
     .status-bar {
-      display: flex; align-items: center; gap: 0.75rem;
-      padding: 0.62rem 2.4rem;
-      border-bottom: 1px solid rgba(94,96,206,0.12);
-      font-size: 0.55rem; letter-spacing: 0.16em;
-      text-transform: uppercase; color: var(--dim); min-height: 2.2rem;
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-      flex-shrink: 0;
+      display: none;
     }
     .s-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--dim); flex-shrink: 0; }
     .s-dot.loading { background: var(--accent); animation: blink 0.65s infinite; }
@@ -458,10 +450,10 @@
     .sp-cam-btn:hover { background: rgba(94,96,206,0.45); border-color: rgba(94,96,206,0.6); color: #fff; }
 
     /* ═══ FORECAST SECTION ══════════════════════════════════════ */
-    #forecastSection { padding: 0.5rem 0 2rem; max-width: 100%; overflow-x: hidden; box-sizing: border-box; }
+    #forecastSection { padding: 0 0 2rem; max-width: 100%; overflow-x: hidden; box-sizing: border-box; }
 
     .wave-hero {
-      margin: 1rem 2rem; padding: 2.2rem 2rem 1.8rem;
+      margin: 0 2rem 1rem; padding: 2.2rem 2rem 1.8rem;
       border-radius: 16px; background: rgba(255,255,255,0.88);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       box-shadow: 0 2px 16px rgba(94,96,206,0.09); position: relative;
