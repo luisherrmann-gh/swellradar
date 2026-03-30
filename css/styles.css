@@ -409,11 +409,11 @@
       white-space: nowrap;
     }
     .quality-loading { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.3);  border: 1px solid rgba(255,255,255,0.1); }
-    .quality-epic    { background: #00CED1;                color: #000;                   border: none; }
-    .quality-good    { background: #00AA44;                color: #fff;                   border: none; }
-    .quality-fair    { background: #F5A800;                color: #000;                   border: none; }
-    .quality-poor    { background: #FF4400;                color: #fff;                   border: none; }
-    .quality-flat    { background: #660000;                color: rgba(255,255,255,0.7);  border: none; }
+    .quality-epic    { background: #7400B8;                color: #fff;                   border: none; }
+    .quality-good    { background: #70E000;                color: #fff;                   border: none; }
+    .quality-fair    { background: #E85D04;                color: #fff;                   border: none; }
+    .quality-poor    { background: #D00000;                color: #fff;                   border: none; }
+    .quality-flat    { background: #6A040F;                color: rgba(255,255,255,0.7);  border: none; }
 
     .sp-name {
       font-family: 'Plus Jakarta Sans', sans-serif;

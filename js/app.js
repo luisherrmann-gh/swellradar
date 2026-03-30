@@ -65,7 +65,7 @@
 
     var SURF_SPOTS = [
       /* scale = nearshore factor: offshore model → actual rideable surf height */
-      { name: 'Nazaré',           lat: 39.6080, lon: -9.0849, scale: 0.80 }, /* canyon amplifies — higher retention */
+      { name: 'Nazaré',           lat: 39.6080, lon: -9.0849, scale: 0.80, camUrl: 'https://video-auth1.iol.pt/beachcam/nazareparadonorte/playlist.m3u8' }, /* canyon amplifies — higher retention */
       { name: 'Almagreira',       lat: 39.3789, lon: -9.3148, scale: 0.55 },
       { name: 'Baleal',           lat: 39.3745, lon: -9.3392, scale: 0.55 },
       { name: 'Lagide',           lat: 39.3738, lon: -9.3360, scale: 0.55 },
@@ -73,7 +73,7 @@
       { name: 'Middle',           lat: 39.3625, lon: -9.3507, scale: 0.55 },
       { name: 'Meio da Baía',     lat: 39.3618, lon: -9.3669, scale: 0.55 },
       { name: 'Molhe Leste',      lat: 39.3501, lon: -9.3678, scale: 0.55 },
-      { name: 'Supertubos',       lat: 39.3443, lon: -9.3636, scale: 0.60 }, /* exposed reef — retains more energy */
+      { name: 'Supertubos',       lat: 39.3443, lon: -9.3636, scale: 0.60, camUrl: 'https://video-auth1.iol.pt/beachcam/supertubos/playlist.m3u8' }, /* exposed reef — retains more energy */
       { name: 'Santa Cruz',       lat: 39.1340, lon: -9.3845, scale: 0.55 },
       { name: 'Praia das Amoeiras', lat: 39.1267, lon: -9.3894, scale: 0.50 },
       { name: 'Praia Azul',       lat: 39.1078, lon: -9.3977, scale: 0.50 },
@@ -510,11 +510,11 @@
       if (heroBadge) {
         var heroLabel = getConditionLabel(h, p, wd, selectedSpotName);
         var heroColors = {
-          'EPIC': { bg: '#00CED1', color: '#000' },
-          'GOOD': { bg: '#00AA44', color: '#fff' },
-          'FAIR': { bg: '#F5A800', color: '#000' },
-          'POOR': { bg: '#FF4400', color: '#fff' },
-          'FLAT': { bg: '#660000', color: 'rgba(255,255,255,0.7)' }
+          'EPIC': { bg: '#7400B8', color: '#fff' },
+          'GOOD': { bg: '#70E000', color: '#fff' },
+          'FAIR': { bg: '#E85D04', color: '#fff' },
+          'POOR': { bg: '#D00000', color: '#fff' },
+          'FLAT': { bg: '#6A040F', color: 'rgba(255,255,255,0.7)' }
         };
         var hc = heroColors[heroLabel] || heroColors['FAIR'];
         heroBadge.textContent = heroLabel;
@@ -2417,7 +2417,7 @@
       var container = document.getElementById('spCardsContainer');
       if (!container) return;
       var gradients = [
-        'linear-gradient(140deg, #2A6FA8 0%, #4EA8DE 45%, #2A6FA8 100%)',
+        'linear-gradient(140deg, #4a52b8 0%, #5E60CE 45%, #4a52b8 100%)',
       ];
       SURF_SPOTS.forEach(function(spot, idx) {
         var grad = gradients[idx % gradients.length];
