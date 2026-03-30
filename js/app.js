@@ -67,27 +67,27 @@
       /* scale = nearshore factor: offshore model → actual rideable surf height */
       { name: 'Nazaré',           lat: 39.6080, lon: -9.0849, scale: 0.80, camUrl: 'https://video-auth1.iol.pt/beachcam/nazareparadonorte/playlist.m3u8' }, /* canyon amplifies — higher retention */
       { name: 'Almagreira',       lat: 39.3789, lon: -9.3148, scale: 0.55 },
-      { name: 'Baleal',           lat: 39.3745, lon: -9.3392, scale: 0.55 },
-      { name: 'Lagide',           lat: 39.3738, lon: -9.3360, scale: 0.55 },
+      { name: 'Baleal',           lat: 39.3745, lon: -9.3392, scale: 0.55, camUrl: 'https://video-auth1.iol.pt/beachcam/bcbalealgeral/playlist.m3u8' },
+      { name: 'Lagide',           lat: 39.3738, lon: -9.3360, scale: 0.55, camUrl: 'https://video-auth1.iol.pt/beachcam/lagide/playlist.m3u8' },
       { name: 'Cantinho da Baía', lat: 39.3701, lon: -9.3395, scale: 0.55 },
       { name: 'Middle',           lat: 39.3625, lon: -9.3507, scale: 0.55 },
       { name: 'Meio da Baía',     lat: 39.3618, lon: -9.3669, scale: 0.55 },
       { name: 'Molhe Leste',      lat: 39.3501, lon: -9.3678, scale: 0.55 },
       { name: 'Supertubos',       lat: 39.3443, lon: -9.3636, scale: 0.60, camUrl: 'https://video-auth1.iol.pt/beachcam/supertubos/playlist.m3u8' }, /* exposed reef — retains more energy */
-      { name: 'Santa Cruz',       lat: 39.1340, lon: -9.3845, scale: 0.55 },
+      { name: 'Santa Cruz',       lat: 39.1340, lon: -9.3845, scale: 0.55, camUrl: 'https://video-auth1.iol.pt/beachcam/santacruz/playlist.m3u8' },
       { name: 'Praia das Amoeiras', lat: 39.1267, lon: -9.3894, scale: 0.50 },
-      { name: 'Praia Azul',       lat: 39.1078, lon: -9.3977, scale: 0.50 },
+      { name: 'Praia Azul',       lat: 39.1078, lon: -9.3977, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/bcpraiaazul/playlist.m3u8' },
       { name: 'São Lourenço',     lat: 39.0120, lon: -9.4218, scale: 0.55 },
       { name: 'Coxos',            lat: 39.0019, lon: -9.4275, scale: 0.60 }, /* deep-water reef */
       { name: 'Cave',             lat: 38.9970, lon: -9.4265, scale: 0.55 },
-      { name: 'Ribeira D\'Ilhas', lat: 38.9878, lon: -9.4196, scale: 0.55 },
-      { name: 'Reef',             lat: 38.9824, lon: -9.4223, scale: 0.55 },
-      { name: 'Pedra Branca',     lat: 38.9793, lon: -9.4228, scale: 0.55 },
-      { name: 'Matadouro',        lat: 38.9759, lon: -9.4202, scale: 0.50 },
-      { name: 'Praia do Sul',     lat: 38.9592, lon: -9.4163, scale: 0.50 },
-      { name: 'Foz do Lizandro',  lat: 38.9421, lon: -9.4161, scale: 0.50 },
-      { name: 'São Julião',       lat: 38.9320, lon: -9.4197, scale: 0.50 },
-      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50 },
+      { name: 'Ribeira D\'Ilhas', lat: 38.9878, lon: -9.4196, scale: 0.55, camUrl: 'https://video-auth1.iol.pt/beachcam/bcmafraribeira/playlist.m3u8' },
+      { name: 'Reef',             lat: 38.9824, lon: -9.4223, scale: 0.55, camUrl: 'https://video-auth1.iol.pt/beachcam/ericeiraspots/playlist.m3u8' },
+      { name: 'Pedra Branca',     lat: 38.9793, lon: -9.4228, scale: 0.55, camUrl: 'https://video-auth1.iol.pt/beachcam/ericeiraspots/playlist.m3u8' },
+      { name: 'Matadouro',        lat: 38.9759, lon: -9.4202, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/matadouroskatepark/playlist.m3u8' },
+      { name: 'Praia do Sul',     lat: 38.9592, lon: -9.4163, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiadosulericeira/playlist.m3u8' },
+      { name: 'Foz do Lizandro',  lat: 38.9421, lon: -9.4161, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/fozdolizandro/playlist.m3u8' },
+      { name: 'São Julião',       lat: 38.9320, lon: -9.4197, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/bcsaojuliao/playlist.m3u8' },
+      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50, camUrl: 'Devin Easter Egg Pequena.mov', camType: 'video' },
       { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783, scale: 0.50 },
       { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726, scale: 0.50 },
       { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694, scale: 0.45 },
@@ -101,7 +101,7 @@
       { name: 'Costa da Caparica', lat: 38.6449, lon: -9.2419, scale: 0.50 },
       { name: 'Fonte da Telha',   lat: 38.5733, lon: -9.1969, scale: 0.50 },
       { name: 'Bicas',            lat: 38.4637, lon: -9.1929, scale: 0.50 },
-      { name: 'Sesimbra',         lat: 38.4431, lon: -9.1052, scale: 0.45, camUrl: 'Henrik Easter Egg Sesimbra.JPG', camType: 'image' }, /* sheltered bay + easter egg */
+      { name: 'Sesimbra',         lat: 38.4431, lon: -9.1052, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/sesimbra/playlist.m3u8' }, /* sheltered bay */
     ];
 
     var spotMarkers = [];
@@ -185,6 +185,11 @@
           img.className = 'cam-easter-img';
           img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:top center;position:absolute;inset:0;';
           camEl.appendChild(img);
+        } else if (selSpot.camType === 'video') {
+          video.src = selSpot.camUrl;
+          video.loop = true;
+          video.style.display = 'block';
+          video.play().catch(function() {});
         } else if (typeof Hls !== 'undefined' && Hls.isSupported()) {
           _mapCamHls = new Hls();
           _mapCamHls.loadSource(selSpot.camUrl);
@@ -426,6 +431,16 @@
         document.getElementById('forecastSection').classList.remove('hidden');
         var fc = document.getElementById('forecastCol');
         if (fc) fc.scrollTop = 0;
+        setTimeout(function() {
+          var mapEl3 = document.getElementById('map');
+          var fcCol  = document.getElementById('forecastCol');
+          var hero   = document.querySelector('.wave-hero');
+          if (mapEl3 && fcCol && hero) {
+            var mapTop = mapEl3.getBoundingClientRect().top;
+            var colTop = fcCol.getBoundingClientRect().top;
+            hero.style.marginTop = Math.max(0, mapTop - colTop) + 'px';
+          }
+        }, 50);
 
         updateHero(data, windData, lat, lon);
         renderTides(data);

@@ -450,7 +450,7 @@
     .sp-cam-btn:hover { background: rgba(94,96,206,0.45); border-color: rgba(94,96,206,0.6); color: #fff; }
 
     /* ═══ FORECAST SECTION ══════════════════════════════════════ */
-    #forecastSection { padding: 0 0 2rem; max-width: 100%; overflow-x: hidden; box-sizing: border-box; }
+    #forecastSection { padding: 0; max-width: 100%; overflow-x: hidden; box-sizing: border-box; }
 
     .wave-hero {
       margin: 0 2rem 1rem; padding: 2.2rem 2rem 1.8rem;
