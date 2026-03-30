@@ -2482,7 +2482,7 @@
         : matches.map(function(s) {
             var idx = SURF_SPOTS.indexOf(s);
             var region = SPOT_REGION[s.name] || '';
-            return '<div onclick="pickSearchSpot(' + idx + ')" style="display:flex;justify-content:space-between;align-items:center;padding:0.52rem 1rem;cursor:pointer;transition:background 0.1s;" onmouseover="this.style.background=\'rgba(94,96,206,0.07)\'" onmouseout="this.style.background=\'\'"><span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.75rem;font-weight:700;color:#7400B8;letter-spacing:0.04em;">' + s.name + '</span><span style="font-family:\'DM Mono\',monospace;font-size:0.55rem;color:rgba(116,0,184,0.4);letter-spacing:0.08em;">' + region + '</span></div>';
+            return '<div onclick="pickSearchSpot(' + idx + ')" style="display:flex;justify-content:space-between;align-items:center;padding:0.52rem 1rem;cursor:pointer;transition:background 0.1s;" onmouseover="this.style.background=\'rgba(94,96,206,0.07)\'" onmouseout="this.style.background=\'\'"><span style="font-family:\'Plus Jakarta Sans\',sans-serif;font-size:0.75rem;font-weight:700;color:#5E60CE;letter-spacing:0.04em;">' + s.name + '</span><span style="font-family:\'DM Mono\',monospace;font-size:0.55rem;color:rgba(94,96,206,0.5);letter-spacing:0.08em;">' + region + '</span></div>';
           }).join('');
     }
 
