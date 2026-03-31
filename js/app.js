@@ -1603,9 +1603,10 @@
 
       /* Background watermark number — show today's range if available */
       if (bgNumEl && wh != null) {
-        bgNumEl.textContent = (whMin != null && whMax != null)
+        var rangeStr = (whMin != null && whMax != null)
           ? whMin.toFixed(1) + '–' + whMax.toFixed(1)
           : wh.toFixed(1);
+        bgNumEl.innerHTML = rangeStr + '<span class="bg-unit">m</span>';
       }
 
       /* Quality badge */
@@ -2424,6 +2425,19 @@
         if (!card) return;
         card.style.display = (region === 'ALL' || SPOT_REGION[spot.name] === region) ? '' : 'none';
       });
+      /* Sort visible cards North→South by latitude */
+      var container = document.getElementById('spCardsContainer');
+      if (container) {
+        var cards = Array.prototype.slice.call(container.children);
+        cards.sort(function(a, b) {
+          var idxA = parseInt(a.getAttribute('data-spot-idx'), 10);
+          var idxB = parseInt(b.getAttribute('data-spot-idx'), 10);
+          var latA = SURF_SPOTS[idxA] ? SURF_SPOTS[idxA].lat : 0;
+          var latB = SURF_SPOTS[idxB] ? SURF_SPOTS[idxB].lat : 0;
+          return latB - latA; /* higher lat = further north = first */
+        });
+        cards.forEach(function(c) { container.appendChild(c); });
+      }
       updateBestCards();
     }
 
@@ -2432,7 +2446,7 @@
       var container = document.getElementById('spCardsContainer');
       if (!container) return;
       var gradients = [
-        'linear-gradient(140deg, #4a52b8 0%, #5E60CE 45%, #4a52b8 100%)',
+        'linear-gradient(140deg, #5ecfb8 0%, #80FFDB 45%, #5ecfb8 100%)',
       ];
       SURF_SPOTS.forEach(function(spot, idx) {
         var grad = gradients[idx % gradients.length];
@@ -2449,22 +2463,25 @@
           + '<div class="sp-card-top"><div class="sp-badge-group">'
           + '<span class="firing-badge" id="spFiring' + idx + '">🔥 FIRING</span>'
           + '<span class="sp-quality-badge quality-loading" id="spQuality' + idx + '">—</span>'
-          + '<span class="sp-wind-type" id="spWindType' + idx + '"></span>'
           + '</div></div>'
           + '<div><div class="sp-name">' + spot.name + '</div>'
           + '<div class="sp-coords">' + latStr + '</div></div>'
           + '<div class="sp-card-bottom">'
           + '<div class="sp-conditions" id="spConditions' + idx + '"><small>Fetching conditions…</small></div>'
-          + '<span class="sp-arrow-big">→</span></div>'
-          + '<div class="sp-wind-compass" id="spWindCompass' + idx + '">'
-          + '<svg width="24" height="24" viewBox="0 0 24 24" id="spWindArrow' + idx + '">'
-          + '<circle cx="12" cy="12" r="11" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>'
-          + '<polygon points="12,2 9,15 12,12 15,15" fill="rgba(255,255,255,0.3)"/>'
-          + '</svg>'
-          + '<div class="sp-wind-spd" id="spWindSpd' + idx + '">—</div>'
-          + '</div>';
+          + '</div>'
+          + '<span style="display:none" id="spWindType' + idx + '"></span>'
+          + '<span style="display:none" id="spWindArrow' + idx + '"></span>'
+          + '<span style="display:none" id="spWindSpd' + idx + '"></span>';
         container.appendChild(card);
       });
+      /* Initial sort: North→South */
+      var cards0 = Array.prototype.slice.call(container.children);
+      cards0.sort(function(a, b) {
+        var idxA = parseInt(a.getAttribute('data-spot-idx'), 10);
+        var idxB = parseInt(b.getAttribute('data-spot-idx'), 10);
+        return (SURF_SPOTS[idxB] ? SURF_SPOTS[idxB].lat : 0) - (SURF_SPOTS[idxA] ? SURF_SPOTS[idxA].lat : 0);
+      });
+      cards0.forEach(function(c) { container.appendChild(c); });
     })();
 
     /* ─── Spot Search ───────────────────────────────────────── */
