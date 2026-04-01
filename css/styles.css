@@ -817,7 +817,7 @@
     min-height: 63px;
     padding: 0.45rem 0.85rem 0.45rem 0.9rem;
     border-radius: 12px;
-    display: flex !important;
+    display: flex;
     flex-direction: row;
     align-items: center;
     position: relative;
