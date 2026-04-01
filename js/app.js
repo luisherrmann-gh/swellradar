@@ -2464,7 +2464,7 @@
           + '<span class="firing-badge" id="spFiring' + idx + '">🔥 FIRING</span>'
           + '<span class="sp-quality-badge quality-loading" id="spQuality' + idx + '">—</span>'
           + '</div></div>'
-          + '<div><div class="sp-name">' + spot.name + '</div>'
+          + '<div class="sp-name-wrap"><div class="sp-name">' + spot.name + '</div>'
           + '<div class="sp-coords">' + latStr + '</div></div>'
           + '<div class="sp-card-bottom">'
           + '<div class="sp-conditions" id="spConditions' + idx + '"><small>Fetching conditions…</small></div>'
