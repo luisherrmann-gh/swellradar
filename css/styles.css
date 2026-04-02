@@ -260,7 +260,7 @@
       padding: 0.6rem 1.4rem 0.7rem;
       display: flex; align-items: center; gap: 1rem;
     }
-    @media (min-width: 769px) { .bottom-sheet { display: none !important; } }
+    .bottom-sheet { display: none !important; }
     .bs-spot { font-size: 0.58rem; letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700; color: #fff; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .bs-wave-row { display: flex; align-items: baseline; gap: 3px; }
     .bs-wave { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.7rem; font-weight: 800; color: #CC0000; line-height: 1; }
