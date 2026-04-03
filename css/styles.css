@@ -333,12 +333,12 @@
 
     .sp-card {
       border-radius: 16px;
-      padding: 0.2rem 1.5rem 0.2rem;
+      padding: 1.6rem 1.5rem 1rem;
       cursor: pointer;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      min-height: 28px;
+      justify-content: center;
+      min-height: 100px;
       position: relative;
       overflow: hidden;
       transition: transform 0.16s ease, box-shadow 0.16s ease;
@@ -378,14 +378,12 @@
     }
 
     .sp-card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 0.5rem;
+      position: absolute;
+      top: 0.6rem;
+      left: 1.5rem;
     }
 
-
-
+    .sp-name-wrap { }
     .sp-badge-group { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 
     /* FIRING badge */
@@ -425,19 +423,12 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 2.1rem; font-weight: 800;
       letter-spacing: -0.04em; line-height: 1;
-      color: #fff; margin-top: 0.55rem;
+      color: #fff; margin-top: 0.3rem;
       text-shadow: 0 0 12px rgba(94,96,206,0.5);
     }
-    .sp-coords { font-size: 0.44rem; letter-spacing: 0.14em; color: rgba(255,255,255,0.42); margin-top: 0.28rem; }
-
-    .sp-card-bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      margin-top: 0.7rem;
-    }
-    .sp-conditions { font-size: 0.52rem; letter-spacing: 0.06em; color: rgba(255,255,255,0.65); font-weight: 500; line-height: 1.5; }
-    .sp-conditions small { display: block; font-size: 0.42rem; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; margin-top: 1px; }
+    .sp-coords { display: none; }
+    .sp-card-bottom { display: none; }
+    .sp-conditions { display: none; }
     .sp-arrow-big { font-size: 1.1rem; color: rgba(255,255,255,0.5); transition: transform 0.16s ease; line-height: 1; flex-shrink: 0; }
     .sp-card:hover .sp-arrow-big { transform: translateX(6px); }
     .sp-cam-btn {
