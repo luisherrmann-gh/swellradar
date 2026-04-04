@@ -333,10 +333,10 @@
 
     .sp-card {
       border-radius: 16px;
-      padding: 1.6rem 1.5rem 0.7rem;
+      padding: 1.8rem 1.5rem 0.8rem;
       cursor: pointer;
-      display: grid;
-      grid-template-columns: 1fr auto auto;
+      display: flex;
+      flex-direction: row;
       align-items: center;
       min-height: 100px;
       position: relative;
@@ -359,7 +359,8 @@
 
     /* Wave number */
     .sp-card-bg-num {
-      grid-column: 3;
+      order: 3;
+      flex-shrink: 0;
       position: static;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 4.2rem; font-weight: 800;
@@ -383,8 +384,8 @@
       left: 1.5rem;
     }
 
-    .sp-name-wrap { grid-column: 1; }
-    .sp-card-bottom { grid-column: 2; display: flex; align-items: center; justify-content: center; padding: 0 1.5rem; }
+    .sp-name-wrap   { order: 1; flex: 1; min-width: 0; }
+    .sp-card-bottom { order: 2; flex: 1; display: flex; align-items: center; justify-content: center; }
     .sp-badge-group { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 
     /* FIRING badge */
@@ -815,19 +816,20 @@
   .sp-cards { display: flex !important; flex-direction: column; gap: 0.5rem; }
   .sp-card {
     min-height: 63px;
-    padding: 1.3rem 0.75rem 0.4rem 0.9rem;
+    padding: 1.1rem 0.75rem 0.3rem 0.9rem;
     border-radius: 12px;
-    display: grid !important;
-    grid-template-columns: 1fr auto auto;
+    display: flex !important;
+    flex-direction: row;
     align-items: center;
     position: relative;
   }
   .sp-card-top    { position: absolute; top: 0.22rem; left: 0.9rem; }
-  .sp-name-wrap   { grid-column: 1; }
-  .sp-card-bottom { grid-column: 2; position: static; left: auto; top: auto; transform: none; display: flex; align-items: center; justify-content: center; padding: 0 0.6rem; }
+  .sp-name-wrap   { order: 1; flex: 1; min-width: 0; }
+  .sp-card-bottom { order: 2; flex: 1; position: static; left: auto; top: auto; transform: none; display: flex; align-items: center; justify-content: center; }
   .sp-wind { font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.85); text-shadow: none; letter-spacing: 0.02em; white-space: nowrap; }
   .sp-card-bg-num {
-    grid-column: 3;
+    order: 3;
+    flex-shrink: 0;
     position: static !important;
     right: auto !important; top: auto !important; transform: none !important;
     font-size: 2.2rem;
