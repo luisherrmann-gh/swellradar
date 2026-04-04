@@ -451,7 +451,7 @@
     #forecastSection { padding: 0; max-width: 100%; overflow-x: hidden; box-sizing: border-box; }
 
     .wave-hero {
-      margin: 0 2rem 1rem; padding: 2.2rem 2rem 1.8rem;
+      margin: 1rem 2rem 1rem; padding: 2.2rem 2rem 1.8rem;
       border-radius: 16px; background: rgba(255,255,255,0.88);
       backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
       box-shadow: 0 2px 16px rgba(94,96,206,0.09); position: relative;

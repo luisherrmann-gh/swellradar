@@ -376,6 +376,7 @@
 
       setStatus('Select a surf spot to load forecast.', 'idle');
       map.flyTo([39.02, -9.35], 9, { duration: 0.85 });
+      filterSpots('ALL');
 
       var fc = document.getElementById('forecastCol');
       if (fc) fc.scrollTo({ top: 0, behavior: 'smooth' });
@@ -431,16 +432,6 @@
         document.getElementById('forecastSection').classList.remove('hidden');
         var fc = document.getElementById('forecastCol');
         if (fc) fc.scrollTop = 0;
-        setTimeout(function() {
-          var mapEl3 = document.getElementById('map');
-          var fcCol  = document.getElementById('forecastCol');
-          var hero   = document.querySelector('.wave-hero');
-          if (mapEl3 && fcCol && hero) {
-            var mapTop = mapEl3.getBoundingClientRect().top;
-            var colTop = fcCol.getBoundingClientRect().top;
-            hero.style.marginTop = Math.max(0, mapTop - colTop) + 'px';
-          }
-        }, 50);
 
         updateHero(data, windData, lat, lon);
         renderTides(data);
@@ -458,11 +449,10 @@
         var lonStr = Math.abs(lon).toFixed(2) + '° ' + (lon >= 0 ? 'E' : 'W');
         setStatus('Forecast loaded · ' + latStr + ', ' + lonStr, 'ok');
 
-        /* Scroll forecast panel back to top so wave hero is visible */
-        var fc = document.getElementById('forecastCol');
-        if (fc) fc.scrollTop = 0;
-        /* Deferred reset covers async scroll side-effects (Leaflet invalidateSize at 120ms, timeline at 220ms) */
-        setTimeout(function() { var fc2 = document.getElementById('forecastCol'); if (fc2) fc2.scrollTop = 0; }, 300);
+        /* Scroll forecast panel back to top */
+        var fc2 = document.getElementById('forecastCol');
+        if (fc2) fc2.scrollTop = 0;
+        window.scrollTo(0, 0);
 
       }).catch(function(err) {
         setStatus('Error: ' + err.message, 'error');
