@@ -333,11 +333,11 @@
 
     .sp-card {
       border-radius: 16px;
-      padding: 1.2rem 1.5rem;
+      padding: 1.6rem 1.5rem 0.7rem;
       cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      align-items: center;
       min-height: 100px;
       position: relative;
       overflow: hidden;
@@ -357,12 +357,10 @@
     .sp-card:active { transform: translateY(-1px); }
 
 
-    /* Wave number watermark */
+    /* Wave number */
     .sp-card-bg-num {
-      position: absolute;
-      right: 1.2rem;
-      top: 50%;
-      transform: translateY(-50%);
+      grid-column: 3;
+      position: static;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 4.2rem; font-weight: 800;
       letter-spacing: -0.06em; line-height: 1;
@@ -370,6 +368,8 @@
       text-shadow: 0 0 12px rgba(94,96,206,0.5);
       pointer-events: none; user-select: none;
       font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      text-align: right;
     }
     .sp-card-bg-num .bg-unit {
       font-size: 2rem; font-weight: 700;
@@ -379,11 +379,12 @@
 
     .sp-card-top {
       position: absolute;
-      top: 0.6rem;
+      top: 0.5rem;
       left: 1.5rem;
     }
 
-    .sp-name-wrap { }
+    .sp-name-wrap { grid-column: 1; }
+    .sp-card-bottom { grid-column: 2; display: flex; align-items: center; justify-content: center; padding: 0 1.5rem; }
     .sp-badge-group { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 
     /* FIRING badge */
@@ -427,8 +428,16 @@
       text-shadow: 0 0 12px rgba(94,96,206,0.5);
     }
     .sp-coords { display: none; }
-    .sp-card-bottom { display: none; }
+    .sp-card-bottom { display: flex; align-items: center; justify-content: center; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
     .sp-conditions { display: none; }
+    .sp-wind {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.6rem; font-weight: 800;
+      letter-spacing: -0.02em;
+      color: rgba(255,255,255,0.85);
+      text-shadow: 0 0 12px rgba(94,96,206,0.5);
+      white-space: nowrap;
+    }
     .sp-arrow-big { font-size: 1.1rem; color: rgba(255,255,255,0.5); transition: transform 0.16s ease; line-height: 1; flex-shrink: 0; }
     .sp-card:hover .sp-arrow-big { transform: translateX(6px); }
     .sp-cam-btn {
@@ -806,28 +815,24 @@
   .sp-cards { display: flex !important; flex-direction: column; gap: 0.5rem; }
   .sp-card {
     min-height: 63px;
-    padding: 0.45rem 0.85rem 0.45rem 0.9rem;
+    padding: 1.3rem 0.75rem 0.4rem 0.9rem;
     border-radius: 12px;
-    display: flex;
-    flex-direction: row;
+    display: grid !important;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
     position: relative;
   }
-  /* badge floats top-left, out of flow */
   .sp-card-top    { position: absolute; top: 0.22rem; left: 0.9rem; }
-  /* name fills left side, centered by parent align-items */
-  .sp-name-wrap   { flex: 1; }
-  .sp-card-bottom { display: none; }
-  /* number pushed to right via order */
+  .sp-name-wrap   { grid-column: 1; }
+  .sp-card-bottom { grid-column: 2; position: static; left: auto; top: auto; transform: none; display: flex; align-items: center; justify-content: center; padding: 0 0.6rem; }
+  .sp-wind { font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.85); text-shadow: none; letter-spacing: 0.02em; white-space: nowrap; }
   .sp-card-bg-num {
-    order: 10;
-    flex-shrink: 0;
-    position: relative !important;
+    grid-column: 3;
+    position: static !important;
     right: auto !important; top: auto !important; transform: none !important;
     font-size: 2.2rem;
     white-space: nowrap;
     text-align: right;
-    padding-left: 0.6rem;
     color: rgba(255,255,255,0.9);
   }
   .sp-card-bg-num .bg-unit { font-size: 1.05rem; }

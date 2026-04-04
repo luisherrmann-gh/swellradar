@@ -1613,6 +1613,18 @@
         windTypeEl.textContent = (wd != null) ? getWindType(wd, spotName2).toUpperCase() : '';
       }
 
+      /* Wind label on card */
+      var windEl = document.getElementById('spWind' + idx);
+      if (windEl) {
+        if (ws != null && wd != null) {
+          var dirs = ['N','NE','E','SE','S','SW','W','NW'];
+          var dirLabel = dirs[Math.round(wd / 45) % 8];
+          windEl.innerHTML = '<span style="display:inline-block;transform:rotate(' + (wd + 180) + 'deg);line-height:1;">↑</span> ' + dirLabel + ' · ' + Math.round(ws) + ' km/h';
+        } else {
+          windEl.textContent = '';
+        }
+      }
+
       /* Conditions text */
       if (condEl) {
         if (wh != null) {
@@ -2458,6 +2470,7 @@
           + '<div class="sp-coords">' + latStr + '</div></div>'
           + '<div class="sp-card-bottom">'
           + '<div class="sp-conditions" id="spConditions' + idx + '"><small>Fetching conditions…</small></div>'
+          + '<div class="sp-wind" id="spWind' + idx + '"></div>'
           + '</div>'
           + '<span style="display:none" id="spWindType' + idx + '"></span>'
           + '<span style="display:none" id="spWindArrow' + idx + '"></span>'
