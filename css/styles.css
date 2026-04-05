@@ -333,7 +333,7 @@
 
     .sp-card {
       border-radius: 16px;
-      padding: 1.8rem 1.5rem 0.8rem;
+      padding: 1.2rem 1.5rem;
       cursor: pointer;
       display: flex;
       flex-direction: row;
@@ -384,7 +384,7 @@
       left: 1.5rem;
     }
 
-    .sp-name-wrap   { order: 1; flex: 1; min-width: 0; }
+    .sp-name-wrap   { order: 1; flex: 1; min-width: 0; display: flex; align-items: center; }
     .sp-card-bottom { order: 2; flex: 1; display: flex; align-items: center; justify-content: center; }
     .sp-badge-group { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 
@@ -425,19 +425,21 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 2.1rem; font-weight: 800;
       letter-spacing: -0.04em; line-height: 1;
-      color: #fff; margin-top: 0.3rem;
+      color: #fff; margin-top: 0;
       text-shadow: 0 0 12px rgba(94,96,206,0.5);
     }
     .sp-coords { display: none; }
     .sp-card-bottom { display: flex; align-items: center; justify-content: center; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
     .sp-conditions { display: none; }
     .sp-wind {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1.6rem; font-weight: 800;
-      letter-spacing: -0.02em;
+      font-family: 'DM Mono', monospace;
+      font-size: 1rem; font-weight: 500;
+      letter-spacing: 0.04em;
       color: rgba(255,255,255,0.85);
-      text-shadow: 0 0 12px rgba(94,96,206,0.5);
       white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 0;
     }
     .sp-arrow-big { font-size: 1.1rem; color: rgba(255,255,255,0.5); transition: transform 0.16s ease; line-height: 1; flex-shrink: 0; }
     .sp-card:hover .sp-arrow-big { transform: translateX(6px); }
@@ -816,7 +818,7 @@
   .sp-cards { display: flex !important; flex-direction: column; gap: 0.5rem; }
   .sp-card {
     min-height: 63px;
-    padding: 1.1rem 0.75rem 0.3rem 0.9rem;
+    padding: 0.75rem 0.75rem 0.75rem 0.9rem;
     border-radius: 12px;
     display: flex !important;
     flex-direction: row;
@@ -824,7 +826,7 @@
     position: relative;
   }
   .sp-card-top    { position: absolute; top: 0.22rem; left: 0.9rem; }
-  .sp-name-wrap   { order: 1; flex: 1; min-width: 0; }
+  .sp-name-wrap   { order: 1; flex: 1; min-width: 0; display: flex; align-items: center; }
   .sp-card-bottom { order: 2; flex: 1; position: static; left: auto; top: auto; transform: none; display: flex; align-items: center; justify-content: center; }
   .sp-wind { font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.85); text-shadow: none; letter-spacing: 0.02em; white-space: nowrap; }
   .sp-card-bg-num {
