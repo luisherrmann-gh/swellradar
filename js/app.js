@@ -1617,17 +1617,20 @@
       var windEl = document.getElementById('spWind' + idx);
       if (windEl) {
         if (ws != null && wd != null) {
-          var spotName3 = SURF_SPOTS[idx] ? SURF_SPOTS[idx].name : '';
-          var wType     = getWindType(wd, spotName3);
-          var wColor    = windQualityColor(ws, wType, 1.0);
+          var spotName3  = SURF_SPOTS[idx] ? SURF_SPOTS[idx].name : '';
+          var wType      = getWindType(wd, spotName3);
+          var wColor     = windQualityColor(ws, wType, 1.0);
           var typeLabels = { 'offshore': 'OFFSHORE', 'cross-off': 'CROSS-OFF', 'cross': 'CROSS', 'cross-on': 'CROSS-ON', 'onshore': 'ONSHORE' };
-          var typeLabel = typeLabels[wType] || wType.toUpperCase();
+          var typeLabel  = typeLabels[wType] || wType.toUpperCase();
+          var dirs = ['N','NE','E','SE','S','SW','W','NW'];
+          var dirLabel = dirs[Math.round(wd / 45) % 8];
+          var glowColor = wColor.replace('1.0)', '0.35)');
           windEl.innerHTML =
-            '<span style="display:inline-block;transform:rotate(' + (wd + 180) + 'deg);line-height:1;color:' + wColor + ';font-size:0.85em;">↑</span>'
-            + '<span style="color:' + wColor + ';font-family:\'DM Mono\',monospace;font-size:0.55rem;font-weight:500;letter-spacing:0.12em;margin-left:0.35em;">' + typeLabel + '</span>'
-            + '<span style="color:rgba(255,255,255,0.55);font-family:\'DM Mono\',monospace;font-size:0.52rem;font-weight:400;letter-spacing:0.06em;margin-left:0.5em;">' + Math.round(ws) + ' km/h</span>';
+            '<span class="sp-wind-arrow" style="transform:rotate(' + (wd + 180) + 'deg);color:' + wColor + ';text-shadow:0 0 14px ' + glowColor + ';">↑</span>'
+            + '<span class="sp-wind-type" style="color:' + wColor + ';text-shadow:0 0 12px ' + glowColor + ';">' + typeLabel + '</span>'
+            + '<span class="sp-wind-spd">' + dirLabel + ' · ' + Math.round(ws) + ' km/h</span>';
         } else {
-          windEl.textContent = '';
+          windEl.innerHTML = '';
         }
       }
 

@@ -360,7 +360,7 @@
     /* Wave number */
     .sp-card-bg-num {
       order: 3;
-      flex-shrink: 0;
+      flex: 1 1 0;
       position: static;
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 4.2rem; font-weight: 800;
@@ -384,8 +384,8 @@
       left: 1.5rem;
     }
 
-    .sp-name-wrap   { order: 1; flex: 1; min-width: 0; display: flex; align-items: center; }
-    .sp-card-bottom { order: 2; flex: 1; display: flex; align-items: center; justify-content: center; }
+    .sp-name-wrap   { order: 1; flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
+    .sp-card-bottom { order: 2; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; padding: 0 1.8rem; }
     .sp-badge-group { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 
     /* FIRING badge */
@@ -429,17 +429,32 @@
       text-shadow: 0 0 12px rgba(94,96,206,0.5);
     }
     .sp-coords { display: none; }
-    .sp-card-bottom { display: flex; align-items: center; justify-content: center; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); margin: 0; }
     .sp-conditions { display: none; }
     .sp-wind {
-      font-family: 'DM Mono', monospace;
-      font-size: 1rem; font-weight: 500;
-      letter-spacing: 0.04em;
-      color: rgba(255,255,255,0.85);
-      white-space: nowrap;
       display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 0;
+      gap: 0.2rem;
+      white-space: nowrap;
+    }
+    .sp-wind-arrow {
+      font-size: 2.6rem;
+      line-height: 1;
+      display: inline-block;
+    }
+    .sp-wind-type {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 1.55rem; font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+    .sp-wind-spd {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem; font-weight: 400;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.06em;
+      line-height: 1;
     }
     .sp-arrow-big { font-size: 1.1rem; color: rgba(255,255,255,0.5); transition: transform 0.16s ease; line-height: 1; flex-shrink: 0; }
     .sp-card:hover .sp-arrow-big { transform: translateX(6px); }
@@ -675,35 +690,6 @@
     footer a { color: var(--accent); text-decoration: none; }
     footer a:hover { text-decoration: underline; }
 
-    /* ─── Wind compass on spot cards ─── */
-    .sp-wind-compass {
-      position: absolute;
-      top: 1.0rem; right: 1.1rem;
-      width: 48px; height: 48px;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.55);
-      display: flex; align-items: center; justify-content: center;
-      flex-direction: column;
-      border: 1px solid rgba(255,255,255,0.15);
-    }
-    .sp-wind-compass svg { display: block; }
-    .sp-wind-spd {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.38rem; letter-spacing: 0.05em;
-      color: rgba(255,255,255,0.7); margin-top: 1px;
-      text-align: center; white-space: nowrap;
-    }
-    .sp-wind-type {
-      position: absolute;
-      top: 4.6rem; right: 1.1rem;
-      font-family: 'DM Mono', monospace;
-      font-size: 0.37rem;
-      letter-spacing: 0.1em;
-      color: rgba(255,255,255,0.38);
-      text-transform: uppercase;
-      text-align: center;
-      width: 48px;
-    }
 
     /* ─── Map wind particle canvas overlay ─── */
     #mapWindCanvas {
@@ -826,12 +812,15 @@
     position: relative;
   }
   .sp-card-top    { position: absolute; top: 0.22rem; left: 0.9rem; }
-  .sp-name-wrap   { order: 1; flex: 1; min-width: 0; display: flex; align-items: center; }
-  .sp-card-bottom { order: 2; flex: 1; position: static; left: auto; top: auto; transform: none; display: flex; align-items: center; justify-content: center; }
-  .sp-wind { font-size: 0.62rem; font-weight: 700; color: rgba(255,255,255,0.85); text-shadow: none; letter-spacing: 0.02em; white-space: nowrap; }
+  .sp-name-wrap   { order: 1; flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
+  .sp-card-bottom { order: 2; flex: 0 0 auto; position: static; left: auto; top: auto; transform: none; display: flex; align-items: center; justify-content: center; padding: 0 0.75rem; }
+  .sp-wind { gap: 0.05rem; }
+  .sp-wind-arrow { font-size: 1.3rem; }
+  .sp-wind-type  { font-size: 0.72rem; letter-spacing: -0.01em; }
+  .sp-wind-spd   { font-size: 0.5rem; }
   .sp-card-bg-num {
     order: 3;
-    flex-shrink: 0;
+    flex: 1 1 0;
     position: static !important;
     right: auto !important; top: auto !important; transform: none !important;
     font-size: 2.2rem;
