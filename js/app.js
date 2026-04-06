@@ -2434,7 +2434,8 @@
       SURF_SPOTS.forEach(function(spot, idx) {
         var card = document.querySelector('[data-spot-idx="' + idx + '"]');
         if (!card) return;
-        card.style.display = (region === 'ALL' || SPOT_REGION[spot.name] === region) ? '' : 'none';
+        var show = (region === 'ALL' || SPOT_REGION[spot.name] === region);
+        card.style.setProperty('display', show ? '' : 'none', 'important');
       });
       /* Sort visible cards North→South by latitude */
       var container = document.getElementById('spCardsContainer');
