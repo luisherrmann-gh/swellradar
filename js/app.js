@@ -29,6 +29,23 @@
     var toCompass = function(deg) {
       return deg == null ? '—' : COMPASS[Math.round(deg / 22.5) % 16];
     };
+    function makeArrow(sourceDeg, color) {
+      var r = ((sourceDeg + 180) % 360);
+      return '<svg width="9" height="9" viewBox="0 0 10 10" style="transform:rotate(' + r + 'deg);display:inline-block;vertical-align:middle;margin-right:2px;flex-shrink:0;" fill="none" stroke="' + color + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9L5 1M2.5 3.5L5 1L7.5 3.5"/></svg>';
+    }
+    function makeTlWave(pct, color) {
+      var w = 44, h = 22;
+      var amp = 1.5 + (pct / 100) * 8;
+      var mid = h / 2;
+      var steps = 28;
+      var pts = [];
+      for (var i = 0; i <= steps; i++) {
+        var x = (i / steps) * w;
+        var y = mid - Math.sin((i / steps) * 2 * Math.PI * 1.5) * amp;
+        pts.push(x.toFixed(1) + ',' + y.toFixed(1));
+      }
+      return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + ' ' + h + '" style="display:block;margin:0.25rem auto 0.05rem;overflow:visible;"><polyline points="' + pts.join(' ') + '" fill="none" stroke="' + color + '" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+    }
     var DAYS   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
     var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun',
                   'Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -923,17 +940,34 @@
         prevDay = d.getUTCDay();
         var wEntry = windByTime[times[idx]] || {};
         var barClass = (h || 0) >= avgH * 1.3 ? 'high' : (h || 0) >= avgH * 0.7 ? 'med' : 'low';
+        var condLabel = getConditionLabel(h, p, wEntry.wd, selectedSpotName);
+        var windType  = getWindType(wEntry.wd, selectedSpotName);
+        var windTypeColors = {
+          'offshore':  isNow ? 'rgba(112,224,0,0.95)'  : '#70E000',
+          'cross-off': isNow ? 'rgba(232,93,4,0.9)'    : '#E85D04',
+          'cross':     isNow ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.35)',
+          'cross-on':  isNow ? 'rgba(208,0,0,0.85)'    : '#D00000',
+          'onshore':   isNow ? 'rgba(208,0,0,0.85)'    : '#D00000'
+        };
+        var windColor  = windTypeColors[windType]  || (isNow ? 'rgba(255,255,255,0.45)' : 'rgba(0,0,0,0.35)');
+        var swellColor = isNow ? 'rgba(255,255,255,0.85)' : '#CC0000';
+        var condColors = { 'epic':'#7400B8', 'good':'#70E000', 'fair':'#E85D04', 'poor':'#D00000', 'flat':'rgba(0,0,0,0.22)' };
+        var tlColor    = isNow ? '#fff' : (condColors[condLabel.toLowerCase()] || '#5E60CE');
+        var tlFontSize = (0.72 + (+pct / 100) * 0.32).toFixed(2) + 'rem';
         var el = document.createElement('div');
-        el.className = 'tl-item' + (isNow ? ' now' : '') + (dayChange && ci > 0 ? ' day-start' : '');
+        el.className = 'tl-item cond-' + condLabel.toLowerCase() + (isNow ? ' now' : '') + (dayChange && ci > 0 ? ' day-start' : '');
         el.innerHTML =
           '<div class="tl-day">' + (dayChange ? DAYS[d.getUTCDay()] : '') + '</div>'
           + '<div class="tl-time">' + String(d.getUTCHours()).padStart(2,'0') + ':00</div>'
-          + '<div class="tl-bar-wrap"><div class="tl-bar ' + barClass + '" style="height:' + pct + '%"></div></div>'
-          + '<div class="tl-h">' + (h != null ? h.toFixed(1) : '—') + '<span class="tl-hunit">m</span></div>'
+          + makeTlWave(+pct, tlColor)
+          + '<div class="tl-h" style="font-size:' + tlFontSize + ';color:' + tlColor + '">' + (h != null ? h.toFixed(1) : '—') + '<span class="tl-hunit">m</span></div>'
           + '<div class="tl-p">' + (p != null ? p.toFixed(0) + 's' : '—') + '</div>'
-          + '<div class="tl-d">' + toCompass(dir) + '</div>'
-          + '<div class="tl-ws">' + (wEntry.ws != null ? Math.round(wEntry.ws) + '<span class="tl-hunit">kph</span>' : '—') + '</div>'
-          + '<div class="tl-wd">' + toCompass(wEntry.wd) + '</div>';
+          + '<div class="tl-d">' + (dir != null ? makeArrow(dir, swellColor) : '') + toCompass(dir) + '</div>'
+          + '<div class="tl-wind-row">'
+          + (wEntry.wd != null ? makeArrow(wEntry.wd, windColor) : '')
+          + '<span class="tl-ws" style="color:' + windColor + '">' + (wEntry.ws != null ? Math.round(wEntry.ws) + '<span class="tl-hunit">kph</span>' : '—') + '</span>'
+          + '<span class="tl-wd" style="color:' + windColor + '">' + toCompass(wEntry.wd) + '</span>'
+          + '</div>';
         scroll.appendChild(el);
         if (isNow) nowEl = el;
       });
