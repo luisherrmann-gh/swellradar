@@ -421,6 +421,22 @@
     .quality-poor    { background: #D00000;                color: #fff;                   border: none; }
     .quality-flat    { background: #6A040F;                color: rgba(255,255,255,0.7);  border: none; }
 
+    /* Crowd badge */
+    .crowd-badge {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.42rem; font-weight: 500;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 20px;
+      white-space: nowrap; min-width: 20px; text-align: center;
+    }
+    .crowd-loading  { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.0);  border: 1px solid rgba(255,255,255,0.08); animation: firingPulse 1.4s ease-in-out infinite; }
+    .crowd-unknown  { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.35); border: 1px solid rgba(255,255,255,0.1); }
+    .crowd-empty    { background: rgba(94,192,129,0.12);  color: #5EC081;                border: 1px solid rgba(94,192,129,0.3); }
+    .crowd-quiet    { background: rgba(94,192,129,0.12);  color: #5EC081;                border: 1px solid rgba(94,192,129,0.25); }
+    .crowd-moderate { background: rgba(255,190,0,0.12);   color: #FFBE00;                border: 1px solid rgba(255,190,0,0.3); }
+    .crowd-busy     { background: rgba(232,93,4,0.14);    color: #E85D04;                border: 1px solid rgba(232,93,4,0.3); }
+    .crowd-packed   { background: rgba(208,0,0,0.14);     color: #D00000;                border: 1px solid rgba(208,0,0,0.3); }
+
     .sp-name {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 2.1rem; font-weight: 800;
@@ -834,6 +850,7 @@
   .sp-badge-group { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 3px; }
   .sp-quality-badge { font-size: 0.32rem !important; padding: 1px 5px !important; }
   .firing-badge     { font-size: 0.32rem !important; padding: 1px 5px !important; }
+  .crowd-badge      { font-size: 0.32rem !important; padding: 1px 5px !important; }
   .sp-best-badge    { font-size: 0.32rem !important; padding: 1px 5px !important; }
   .wave-hero, .stats-row, .tides-section, .tl-section, .chart-section { margin-left: 0.75rem; margin-right: 0.75rem; }
   .wave-hero { padding: 1.4rem 1.2rem 1.2rem; border-radius: 14px; }

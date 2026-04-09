@@ -45,6 +45,9 @@
       })(t0);
     }
 
+    /* ─── Crowd Detection ───────────────────────────────────── */
+    var ROBOFLOW_KEY = 'KES5Y6ms75lfMaB5pazU'; /* publishable key from roboflow.com */
+
     /* ─── Map ───────────────────────────────────────────────── */
     var selLat = null, selLon = null, pinMarker = null;
     var selectedSpotName = null;
@@ -144,6 +147,18 @@
       }
       map.flyTo([spot.lat, spot.lon], 14, { duration: 0.9 });
       placePin(spot.lat, spot.lon, spot.name);
+      /* Sync crowd badge to hero panel */
+      var _heroCrowd = document.getElementById('heroCrowdBadge');
+      if (_heroCrowd) {
+        var _cardCrowd = document.getElementById('spCrowd' + idx);
+        if (spot.name === 'Carcavelos' && _cardCrowd && _cardCrowd.textContent) {
+          _heroCrowd.textContent = _cardCrowd.textContent;
+          _heroCrowd.className = _cardCrowd.className;
+          _heroCrowd.style.display = 'inline-block';
+        } else {
+          _heroCrowd.style.display = 'none';
+        }
+      }
       selScale = spot.scale != null ? spot.scale : 1.0;
       fetchForecast(spot.lat, spot.lon);
       /* Show cam toggle only for spots with a live cam */
@@ -527,6 +542,8 @@
         heroBadge.style.color = hc.color;
         heroBadge.classList.add('visible');
       }
+      var heroCrowdBadge = document.getElementById('heroCrowdBadge');
+      if (heroCrowdBadge) heroCrowdBadge.style.display = (selectedSpotName === 'Carcavelos') ? 'inline-block' : 'none';
 
       var latStr = Math.abs(lat).toFixed(4) + '° ' + (lat >= 0 ? 'N' : 'S');
       var lonStr = Math.abs(lon).toFixed(4) + '° ' + (lon >= 0 ? 'E' : 'W');
@@ -2475,6 +2492,7 @@
           + '<div class="sp-card-top"><div class="sp-badge-group">'
           + '<span class="firing-badge" id="spFiring' + idx + '">🔥 FIRING</span>'
           + '<span class="sp-quality-badge quality-loading" id="spQuality' + idx + '">—</span>'
+          + (spot.name === 'Carcavelos' ? '<span class="crowd-badge crowd-loading" id="spCrowd' + idx + '"></span>' : '')
           + '</div></div>'
           + '<div class="sp-name-wrap"><div class="sp-name">' + spot.name + '</div>'
           + '<div class="sp-coords">' + latStr + '</div></div>'
@@ -2540,4 +2558,133 @@
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeSearch();
     });
+
+    /* ─── Crowd Detection — Carcavelos ──────────────────────── */
+    var _crowdHls = null;
+    function fetchCarcavelosCrowd() {
+      var carcIdx = -1;
+      for (var i = 0; i < SURF_SPOTS.length; i++) {
+        if (SURF_SPOTS[i].name === 'Carcavelos') { carcIdx = i; break; }
+      }
+      if (carcIdx === -1) return;
+      var badge = document.getElementById('spCrowd' + carcIdx);
+      if (!badge) return;
+
+      badge.className = 'crowd-badge crowd-loading';
+      badge.textContent = '';
+
+      var camUrl = SURF_SPOTS[carcIdx].camUrl;
+      if (!camUrl) return;
+
+      var video = document.createElement('video');
+      video.crossOrigin = 'anonymous';
+      video.muted = true;
+      video.playsInline = true;
+      video.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-9999px;';
+      document.body.appendChild(video);
+
+      var canvas = document.createElement('canvas');
+      canvas.width = 1280; canvas.height = 720;
+
+      var done = false;
+      var timer = setTimeout(function() {
+        if (!done) { done = true; cleanup(); setBadge(badge, frameCounts.length ? Math.max.apply(null, frameCounts) : -1); }
+      }, 40000);
+
+      function cleanup() {
+        clearTimeout(timer);
+        if (_crowdHls) { _crowdHls.destroy(); _crowdHls = null; }
+        if (video.parentNode) video.parentNode.removeChild(video);
+      }
+
+      /* Capture 3 frames 8s apart, take the maximum count */
+      var frameCounts = [];
+      var framesDone = 0;
+      var TOTAL_FRAMES = 3;
+
+      function captureFrame() {
+        if (done) return;
+        var b64;
+        try {
+          canvas.getContext('2d').drawImage(video, 0, 0, 1280, 720);
+          b64 = canvas.toDataURL('image/jpeg', 0.8).split(',')[1];
+        } catch(e) {
+          done = true; cleanup(); setBadge(badge, -1); return;
+        }
+        fetch('https://serverless.roboflow.com/surfer-spotting/2?api_key=' + ROBOFLOW_KEY + '&confidence=10&overlap=30', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: b64
+        })
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          var count = data.predictions ? data.predictions.length : 0;
+          console.log('[CROWD] Frame ' + (framesDone + 1) + ' count: ' + count);
+          frameCounts.push(count);
+          framesDone++;
+          if (framesDone >= TOTAL_FRAMES) {
+            done = true; cleanup();
+            setBadge(badge, Math.max.apply(null, frameCounts));
+          }
+        })
+        .catch(function() {
+          framesDone++;
+          if (framesDone >= TOTAL_FRAMES) {
+            done = true; cleanup();
+            var best = frameCounts.length ? Math.max.apply(null, frameCounts) : -1;
+            setBadge(badge, best);
+          }
+        });
+      }
+
+      /* Wait for real video data, then sample 3 frames 8s apart */
+      function onTimeUpdate() {
+        if (video.currentTime > 0) {
+          video.removeEventListener('timeupdate', onTimeUpdate);
+          captureFrame();
+          setTimeout(captureFrame, 8000);
+          setTimeout(captureFrame, 16000);
+        }
+      }
+      video.addEventListener('timeupdate', onTimeUpdate);
+
+      if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        _crowdHls = new Hls({ startLevel: -1, maxBufferLength: 5 });
+        _crowdHls.loadSource(camUrl);
+        _crowdHls.attachMedia(video);
+        _crowdHls.on(Hls.Events.MANIFEST_PARSED, function() { video.play().catch(function(){}); });
+        _crowdHls.on(Hls.Events.ERROR, function(ev, data) {
+          if (data.fatal && !done) { done = true; cleanup(); setBadge(badge, -1); }
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = camUrl;
+        video.play().catch(function(){});
+      } else {
+        cleanup();
+        setBadge(badge, -1);
+      }
+    }
+
+    function setBadge(badge, count) {
+      var label, cls;
+      /* Thresholds calibrated for Carcavelos cam: model detects ~10% of real surfers */
+      if (count < 0)       { label = '—';           cls = 'crowd-unknown'; }
+      else if (count === 0){ label = 'EMPTY';        cls = 'crowd-empty'; }
+      else if (count <= 2) { label = 'QUIET · ' + count;    cls = 'crowd-quiet'; }
+      else if (count <= 6) { label = 'MODERATE · ' + count; cls = 'crowd-moderate'; }
+      else if (count <= 12){ label = 'BUSY · ' + count;     cls = 'crowd-busy'; }
+      else                 { label = 'PACKED · ' + count;   cls = 'crowd-packed'; }
+      badge.textContent = label;
+      badge.className = 'crowd-badge ' + cls;
+      /* Mirror to hero badge if Carcavelos is currently selected */
+      var heroBadge = document.getElementById('heroCrowdBadge');
+      if (heroBadge && selectedSpotName === 'Carcavelos') {
+        heroBadge.textContent = label;
+        heroBadge.className = 'crowd-badge ' + cls;
+        heroBadge.style.display = 'inline-block';
+      }
+    }
+
+    fetchCarcavelosCrowd();
+    setInterval(fetchCarcavelosCrowd, 5 * 60 * 1000);
 
