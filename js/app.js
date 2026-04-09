@@ -441,7 +441,7 @@
         + '&hourly=wave_height,wave_period,wave_direction,wind_wave_height,swell_wave_height&forecast_days=7';
       var windUrl = 'https://api.open-meteo.com/v1/forecast'
         + '?latitude=' + lat + '&longitude=' + lon
-        + '&hourly=windspeed_10m,winddirection_10m,windgusts_10m&forecast_days=7';
+        + '&hourly=windspeed_10m,winddirection_10m,windgusts_10m,temperature_2m,apparent_temperature,precipitation_probability,weather_code,uv_index,cloud_cover&forecast_days=7';
 
       Promise.all([
         fetch(marineUrl),
@@ -476,6 +476,7 @@
         renderWindFlow(windData);
         updateMapWindFromSpot(windData);
         updateMapSwellFromSpot(data);
+        renderWeather(windData);
 
         var latStr = Math.abs(lat).toFixed(2) + '° ' + (lat >= 0 ? 'N' : 'S');
         var lonStr = Math.abs(lon).toFixed(2) + '° ' + (lon >= 0 ? 'E' : 'W');
@@ -2003,6 +2004,137 @@
       var per = (marineData.hourly.wave_period     && marineData.hourly.wave_period[ci])     || 10;
       var wd  = (marineData.hourly.wave_direction  && marineData.hourly.wave_direction[ci])  || 270;
       setMapSwellState(wh, per, wd);
+    }
+
+    /* ─── Weather box ──────────────────────────────────────── */
+    function renderWeather(windData) {
+      var el = document.getElementById('wxSection');
+      if (!el) return;
+      if (!windData || !windData.hourly || !windData.hourly.time) return;
+      var now = Date.now();
+      var times = windData.hourly.time;
+      var ci = 0, minD = Infinity;
+      times.forEach(function(t, i) {
+        var d = Math.abs(new Date(t) - now);
+        if (d < minD) { minD = d; ci = i; }
+      });
+      var temp    = windData.hourly.temperature_2m         && windData.hourly.temperature_2m[ci];
+      var feels   = windData.hourly.apparent_temperature   && windData.hourly.apparent_temperature[ci];
+      var rain    = windData.hourly.precipitation_probability && windData.hourly.precipitation_probability[ci];
+      var code    = windData.hourly.weather_code           && windData.hourly.weather_code[ci];
+      var uv      = windData.hourly.uv_index               && windData.hourly.uv_index[ci];
+      var cloud   = windData.hourly.cloud_cover            && windData.hourly.cloud_cover[ci];
+
+      function wxIcon(c) {
+        if (c == null) return wxSvgSun();
+        if (c === 0)                  return wxSvgSun();
+        if (c <= 2)                   return wxSvgPartly();
+        if (c <= 3)                   return wxSvgCloud();
+        if (c <= 48)                  return wxSvgFog();
+        if (c <= 67)                  return wxSvgRain();
+        if (c <= 77)                  return wxSvgSnow();
+        if (c <= 82)                  return wxSvgRain();
+        return wxSvgStorm();
+      }
+      function wxLabel(c) {
+        if (c == null) return 'Clear';
+        if (c === 0)   return 'Clear Sky';
+        if (c <= 1)    return 'Mainly Clear';
+        if (c <= 2)    return 'Partly Cloudy';
+        if (c <= 3)    return 'Overcast';
+        if (c <= 48)   return 'Foggy';
+        if (c <= 55)   return 'Drizzle';
+        if (c <= 67)   return 'Rain';
+        if (c <= 77)   return 'Snow';
+        if (c <= 82)   return 'Showers';
+        return 'Thunderstorm';
+      }
+      function uvLabel(u) {
+        if (u == null) return '—';
+        if (u <= 2)  return 'Low';
+        if (u <= 5)  return 'Moderate';
+        if (u <= 7)  return 'High';
+        if (u <= 10) return 'Very High';
+        return 'Extreme';
+      }
+      function uvColor(u) {
+        if (u == null) return 'var(--dim)';
+        if (u <= 2)  return '#70E000';
+        if (u <= 5)  return '#E85D04';
+        if (u <= 7)  return '#D00000';
+        if (u <= 10) return '#7400B8';
+        return '#CC0000';
+      }
+
+      var tempStr  = temp  != null ? Math.round(temp)  + '°C' : '—';
+      var feelsStr = feels != null ? Math.round(feels) + '°C' : '—';
+      var rainStr  = rain  != null ? rain + '%' : '—';
+      var uvStr    = uv    != null ? uv.toFixed(1) : '—';
+      var cloudStr = cloud != null ? cloud + '%' : '—';
+
+      document.getElementById('wxIcon').innerHTML  = wxIcon(code);
+      document.getElementById('wxTemp').textContent = tempStr;
+      document.getElementById('wxDesc').textContent = wxLabel(code);
+      document.getElementById('wxFeels').textContent = feelsStr;
+      document.getElementById('wxRain').textContent  = rainStr;
+      document.getElementById('wxUvVal').textContent  = uvStr + ' · ' + uvLabel(uv);
+      document.getElementById('wxUvVal').style.color  = uvColor(uv);
+      document.getElementById('wxCloud').textContent = cloudStr;
+    }
+
+    function wxSvgSun() {
+      return '<svg width="56" height="56" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="11" fill="#FFD60A"/><g stroke="#FFD60A" stroke-width="2.5" stroke-linecap="round">'
+        + '<line x1="28" y1="6" x2="28" y2="12"/><line x1="28" y1="44" x2="28" y2="50"/>'
+        + '<line x1="6" y1="28" x2="12" y2="28"/><line x1="44" y1="28" x2="50" y2="28"/>'
+        + '<line x1="13" y1="13" x2="17" y2="17"/><line x1="39" y1="39" x2="43" y2="43"/>'
+        + '<line x1="43" y1="13" x2="39" y2="17"/><line x1="17" y1="39" x2="13" y2="43"/>'
+        + '</g></svg>';
+    }
+    function wxSvgPartly() {
+      return '<svg width="56" height="56" viewBox="0 0 56 56" fill="none">'
+        + '<circle cx="24" cy="22" r="9" fill="#FFD60A"/>'
+        + '<rect x="10" y="29" width="36" height="18" rx="9" fill="#5E60CE" opacity="0.25"/>'
+        + '<rect x="13" y="31" width="30" height="14" rx="7" fill="white" stroke="rgba(94,96,206,0.3)" stroke-width="1"/>'
+        + '<ellipse cx="28" cy="31" rx="10" ry="8" fill="white" stroke="rgba(94,96,206,0.3)" stroke-width="1"/>'
+        + '</svg>';
+    }
+    function wxSvgCloud() {
+      return '<svg width="56" height="56" viewBox="0 0 56 56" fill="none">'
+        + '<rect x="8" y="22" width="40" height="20" rx="10" fill="rgba(94,96,206,0.15)"/>'
+        + '<rect x="11" y="24" width="34" height="16" rx="8" fill="white" stroke="rgba(94,96,206,0.3)" stroke-width="1.2"/>'
+        + '<ellipse cx="28" cy="24" rx="12" ry="9" fill="white" stroke="rgba(94,96,206,0.3)" stroke-width="1.2"/>'
+        + '</svg>';
+    }
+    function wxSvgFog() {
+      return '<svg width="56" height="56" viewBox="0 0 56 56" fill="none">'
+        + '<g stroke="rgba(94,96,206,0.4)" stroke-width="2.2" stroke-linecap="round">'
+        + '<line x1="12" y1="20" x2="44" y2="20"/><line x1="16" y1="28" x2="40" y2="28"/><line x1="12" y1="36" x2="44" y2="36"/>'
+        + '</g></svg>';
+    }
+    function wxSvgRain() {
+      return '<svg width="56" height="56" viewBox="0 0 56 56" fill="none">'
+        + '<rect x="10" y="12" width="36" height="18" rx="9" fill="rgba(94,96,206,0.15)"/>'
+        + '<rect x="13" y="14" width="30" height="14" rx="7" fill="white" stroke="rgba(94,96,206,0.3)" stroke-width="1.2"/>'
+        + '<ellipse cx="28" cy="14" rx="11" ry="8" fill="white" stroke="rgba(94,96,206,0.3)" stroke-width="1.2"/>'
+        + '<g stroke="#5390D9" stroke-width="2" stroke-linecap="round">'
+        + '<line x1="20" y1="36" x2="17" y2="44"/><line x1="28" y1="36" x2="25" y2="44"/><line x1="36" y1="36" x2="33" y2="44"/>'
+        + '</g></svg>';
+    }
+    function wxSvgSnow() {
+      return '<svg width="56" height="56" viewBox="0 0 56 56" fill="none">'
+        + '<rect x="10" y="12" width="36" height="18" rx="9" fill="rgba(94,96,206,0.1)"/>'
+        + '<rect x="13" y="14" width="30" height="14" rx="7" fill="white" stroke="rgba(94,96,206,0.25)" stroke-width="1.2"/>'
+        + '<ellipse cx="28" cy="14" rx="11" ry="8" fill="white" stroke="rgba(94,96,206,0.25)" stroke-width="1.2"/>'
+        + '<g fill="#80FFDB"><circle cx="20" cy="40" r="2.5"/><circle cx="28" cy="38" r="2.5"/><circle cx="36" cy="40" r="2.5"/><circle cx="24" cy="46" r="2"/><circle cx="32" cy="46" r="2"/></g>'
+        + '</svg>';
+    }
+    function wxSvgStorm() {
+      return '<svg width="56" height="56" viewBox="0 0 56 56" fill="none">'
+        + '<rect x="10" y="10" width="36" height="18" rx="9" fill="rgba(94,96,206,0.2)"/>'
+        + '<rect x="13" y="12" width="30" height="14" rx="7" fill="rgba(80,80,120,0.9)" stroke="rgba(94,96,206,0.4)" stroke-width="1.2"/>'
+        + '<ellipse cx="28" cy="12" rx="11" ry="8" fill="rgba(80,80,120,0.9)" stroke="rgba(94,96,206,0.4)" stroke-width="1.2"/>'
+        + '<polyline points="32,32 26,42 30,42 24,52" stroke="#FFD60A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>'
+        + '</svg>';
     }
 
     /* Called when a spot is clicked and forecast wind data loads */

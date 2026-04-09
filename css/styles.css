@@ -648,6 +648,55 @@
     .tl-ws  { font-size: 0.51rem; letter-spacing: 0.03em; font-weight: 500; white-space: nowrap; }
     .tl-wd  { font-size: 0.47rem; letter-spacing: 0.03em; }
 
+    /* ═══ WEATHER BOX ════════════════════════════════════════════ */
+    .wx-section {
+      margin: 0 2rem 1rem; border-radius: 16px;
+      background: rgba(255,255,255,0.88);
+      border: 1.5px solid #80FFDB;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      box-shadow: 0 2px 16px rgba(94,96,206,0.09); overflow: hidden;
+    }
+    .wx-body {
+      padding: 1.2rem 1.6rem 1.4rem;
+      display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .wx-hero {
+      display: flex; align-items: center; gap: 1.2rem;
+    }
+    .wx-icon { flex-shrink: 0; }
+    .wx-hero-right { display: flex; flex-direction: column; gap: 0.2rem; }
+    .wx-temp {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem); font-weight: 800;
+      color: var(--accent); line-height: 1;
+    }
+    .wx-desc {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.56rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--dim);
+    }
+    .wx-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border-radius: 12px; overflow: hidden;
+      border: 1.5px solid rgba(94,96,206,0.12);
+    }
+    .wx-cell {
+      padding: 0.9rem 0.8rem;
+      border-right: 1px solid rgba(94,96,206,0.12);
+      display: flex; flex-direction: column; gap: 0.4rem;
+    }
+    .wx-cell:last-child { border-right: none; }
+    .wx-cell-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.38rem; letter-spacing: 0.2em;
+      text-transform: uppercase; color: var(--dim);
+    }
+    .wx-cell-val {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: clamp(0.85rem, 2vw, 1.1rem); font-weight: 700;
+      color: var(--accent); line-height: 1;
+    }
+
     /* ═══ CHARTS ═════════════════════════════════════════════════ */
     .chart-section {
       margin: 0 2rem 1rem; padding: 1.4rem 1.8rem 2rem;
@@ -851,7 +900,12 @@
   .sp-badge-group .crowd-badge { font-size: 0.32rem !important; padding: 1px 5px !important; }
   .wave-hero #heroCrowdBadge   { font-size: 0.62rem !important; padding: 4px 13px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; }
   .sp-best-badge    { font-size: 0.32rem !important; padding: 1px 5px !important; }
-  .wave-hero, .stats-row, .tides-section, .tl-section, .chart-section { margin-left: 0.75rem; margin-right: 0.75rem; }
+  .wave-hero, .stats-row, .tides-section, .tl-section, .chart-section, .wx-section { margin-left: 0.75rem; margin-right: 0.75rem; }
+  .wx-body { padding: 1rem; }
+  .wx-grid { grid-template-columns: repeat(2, 1fr); }
+  .wx-cell:nth-child(2) { border-right: none; }
+  .wx-cell { border-bottom: 1px solid rgba(94,96,206,0.1); }
+  .wx-cell:nth-child(3), .wx-cell:nth-child(4) { border-bottom: none; }
   .wave-hero { padding: 1.4rem 1.2rem 1.2rem; border-radius: 14px; }
   .wave-num { font-size: clamp(38px, 11vw, 70px) !important; }
   .wave-coords { display: none; }
