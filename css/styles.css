@@ -850,7 +850,8 @@
   .sp-badge-group { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 3px; }
   .sp-quality-badge { font-size: 0.32rem !important; padding: 1px 5px !important; }
   .firing-badge     { font-size: 0.32rem !important; padding: 1px 5px !important; }
-  .crowd-badge      { font-size: 0.32rem !important; padding: 1px 5px !important; }
+  .sp-badge-group .crowd-badge { font-size: 0.32rem !important; padding: 1px 5px !important; }
+  .wave-hero #heroCrowdBadge   { font-size: 0.62rem !important; padding: 4px 13px !important; font-family: 'Plus Jakarta Sans', sans-serif !important; }
   .sp-best-badge    { font-size: 0.32rem !important; padding: 1px 5px !important; }
   .wave-hero, .stats-row, .tides-section, .tl-section, .chart-section { margin-left: 0.75rem; margin-right: 0.75rem; }
   .wave-hero { padding: 1.4rem 1.2rem 1.2rem; border-radius: 14px; }

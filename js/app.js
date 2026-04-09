@@ -151,7 +151,7 @@
       var _heroCrowd = document.getElementById('heroCrowdBadge');
       if (_heroCrowd) {
         var _cardCrowd = document.getElementById('spCrowd' + idx);
-        if (spot.name === 'Carcavelos' && _cardCrowd && _cardCrowd.textContent) {
+        if (spot.name === 'Carcavelos' && _cardCrowd) {
           _heroCrowd.textContent = _cardCrowd.textContent;
           _heroCrowd.className = _cardCrowd.className;
           _heroCrowd.style.display = 'inline-block';
@@ -2572,6 +2572,13 @@
 
       badge.className = 'crowd-badge crowd-loading';
       badge.textContent = '';
+      /* Mirror loading state to hero badge */
+      var _heroBadge = document.getElementById('heroCrowdBadge');
+      if (_heroBadge && selectedSpotName === 'Carcavelos') {
+        _heroBadge.className = 'crowd-badge crowd-loading';
+        _heroBadge.textContent = '';
+        _heroBadge.style.display = 'inline-block';
+      }
 
       var camUrl = SURF_SPOTS[carcIdx].camUrl;
       if (!camUrl) return;
