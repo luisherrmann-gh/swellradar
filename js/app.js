@@ -2667,13 +2667,13 @@
 
     function setBadge(badge, count) {
       var label, cls;
-      /* Thresholds calibrated for Carcavelos cam: model detects ~10% of real surfers */
-      if (count < 0)       { label = '—';           cls = 'crowd-unknown'; }
-      else if (count === 0){ label = 'EMPTY';        cls = 'crowd-empty'; }
-      else if (count <= 2) { label = 'QUIET · ' + count;    cls = 'crowd-quiet'; }
-      else if (count <= 6) { label = 'MODERATE · ' + count; cls = 'crowd-moderate'; }
-      else if (count <= 12){ label = 'BUSY · ' + count;     cls = 'crowd-busy'; }
-      else                 { label = 'PACKED · ' + count;   cls = 'crowd-packed'; }
+      /* Thresholds calibrated for Carcavelos cam (~10% detection rate) */
+      if (count < 0)       { label = '—';        cls = 'crowd-unknown'; }
+      else if (count === 0){ label = 'EMPTY';     cls = 'crowd-empty'; }
+      else if (count <= 2) { label = 'QUIET';     cls = 'crowd-quiet'; }
+      else if (count <= 6) { label = 'MODERATE';  cls = 'crowd-moderate'; }
+      else if (count <= 12){ label = 'BUSY';       cls = 'crowd-busy'; }
+      else                 { label = 'PACKED';    cls = 'crowd-packed'; }
       badge.textContent = label;
       badge.className = 'crowd-badge ' + cls;
       /* Mirror to hero badge if Carcavelos is currently selected */
