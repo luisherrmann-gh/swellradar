@@ -1463,44 +1463,53 @@
        LANDING PAGE — pre-fetch current conditions for spot cards
     ═══════════════════════════════════════════════════════════ */
     var SPOT_FACING = {
-      'Nazaré':               285,
-      'Almagreira':           270,
-      'Lagide':               260,
-      'Baleal':               315,
-      'Cantinho da Baía':     300,
-      'Middle':               290,
-      'Meio da Baía':         285,
-      'Molhe Leste':          290,
-      'Supertubos':           255,
+      /* Nazaré — strand schaut W/WNW, leicht nördl. von West */
+      'Nazaré':               280,
+      /* Peniche-Bereich */
+      'Almagreira':           270,  // West
+      'Lagide':               262,  // WSW
+      'Baleal':               305,  // NW (Nordseite der Insel, Hauptsurf)
+      'Cantinho da Baía':     300,  // NW, Peniche-Bucht
+      'Middle':               290,  // WNW
+      'Meio da Baía':         285,  // WNW
+      'Molhe Leste':          285,  // WNW
+      'Supertubos':           265,  // W (nicht WSW — Strand schaut direkt West)
+      /* Santa Cruz → Ericeira */
       'Santa Cruz':           270,
       'Praia das Amoeiras':   270,
       'Praia Azul':           270,
-      'São Lourenço':         285,
-      'Coxos':                280,
-      'Cave':                 275,
-      'Ribeira D\'Ilhas':     285,
-      'Reef':                 280,
+      'São Lourenço':         278,  // WNW
+      'Coxos':                278,  // WNW, Reef
+      'Cave':                 273,  // W/WNW
+      'Ribeira D\'Ilhas':     280,  // WNW
+      'Reef':                 278,
       'Pedra Branca':         265,
       'Matadouro':            270,
+      /* Sintra-Küste */
       'Praia do Sul':         265,
       'Praia da Baleia':      270,
-      'Foz do Lizandro':      270,
-      'São Julião':           270,
-      'Praia Pequena':        255,
-      'Praia Grande':         260,
-      'Praia do Guincho':     240,
-      'São Pedro do Estoril': 225,
-      'Parede':               215,
-      'Praia de Torre':       210,
-      'Santo Amaro':          205,
-      'Paco de Arcos':        200,
-      'Praia de Caxias':      200,
-      'São João da Caparica': 195,
-      'Costa da Caparica':    195,
-      'Fonte da Telha':       195,
-      'Bicas':                200,
-      'Sesimbra':             210,
-      'Carcavelos':           200
+      'Foz do Lizandro':      268,
+      'São Julião':           268,
+      'Praia Pequena':        260,  // WSW, etwas geschützt
+      'Praia Grande':         265,  // W/WSW
+      /* Guincho — extrem exponiert, schaut WSW */
+      'Praia do Guincho':     255,
+      /* Estoril-Küste — Nordbank Tejo-Mündung, schaut Richtung Süd */
+      'São Pedro do Estoril': 205,  // S/SSW (war 225 — zu weit westlich)
+      'Parede':               200,  // S
+      'Praia de Torre':       195,  // S
+      'Santo Amaro':          190,  // S
+      'Paco de Arcos':        185,  // S
+      'Praia de Caxias':      185,  // S
+      /* Carcavelos — westliches Ende Estoril-Küste, schaut S/SSW */
+      'Carcavelos':           200,
+      /* Caparica-Küste — Atlantikküste, schaut West */
+      'São João da Caparica': 265,
+      'Costa da Caparica':    265,
+      'Fonte da Telha':       260,
+      'Bicas':                255,
+      /* Sesimbra — geschützte Bucht, schaut direkt Süd */
+      'Sesimbra':             180
     };
     function getWindType(windDeg, spotName) {
       var facing = SPOT_FACING[spotName];
@@ -1516,10 +1525,10 @@
     function getConditionLabel(wh, period, windDeg, spotName) {
       if (wh == null || wh < 0.3) return 'FLAT';
       var score = 1;
-      if      (wh >= 2.5 && period >= 14) score = 4;
-      else if (wh >= 1.5 && period >= 12) score = 3;
-      else if (wh >= 0.8 && period >= 9)  score = 2;
-      var windMod = { 'offshore': 1, 'cross-off': 0, 'cross': 0, 'cross-on': -1, 'onshore': -2 };
+      if      (wh >= 2.5 && period >= 12) score = 4;
+      else if (wh >= 1.5 && period >= 10) score = 3;
+      else if (wh >= 0.8 && period >= 7)  score = 2;
+      var windMod = { 'offshore': 1, 'cross-off': 1, 'cross': 0, 'cross-on': -1, 'onshore': -2 };
       var mod = windMod[getWindType(windDeg, spotName)] || 0;
       var final = Math.min(4, Math.max(1, score + mod));
       return ['POOR', 'FAIR', 'GOOD', 'EPIC'][final - 1];
