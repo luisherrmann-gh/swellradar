@@ -175,6 +175,7 @@
     }
     .map-cam-tab.active { background: #5E60CE; color: #fff; border-color: #5E60CE; }
 
+
     #map { flex: 1; min-height: 0; width: 100%; display: block; cursor: grab; }
 
     /* Leaflet overrides */

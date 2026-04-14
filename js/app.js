@@ -107,7 +107,7 @@
       { name: 'Praia do Sul',     lat: 38.9592, lon: -9.4163, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiadosulericeira/playlist.m3u8' },
       { name: 'Foz do Lizandro',  lat: 38.9421, lon: -9.4161, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/fozdolizandro/playlist.m3u8' },
       { name: 'São Julião',       lat: 38.9320, lon: -9.4197, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/bcsaojuliao/playlist.m3u8' },
-      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50, camUrl: 'Devin Easter Egg Pequena.mov', camType: 'video' },
+      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50, camUrl: 'Devin Easter Egg Pequena.mov', camType: 'video', camUrl2: 'Saras Cam.MP4', camType2: 'video' },
       { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiagrande/playlist.m3u8' },
       { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiaguinchosul/playlist.m3u8' },
       { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/saopedroestoria/playlist.m3u8' },
@@ -179,68 +179,84 @@
       selScale = spot.scale != null ? spot.scale : 1.0;
       fetchForecast(spot.lat, spot.lon);
       /* Show cam toggle only for spots with a live cam */
-      var toggle = document.getElementById('mapCamToggle');
+      var toggle  = document.getElementById('mapCamToggle');
+      var tabCam2 = document.getElementById('tabCam2');
       if (spot.camUrl) {
         toggle.style.display = 'flex';
+        tabCam2.style.display = spot.camUrl2 ? 'inline-block' : 'none';
       } else {
         toggle.style.display = 'none';
+        tabCam2.style.display = 'none';
         switchMapCam('map');
       }
     }
 
     var _mapCamHls = null;
+    var _activeCamSource = 1;
+
+    function _loadMapCamSource(selSpot, sourceNum) {
+      var camEl = document.getElementById('camView');
+      var video = document.getElementById('mapCamVideo');
+      var errEl = document.getElementById('mapCamError');
+      if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
+      var oldImg = camEl.querySelector('.cam-easter-img');
+      if (oldImg) oldImg.remove();
+      errEl.style.display = 'none';
+      video.style.display = 'block';
+      var url  = sourceNum === 2 ? selSpot.camUrl2  : selSpot.camUrl;
+      var type = sourceNum === 2 ? selSpot.camType2 : selSpot.camType;
+      if (type === 'image') {
+        video.style.display = 'none';
+        var img = document.createElement('img');
+        img.src = url;
+        img.className = 'cam-easter-img';
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:top center;position:absolute;inset:0;';
+        camEl.appendChild(img);
+      } else if (type === 'video') {
+        video.src = url;
+        video.loop = true;
+        video.play().catch(function() {});
+      } else if (typeof Hls !== 'undefined' && Hls.isSupported()) {
+        _mapCamHls = new Hls();
+        _mapCamHls.loadSource(url);
+        _mapCamHls.attachMedia(video);
+        _mapCamHls.on(Hls.Events.ERROR, function(e, data) {
+          if (data.fatal) { errEl.style.display = 'flex'; video.style.display = 'none'; }
+        });
+        video.play().catch(function() {});
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = url;
+        video.play().catch(function() {});
+      } else {
+        errEl.style.display = 'flex'; video.style.display = 'none';
+      }
+    }
+
     function switchMapCam(mode) {
-      var mapEl  = document.getElementById('map');
-      var camEl  = document.getElementById('camView');
-      var video  = document.getElementById('mapCamVideo');
-      var errEl  = document.getElementById('mapCamError');
-      var tabMap = document.getElementById('tabMap');
-      var tabCam = document.getElementById('tabCam');
-      if (mode === 'cam') {
+      var mapEl   = document.getElementById('map');
+      var camEl   = document.getElementById('camView');
+      var video   = document.getElementById('mapCamVideo');
+      var tabMap  = document.getElementById('tabMap');
+      var tabCam  = document.getElementById('tabCam');
+      var tabCam2 = document.getElementById('tabCam2');
+      if (mode === 'cam' || mode === 'cam2') {
         var selSpot = null;
         SURF_SPOTS.forEach(function(s) { if (s.name === selectedSpotName) selSpot = s; });
         if (!selSpot || !selSpot.camUrl) return;
+        if (mode === 'cam2' && !selSpot.camUrl2) return;
         mapEl.style.display = 'none';
         camEl.style.display = 'block';
-        errEl.style.display = 'none';
-        video.style.display = 'block';
         tabMap.classList.remove('active');
-        tabCam.classList.add('active');
-        if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
-        /* Remove any existing easter egg image */
-        var oldImg = camEl.querySelector('.cam-easter-img');
-        if (oldImg) oldImg.remove();
-        if (selSpot.camType === 'image') {
-          video.style.display = 'none';
-          var img = document.createElement('img');
-          img.src = selSpot.camUrl;
-          img.className = 'cam-easter-img';
-          img.style.cssText = 'width:100%;height:100%;object-fit:cover;object-position:top center;position:absolute;inset:0;';
-          camEl.appendChild(img);
-        } else if (selSpot.camType === 'video') {
-          video.src = selSpot.camUrl;
-          video.loop = true;
-          video.style.display = 'block';
-          video.play().catch(function() {});
-        } else if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-          _mapCamHls = new Hls();
-          _mapCamHls.loadSource(selSpot.camUrl);
-          _mapCamHls.attachMedia(video);
-          _mapCamHls.on(Hls.Events.ERROR, function(e, data) {
-            if (data.fatal) { errEl.style.display = 'flex'; video.style.display = 'none'; }
-          });
-          video.play().catch(function() {});
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = selSpot.camUrl;
-          video.play().catch(function() {});
-        } else {
-          errEl.style.display = 'flex'; video.style.display = 'none';
-        }
+        tabCam.classList.toggle('active', mode === 'cam');
+        tabCam2.classList.toggle('active', mode === 'cam2');
+        _activeCamSource = (mode === 'cam2') ? 2 : 1;
+        _loadMapCamSource(selSpot, _activeCamSource);
       } else {
         camEl.style.display = 'none';
         mapEl.style.display = 'block';
         tabMap.classList.add('active');
         tabCam.classList.remove('active');
+        tabCam2.classList.remove('active');
         video.pause(); video.src = '';
         if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
         var oldImg2 = camEl.querySelector('.cam-easter-img');
