@@ -111,7 +111,32 @@
       { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiagrande/playlist.m3u8' },
       { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiaguinchosul/playlist.m3u8' },
       { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/saopedroestoria/playlist.m3u8' },
-      { name: 'Carcavelos',         lat: 38.6796, lon: -9.3359, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/carcavelos/chunks.m3u8' },
+      { name: 'Carcavelos',         lat: 38.6796, lon: -9.3359, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/carcavelos/chunks.m3u8',
+        guide: {
+          desc: '15 minutes from Lisbon, Carcavelos delivers heavy sand-bottom barrels — especially in winter when it\'s really cranking. Waves look unmakeable until you take off; hold a high line and hang tight for an 85% success rate. Summer brings inconsistent short-period windswells. Come autumn through spring, the swell wraps the corner and grooms the hard-packed sandbars.',
+          ideal: [
+            { label: 'Swell Direction', value: 'W to WSW, even SW' },
+            { label: 'Wind',            value: 'North' },
+            { label: 'Surf Height',     value: 'Head-high to several feet overhead' },
+            { label: 'Tide',            value: 'Medium-low — breaks on all tides' }
+          ],
+          stats: [
+            { label: 'Ability Level',  value: 'All Abilities',  sub: 'Beginner to advanced, depending on how big it is.',  bar: 0.5,  range: ['Beg','Adv'] },
+            { label: 'Local Vibe',     value: 'Doable',         sub: 'Slightly chaotic, but there is a hierarchy.',        bar: 0.35, range: ['Welcoming','Intimidating'] },
+            { label: 'Crowd Factor',   value: 'Moderate',       sub: 'Due to its proximity to the city, almost always a crowd.', bar: 0.5, range: ['Mellow','Heavy'] },
+            { label: 'Spot Rating',    value: 'Perfect',        sub: 'With the right swell/wind/sand combo it can get really good.', bar: 1.0, range: ['Poor','Perfect'] },
+            { label: 'Shoulder Burn',  value: 'Medium',         sub: 'Can be some work on the bigger days.',               bar: 0.5,  range: ['Light','Exhausting'] },
+            { label: 'Water Quality',  value: 'Dirty',          sub: 'Close to Lisbon so it can get very nasty.',          bar: 1.0,  range: ['Clean','Dirty'] }
+          ],
+          info: [
+            { label: 'Hazards',      value: 'Crowds and hitting bottom on bigger days.' },
+            { label: 'Bring Your',   value: 'Shortboard, Fish, Longboard' },
+            { label: 'Bottom',       value: 'Sand' },
+            { label: 'Best Season',  value: 'Autumn is best, but Winter and Spring are solid. Much slower in Summer.' },
+            { label: 'Access',       value: 'Parking right there.' }
+          ]
+        }
+      },
       { name: 'Parede',           lat: 38.6857, lon: -9.3538, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/parede/playlist.m3u8' },
       { name: 'Praia de Torre',   lat: 38.6757, lon: -9.3230, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/bctorre/playlist.m3u8' },
       { name: 'Santo Amaro',      lat: 38.6848, lon: -9.3121, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/santoamaro/playlist.m3u8' },
@@ -182,14 +207,19 @@
       var toggle     = document.getElementById('mapCamToggle');
       var tabCam2    = document.getElementById('tabCam2');
       var tabPhotos  = document.getElementById('tabPhotos');
-      if (spot.camUrl) {
+      var tabGuide   = document.getElementById('tabGuide');
+      if (spot.camUrl || spot.guide) {
         toggle.style.display = 'flex';
-        tabCam2.style.display = spot.camUrl2 ? 'inline-block' : 'none';
-        tabPhotos.style.display = spot.photos ? 'inline-block' : 'none';
+        tabCam2.style.display   = spot.camUrl2  ? 'inline-block' : 'none';
+        tabPhotos.style.display = spot.photos   ? 'inline-block' : 'none';
+        tabGuide.style.display  = spot.guide    ? 'inline-block' : 'none';
+        if (!spot.camUrl) { document.getElementById('tabCam').style.display = 'none'; }
+        else              { document.getElementById('tabCam').style.display = 'inline-block'; }
       } else {
         toggle.style.display = 'none';
-        tabCam2.style.display = 'none';
+        tabCam2.style.display   = 'none';
         tabPhotos.style.display = 'none';
+        tabGuide.style.display  = 'none';
         switchMapCam('map');
       }
     }
@@ -252,21 +282,25 @@
       var mapEl      = document.getElementById('map');
       var camEl      = document.getElementById('camView');
       var photosEl   = document.getElementById('photosView');
+      var guideEl    = document.getElementById('guideView');
       var video      = document.getElementById('mapCamVideo');
       var tabMap     = document.getElementById('tabMap');
       var tabCam     = document.getElementById('tabCam');
       var tabCam2    = document.getElementById('tabCam2');
       var tabPhotos  = document.getElementById('tabPhotos');
+      var tabGuide   = document.getElementById('tabGuide');
 
       /* helper: hide everything cleanly */
       function _hideAll() {
         camEl.style.display    = 'none';
         photosEl.style.display = 'none';
+        guideEl.style.display  = 'none';
         mapEl.style.display    = 'block';
         tabMap.classList.add('active');
         tabCam.classList.remove('active');
         tabCam2.classList.remove('active');
         tabPhotos.classList.remove('active');
+        tabGuide.classList.remove('active');
         video.pause(); video.src = '';
         if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
         var oldImg2 = camEl.querySelector('.cam-easter-img');
@@ -280,12 +314,14 @@
         if (!selSpot || !selSpot.camUrl) return;
         if (mode === 'cam2' && !selSpot.camUrl2) return;
         photosEl.style.display = 'none';
+        guideEl.style.display  = 'none';
         mapEl.style.display    = 'none';
         camEl.style.display    = 'block';
         tabMap.classList.remove('active');
         tabCam.classList.toggle('active', mode === 'cam');
         tabCam2.classList.toggle('active', mode === 'cam2');
         tabPhotos.classList.remove('active');
+        tabGuide.classList.remove('active');
         _activeCamSource = (mode === 'cam2') ? 2 : 1;
         _loadMapCamSource(selSpot, _activeCamSource);
       } else if (mode === 'photos') {
@@ -298,10 +334,82 @@
         tabMap.classList.remove('active');
         tabPhotos.classList.add('active');
         _initPhotosGallery(selSpot.photos);
+      } else if (mode === 'guide') {
+        var selSpot = null;
+        SURF_SPOTS.forEach(function(s) { if (s.name === selectedSpotName) selSpot = s; });
+        if (!selSpot || !selSpot.guide) return;
+        _hideAll();
+        mapEl.style.display   = 'none';
+        guideEl.style.display = 'block';
+        tabMap.classList.remove('active');
+        tabGuide.classList.add('active');
+        _renderGuide(selSpot.name, selSpot.guide);
       } else {
         _hideAll();
         setTimeout(function() { map.invalidateSize(); }, 50);
       }
+    }
+
+    /* ─── Spot Guide ────────────────────────────────────────── */
+    function _renderGuide(spotName, g) {
+      var el = document.getElementById('guideView');
+
+      /* ideal conditions icons (inline SVG paths) */
+      var icons = {
+        'Swell Direction': '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2L8 9h8L12 2z"/><path d="M12 22V9"/><path d="M4 15c2-2 4-3 8-3s6 1 8 3"/></svg>',
+        'Wind':            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9.59 4.59A2 2 0 1 1 11 8H2"/><path d="M12.59 19.41A2 2 0 1 0 14 16H2"/><path d="M6.59 11.41A2 2 0 1 1 8 8c0 5-6 5-6 5"/></svg>',
+        'Surf Height':     '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 18c2-4 5-6 8-6s6 2 8 6"/><path d="M2 12c2-3 4-5 6-5"/></svg>',
+        'Tide':            '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 6h20M2 10h20M2 14h20M2 18h20"/></svg>'
+      };
+
+      var html = '<div class="guide-inner">';
+
+      /* header */
+      html += '<div class="guide-header"><span class="guide-spot-name">' + spotName + '</span><span class="guide-label">SURF GUIDE</span></div>';
+
+      /* description */
+      html += '<p class="guide-desc">' + g.desc + '</p>';
+
+      /* divider */
+      html += '<div class="guide-divider"></div>';
+
+      /* ideal conditions */
+      html += '<div class="guide-section-title">Ideal Conditions</div>';
+      html += '<div class="guide-ideal-grid">';
+      g.ideal.forEach(function(item) {
+        var icon = icons[item.label] || '';
+        html += '<div class="guide-ideal-item"><span class="guide-ideal-icon">' + icon + '</span><div><div class="guide-ideal-lbl">' + item.label + '</div><div class="guide-ideal-val">' + item.value + '</div></div></div>';
+      });
+      html += '</div>';
+
+      /* divider */
+      html += '<div class="guide-divider"></div>';
+
+      /* stats */
+      html += '<div class="guide-stats-grid">';
+      g.stats.forEach(function(s) {
+        html += '<div class="guide-stat-item">'
+          + '<div class="guide-stat-lbl">' + s.label + '</div>'
+          + '<div class="guide-stat-val">' + s.value + '</div>'
+          + '<div class="guide-bar-wrap"><div class="guide-bar-fill" style="width:' + (s.bar * 100) + '%"></div></div>'
+          + '<div class="guide-bar-range"><span>' + s.range[0] + '</span><span>' + s.range[1] + '</span></div>'
+          + '<div class="guide-stat-sub">' + s.sub + '</div>'
+          + '</div>';
+      });
+      html += '</div>';
+
+      /* divider */
+      html += '<div class="guide-divider"></div>';
+
+      /* info list */
+      html += '<div class="guide-info-list">';
+      g.info.forEach(function(item) {
+        html += '<div class="guide-info-row"><span class="guide-info-lbl">' + item.label + '</span><span class="guide-info-val">' + item.value + '</span></div>';
+      });
+      html += '</div>';
+
+      html += '</div>'; /* /guide-inner */
+      el.innerHTML = html;
     }
 
     /* ─── Photo Gallery ─────────────────────────────────────── */
@@ -488,6 +596,8 @@
       if (mapEl2)     mapEl2.style.display    = '';
       if (camEl2)     camEl2.style.display    = '';
       if (photosEl2)  photosEl2.style.display = 'none';
+      var guideEl2 = document.getElementById('guideView');
+      if (guideEl2)   guideEl2.style.display  = 'none';
       if (camVid2) { camVid2.pause(); camVid2.src = ''; }
       if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
       _stopSaraAudio();
@@ -496,9 +606,11 @@
       var tabMap2    = document.getElementById('tabMap');
       var tabCam2    = document.getElementById('tabCam');
       var tabPhotos2 = document.getElementById('tabPhotos');
+      var tabGuide2  = document.getElementById('tabGuide');
       if (tabMap2)    tabMap2.classList.add('active');
       if (tabCam2)    tabCam2.classList.remove('active');
       if (tabPhotos2) tabPhotos2.classList.remove('active');
+      if (tabGuide2)  tabGuide2.classList.remove('active');
       var toggle2 = document.getElementById('mapCamToggle');
       if (toggle2) toggle2.style.display = 'none';
 
