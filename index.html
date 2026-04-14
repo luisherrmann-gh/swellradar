@@ -53,6 +53,7 @@
             <button class="map-cam-tab active" id="tabMap" onclick="switchMapCam('map')">MAP</button>
             <button class="map-cam-tab" id="tabCam" onclick="switchMapCam('cam')">LIVE CAM</button>
             <button class="map-cam-tab" id="tabCam2" onclick="switchMapCam('cam2')" style="display:none;">SARA'S CAM</button>
+            <button class="map-cam-tab" id="tabPhotos" onclick="switchMapCam('photos')" style="display:none;">PICTURES</button>
           </div>
         </div>
         <div style="position:relative;flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden;">
@@ -68,6 +69,15 @@
               <span style="font-family:'DM Mono',monospace;font-size:0.6rem;color:rgba(255,255,255,0.5);letter-spacing:0.12em;">STREAM UNAVAILABLE</span>
               <span style="font-family:'DM Mono',monospace;font-size:0.45rem;color:rgba(255,255,255,0.3);">CORS or stream offline</span>
             </div>
+          </div>
+          <!-- Photos gallery view -->
+          <div id="photosView" style="display:none;position:absolute;inset:0;background:#0a0a0a;z-index:10;overflow:hidden;">
+            <div id="photosTrack" style="display:flex;height:100%;transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);will-change:transform;"></div>
+            <!-- Arrows -->
+            <button id="photosArrowLeft" onclick="photosNav(-1)" style="display:none;position:absolute;left:0.6rem;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.1rem;z-index:2;align-items:center;justify-content:center;">&#8249;</button>
+            <button id="photosArrowRight" onclick="photosNav(1)" style="position:absolute;right:0.6rem;top:50%;transform:translateY(-50%);background:rgba(0,0,0,0.45);backdrop-filter:blur(6px);border:none;color:#fff;width:36px;height:36px;border-radius:50%;cursor:pointer;font-size:1.1rem;z-index:2;display:flex;align-items:center;justify-content:center;">&#8250;</button>
+            <!-- Dots -->
+            <div id="photosDots" style="position:absolute;bottom:0.8rem;left:50%;transform:translateX(-50%);display:flex;gap:6px;z-index:2;"></div>
           </div>
         </div>
         <div class="bottom-sheet hidden" id="bottomSheet">

@@ -107,7 +107,7 @@
       { name: 'Praia do Sul',     lat: 38.9592, lon: -9.4163, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiadosulericeira/playlist.m3u8' },
       { name: 'Foz do Lizandro',  lat: 38.9421, lon: -9.4161, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/fozdolizandro/playlist.m3u8' },
       { name: 'São Julião',       lat: 38.9320, lon: -9.4197, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/bcsaojuliao/playlist.m3u8' },
-      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50, camUrl: 'Devin Easter Egg Pequena.mov', camType: 'video', camUrl2: 'Saras Cam.MP4', camType2: 'video' },
+      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50, camUrl: 'Devin Easter Egg Pequena.mov', camType: 'video', camUrl2: 'Saras Cam.MP4', camType2: 'video', photos: ['Pequena 1.jpeg','Pequena 2.jpeg','Pequena 3.jpeg'] },
       { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiagrande/playlist.m3u8' },
       { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiaguinchosul/playlist.m3u8' },
       { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/saopedroestoria/playlist.m3u8' },
@@ -179,20 +179,28 @@
       selScale = spot.scale != null ? spot.scale : 1.0;
       fetchForecast(spot.lat, spot.lon);
       /* Show cam toggle only for spots with a live cam */
-      var toggle  = document.getElementById('mapCamToggle');
-      var tabCam2 = document.getElementById('tabCam2');
+      var toggle     = document.getElementById('mapCamToggle');
+      var tabCam2    = document.getElementById('tabCam2');
+      var tabPhotos  = document.getElementById('tabPhotos');
       if (spot.camUrl) {
         toggle.style.display = 'flex';
         tabCam2.style.display = spot.camUrl2 ? 'inline-block' : 'none';
+        tabPhotos.style.display = spot.photos ? 'inline-block' : 'none';
       } else {
         toggle.style.display = 'none';
         tabCam2.style.display = 'none';
+        tabPhotos.style.display = 'none';
         switchMapCam('map');
       }
     }
 
     var _mapCamHls = null;
     var _activeCamSource = 1;
+    var _saraAudio = null;
+
+    function _stopSaraAudio() {
+      if (_saraAudio) { _saraAudio.pause(); _saraAudio.currentTime = 0; _saraAudio = null; }
+    }
 
     function _loadMapCamSource(selSpot, sourceNum) {
       var camEl = document.getElementById('camView');
@@ -203,6 +211,14 @@
       if (oldImg) oldImg.remove();
       errEl.style.display = 'none';
       video.style.display = 'block';
+      /* Start/stop Polo G for Sara's Cam */
+      _stopSaraAudio();
+      if (sourceNum === 2) {
+        _saraAudio = new Audio('polo g.mp3');
+        _saraAudio.loop = true;
+        _saraAudio.volume = 0.75;
+        _saraAudio.play().catch(function() {});
+      }
       var url  = sourceNum === 2 ? selSpot.camUrl2  : selSpot.camUrl;
       var type = sourceNum === 2 ? selSpot.camType2 : selSpot.camType;
       if (type === 'image') {
@@ -233,36 +249,125 @@
     }
 
     function switchMapCam(mode) {
-      var mapEl   = document.getElementById('map');
-      var camEl   = document.getElementById('camView');
-      var video   = document.getElementById('mapCamVideo');
-      var tabMap  = document.getElementById('tabMap');
-      var tabCam  = document.getElementById('tabCam');
-      var tabCam2 = document.getElementById('tabCam2');
+      var mapEl      = document.getElementById('map');
+      var camEl      = document.getElementById('camView');
+      var photosEl   = document.getElementById('photosView');
+      var video      = document.getElementById('mapCamVideo');
+      var tabMap     = document.getElementById('tabMap');
+      var tabCam     = document.getElementById('tabCam');
+      var tabCam2    = document.getElementById('tabCam2');
+      var tabPhotos  = document.getElementById('tabPhotos');
+
+      /* helper: hide everything cleanly */
+      function _hideAll() {
+        camEl.style.display    = 'none';
+        photosEl.style.display = 'none';
+        mapEl.style.display    = 'block';
+        tabMap.classList.add('active');
+        tabCam.classList.remove('active');
+        tabCam2.classList.remove('active');
+        tabPhotos.classList.remove('active');
+        video.pause(); video.src = '';
+        if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
+        var oldImg2 = camEl.querySelector('.cam-easter-img');
+        if (oldImg2) oldImg2.remove();
+        _stopSaraAudio();
+      }
+
       if (mode === 'cam' || mode === 'cam2') {
         var selSpot = null;
         SURF_SPOTS.forEach(function(s) { if (s.name === selectedSpotName) selSpot = s; });
         if (!selSpot || !selSpot.camUrl) return;
         if (mode === 'cam2' && !selSpot.camUrl2) return;
-        mapEl.style.display = 'none';
-        camEl.style.display = 'block';
+        photosEl.style.display = 'none';
+        mapEl.style.display    = 'none';
+        camEl.style.display    = 'block';
         tabMap.classList.remove('active');
         tabCam.classList.toggle('active', mode === 'cam');
         tabCam2.classList.toggle('active', mode === 'cam2');
+        tabPhotos.classList.remove('active');
         _activeCamSource = (mode === 'cam2') ? 2 : 1;
         _loadMapCamSource(selSpot, _activeCamSource);
+      } else if (mode === 'photos') {
+        var selSpot = null;
+        SURF_SPOTS.forEach(function(s) { if (s.name === selectedSpotName) selSpot = s; });
+        if (!selSpot || !selSpot.photos) return;
+        _hideAll();
+        mapEl.style.display    = 'none';
+        photosEl.style.display = 'block';
+        tabMap.classList.remove('active');
+        tabPhotos.classList.add('active');
+        _initPhotosGallery(selSpot.photos);
       } else {
-        camEl.style.display = 'none';
-        mapEl.style.display = 'block';
-        tabMap.classList.add('active');
-        tabCam.classList.remove('active');
-        tabCam2.classList.remove('active');
-        video.pause(); video.src = '';
-        if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
-        var oldImg2 = camEl.querySelector('.cam-easter-img');
-        if (oldImg2) oldImg2.remove();
+        _hideAll();
         setTimeout(function() { map.invalidateSize(); }, 50);
       }
+    }
+
+    /* ─── Photo Gallery ─────────────────────────────────────── */
+    var _photosIdx = 0;
+    var _photosCount = 0;
+
+    function _initPhotosGallery(photos) {
+      var track   = document.getElementById('photosTrack');
+      var dots    = document.getElementById('photosDots');
+      var arrowL  = document.getElementById('photosArrowLeft');
+      var arrowR  = document.getElementById('photosArrowRight');
+      _photosIdx   = 0;
+      _photosCount = photos.length;
+      /* Build slides */
+      track.innerHTML = '';
+      photos.forEach(function(src) {
+        var slide = document.createElement('div');
+        slide.style.cssText = 'flex:0 0 100%;width:100%;height:100%;display:flex;align-items:center;justify-content:center;overflow:hidden;';
+        var img = document.createElement('img');
+        img.src = src;
+        img.style.cssText = 'width:100%;height:100%;object-fit:contain;';
+        slide.appendChild(img);
+        track.appendChild(slide);
+      });
+      /* Build dots */
+      dots.innerHTML = '';
+      photos.forEach(function(_, i) {
+        var dot = document.createElement('span');
+        dot.style.cssText = 'width:7px;height:7px;border-radius:50%;background:' + (i === 0 ? '#fff' : 'rgba(255,255,255,0.35)') + ';display:inline-block;transition:background 0.2s;cursor:pointer;';
+        dot.addEventListener('click', function() { _photosGoTo(i); });
+        dots.appendChild(dot);
+      });
+      _updatePhotosUI();
+      /* Touch/swipe */
+      var startX = null;
+      var el = document.getElementById('photosView');
+      el.addEventListener('touchstart', function(e) { startX = e.touches[0].clientX; }, { passive: true });
+      el.addEventListener('touchend', function(e) {
+        if (startX === null) return;
+        var dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 40) photosNav(dx < 0 ? 1 : -1);
+        startX = null;
+      }, { passive: true });
+    }
+
+    function _updatePhotosUI() {
+      var track  = document.getElementById('photosTrack');
+      var dots   = document.getElementById('photosDots');
+      var arrowL = document.getElementById('photosArrowLeft');
+      var arrowR = document.getElementById('photosArrowRight');
+      track.style.transform = 'translateX(-' + (_photosIdx * 100) + '%)';
+      var dotEls = dots.querySelectorAll('span');
+      dotEls.forEach(function(d, i) {
+        d.style.background = i === _photosIdx ? '#fff' : 'rgba(255,255,255,0.35)';
+      });
+      arrowL.style.display = _photosIdx > 0 ? 'flex' : 'none';
+      arrowR.style.display = _photosIdx < _photosCount - 1 ? 'flex' : 'none';
+    }
+
+    function _photosGoTo(idx) {
+      _photosIdx = Math.max(0, Math.min(_photosCount - 1, idx));
+      _updatePhotosUI();
+    }
+
+    function photosNav(dir) {
+      _photosGoTo(_photosIdx + dir);
     }
 
     var _camHls = null;
@@ -376,19 +481,24 @@
 
       /* Reset cam state — switchMapCam('cam') hides #map and shows #camView with inline
          styles. goHome must undo this so map.flyTo() can run on a visible element. */
-      var mapEl2  = document.getElementById('map');
-      var camEl2  = document.getElementById('camView');
-      var camVid2 = document.getElementById('mapCamVideo');
-      if (mapEl2)  mapEl2.style.display  = '';
-      if (camEl2)  camEl2.style.display  = '';
+      var mapEl2     = document.getElementById('map');
+      var camEl2     = document.getElementById('camView');
+      var photosEl2  = document.getElementById('photosView');
+      var camVid2    = document.getElementById('mapCamVideo');
+      if (mapEl2)     mapEl2.style.display    = '';
+      if (camEl2)     camEl2.style.display    = '';
+      if (photosEl2)  photosEl2.style.display = 'none';
       if (camVid2) { camVid2.pause(); camVid2.src = ''; }
       if (_mapCamHls) { _mapCamHls.destroy(); _mapCamHls = null; }
+      _stopSaraAudio();
       var eggImg = camEl2 && camEl2.querySelector('.cam-easter-img');
       if (eggImg) eggImg.remove();
-      var tabMap2 = document.getElementById('tabMap');
-      var tabCam2 = document.getElementById('tabCam');
-      if (tabMap2) tabMap2.classList.add('active');
-      if (tabCam2) tabCam2.classList.remove('active');
+      var tabMap2    = document.getElementById('tabMap');
+      var tabCam2    = document.getElementById('tabCam');
+      var tabPhotos2 = document.getElementById('tabPhotos');
+      if (tabMap2)    tabMap2.classList.add('active');
+      if (tabCam2)    tabCam2.classList.remove('active');
+      if (tabPhotos2) tabPhotos2.classList.remove('active');
       var toggle2 = document.getElementById('mapCamToggle');
       if (toggle2) toggle2.style.display = 'none';
 
