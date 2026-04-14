@@ -711,34 +711,50 @@
       margin: 0 2rem 1rem;
       border-radius: 14px;
       border: 1.5px solid #80FFDB;
-      background: rgba(128,255,219,0.04);
-      padding: 1rem 1.2rem 1.1rem;
+      background: #fff;
+      padding: 1rem 1.25rem 1.2rem;
     }
     .ai-briefing-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 0.65rem;
+      margin-bottom: 0.8rem;
     }
     .ai-briefing-label {
       font-family: 'DM Mono', monospace;
       font-size: 0.42rem;
       font-weight: 700;
       letter-spacing: 0.22em;
-      color: #80FFDB;
+      color: #5E60CE;
     }
     .ai-briefing-date {
       font-family: 'DM Mono', monospace;
       font-size: 0.38rem;
-      color: rgba(255,255,255,0.25);
+      color: rgba(0,0,0,0.3);
       letter-spacing: 0.1em;
     }
     .ai-briefing-text {
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.62rem;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.75);
-      white-space: pre-wrap;
+      font-size: 0.63rem;
+      line-height: 1.0;
+      color: rgba(0,0,0,0.8);
+    }
+    .ai-briefing-text .ai-briefing-title {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #0d0d12;
+      margin-bottom: 0.6rem;
+    }
+    .ai-briefing-text p {
+      margin-bottom: 0.55rem;
+      line-height: 1.65;
+      color: rgba(0,0,0,0.7);
+    }
+    .ai-briefing-text p:last-child { margin-bottom: 0; }
+    .ai-briefing-text .ai-hl {
+      color: #0d0d12;
+      font-weight: 700;
     }
 
     /* ═══ TIDES CHART — Surfline clone ══════════════════════════ */
