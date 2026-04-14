@@ -1,0 +1,32 @@
+name: Daily AI Forecast — Carcavelos
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # Every day at 06:00 UTC (07:00 Lisbon summer / 06:00 winter)
+  workflow_dispatch:        # Allow manual trigger from GitHub Actions tab
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Generate forecast text
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/generate-forecast.js
+
+      - name: Commit & push forecast-text.json
+        run: |
+          git config user.name  "forecast-bot"
+          git config user.email "forecast-bot@swellradar.lx"
+          git add forecast-text.json
+          git diff --cached --quiet || git commit -m "chore: daily AI forecast $(date -u +%Y-%m-%d)"
+          git push

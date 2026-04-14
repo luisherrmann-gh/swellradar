@@ -704,6 +704,7 @@
         if (fc) fc.scrollTop = 0;
 
         updateHero(data, windData, lat, lon);
+        loadAIBriefing(selectedSpotName);
         renderTides(data);
         setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 150);
         setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 400);
@@ -728,6 +729,23 @@
       }).catch(function(err) {
         setStatus('Error: ' + err.message, 'error');
       });
+    }
+
+    /* ─── AI Briefing ──────────────────────────────────────────── */
+    function loadAIBriefing(spotName) {
+      var section = document.getElementById('aiBriefingSection');
+      if (spotName !== 'Carcavelos') { section.style.display = 'none'; return; }
+      fetch('forecast-text.json?v=' + Date.now())
+        .then(function(r) { return r.json(); })
+        .then(function(d) {
+          if (!d.text) { section.style.display = 'none'; return; }
+          var today = new Date().toISOString().split('T')[0];
+          if (d.date !== today) { section.style.display = 'none'; return; }
+          document.getElementById('aiBriefingText').textContent = d.text;
+          document.getElementById('aiBriefingDate').textContent = d.sunrise + ' – ' + d.sunset + ' daylight';
+          section.style.display = 'block';
+        })
+        .catch(function() { section.style.display = 'none'; });
     }
 
     /* ─── Update hero ────��──────────────────────────────────── */
