@@ -686,6 +686,34 @@
     }
     .wave-unit { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.2rem, 3.2vw, 2.6rem); font-weight: 400; color: var(--dim); align-self: flex-end; padding-bottom: 0.1em; }
     .wave-sub { margin-top: 0.85rem; font-size: 0.56rem; letter-spacing: 0.14em; color: var(--dim); font-style: italic; text-transform: uppercase; }
+    #waterTempWrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(94,96,206,0.07);
+      border: 1px solid rgba(94,96,206,0.18);
+      border-radius: 999px;
+      padding: 4px 12px 4px 10px;
+    }
+    .wtemp-temp {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #5E60CE;
+    }
+    .wtemp-divider {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.55rem;
+      color: rgba(0,0,0,0.2);
+    }
+    .wtemp-wetsuit {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.42rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: rgba(0,0,0,0.45);
+      text-transform: uppercase;
+    }
     #bestSessionWrap {
       display: inline-flex;
       align-items: center;

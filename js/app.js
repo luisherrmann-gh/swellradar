@@ -701,7 +701,7 @@
 
       var marineUrl = 'https://marine-api.open-meteo.com/v1/marine'
         + '?latitude=' + lat + '&longitude=' + lon
-        + '&hourly=wave_height,wave_period,wave_direction,wind_wave_height,swell_wave_height&forecast_days=7';
+        + '&hourly=wave_height,wave_period,wave_direction,wind_wave_height,swell_wave_height,sea_surface_temperature&forecast_days=7';
       var windUrl = 'https://api.open-meteo.com/v1/forecast'
         + '?latitude=' + lat + '&longitude=' + lon
         + '&hourly=windspeed_10m,winddirection_10m,windgusts_10m,temperature_2m,apparent_temperature,precipitation_probability,weather_code,uv_index,cloud_cover&forecast_days=7';
@@ -729,6 +729,7 @@
         if (fc) fc.scrollTop = 0;
 
         updateHero(data, windData, lat, lon);
+        updateWaterTemp(data);
         updateBestSession(data, windData);
         loadAIBriefing(selectedSpotName);
         renderTides(data);
@@ -790,6 +791,34 @@
         })
         .filter(function(l) { return l !== ''; })
         .join('');
+    }
+
+    /* ─── Water Temp + Wetsuit ─────────────────────────────────── */
+    function updateWaterTemp(data) {
+      var el = document.getElementById('waterTempWrap');
+      if (!el) return;
+      try {
+        var temps = data.hourly.sea_surface_temperature;
+        if (!temps) { el.style.display = 'none'; return; }
+        var now = Date.now();
+        var ci = 0, minD = Infinity;
+        data.hourly.time.forEach(function(t, i) {
+          var d = Math.abs(new Date(t) - now);
+          if (d < minD) { minD = d; ci = i; }
+        });
+        var temp = temps[ci];
+        if (temp == null) { el.style.display = 'none'; return; }
+        var wetsuit;
+        if      (temp < 10) wetsuit = '6/5 + hood + gloves';
+        else if (temp < 13) wetsuit = '5/4 + boots + gloves';
+        else if (temp < 16) wetsuit = '4/3';
+        else if (temp < 18) wetsuit = '3/2';
+        else if (temp < 21) wetsuit = 'Shorty / 2/2';
+        else                wetsuit = 'Boardshorts / Bikini';
+        document.getElementById('waterTempVal').textContent  = temp.toFixed(1) + '°C';
+        document.getElementById('wetsuitVal').textContent    = wetsuit;
+        el.style.display = 'inline-flex';
+      } catch(e) { el.style.display = 'none'; }
     }
 
     /* ─── Best Session Window ──────────────────────────────────── */
