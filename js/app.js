@@ -729,6 +729,7 @@
         if (fc) fc.scrollTop = 0;
 
         updateHero(data, windData, lat, lon);
+        updateBestSession(data, windData);
         loadAIBriefing(selectedSpotName);
         renderTides(data);
         setTimeout(function() { if (tideChartInst) tideChartInst.resize(); }, 150);
@@ -789,6 +790,79 @@
         })
         .filter(function(l) { return l !== ''; })
         .join('');
+    }
+
+    /* ─── Best Session Window ──────────────────────────────────── */
+    function updateBestSession(data, windData) {
+      var wrap = document.getElementById('bestSessionWrap');
+      var timeEl = document.getElementById('bestSessionTime');
+      try {
+        var todayStr = new Date().toISOString().slice(0, 10);
+        var sc = selScale != null ? selScale : 1.0;
+        var scores = [];
+
+        data.hourly.time.forEach(function(t, i) {
+          if (t.slice(0, 10) !== todayStr) return;
+          var hour = parseInt(t.slice(11, 13));
+          if (hour < 6 || hour > 20) return; /* only daylight */
+
+          var wh     = (data.hourly.wave_height  && data.hourly.wave_height[i]  || 0) * sc;
+          var period = data.hourly.wave_period   && data.hourly.wave_period[i]  || 0;
+
+          /* wave quality score */
+          var wScore = 0;
+          if      (wh >= 2.5 && period >= 12) wScore = 4;
+          else if (wh >= 1.5 && period >= 10) wScore = 3;
+          else if (wh >= 0.8 && period >= 7)  wScore = 2;
+          else if (wh >= 0.3)                 wScore = 1;
+
+          /* wind score */
+          var windScore = 0;
+          if (windData && windData.hourly && windData.hourly.time) {
+            var wi = 0, minD = Infinity;
+            windData.hourly.time.forEach(function(wt, j) {
+              var d = Math.abs(new Date(wt) - new Date(t));
+              if (d < minD) { minD = d; wi = j; }
+            });
+            var ws = windData.hourly.windspeed_10m    && windData.hourly.windspeed_10m[wi]    || 0;
+            var wd = windData.hourly.winddirection_10m && windData.hourly.winddirection_10m[wi] || 0;
+            var windType = getWindType(wd, selectedSpotName);
+            var windMod  = { 'offshore': 2, 'cross-off': 1, 'cross': 0, 'cross-on': -1, 'onshore': -2 };
+            windScore = (windMod[windType] || 0) - Math.floor(ws / 20);
+          }
+
+          scores.push({ hour: hour, time: t.slice(11, 16), score: wScore + windScore });
+        });
+
+        if (!scores.length) { wrap.style.display = 'none'; return; }
+
+        /* Find best 3-hour consecutive window */
+        var best = null, bestScore = -Infinity;
+        for (var i = 0; i <= scores.length - 3; i++) {
+          var avg = (scores[i].score + scores[i+1].score + scores[i+2].score) / 3;
+          if (avg > bestScore) { bestScore = avg; best = i; }
+        }
+        /* fallback: single best hour */
+        if (best === null) {
+          scores.sort(function(a, b) { return b.score - a.score; });
+          timeEl.textContent = scores[0].time;
+          wrap.style.display = 'inline-flex';
+          return;
+        }
+
+        var startHour = scores[best].hour;
+        var endIdx    = Math.min(best + 3, scores.length - 1);
+        var endHour   = scores[endIdx].hour + 1;
+        function toAmPm(h) {
+          var suffix = h >= 12 ? 'pm' : 'am';
+          var h12 = h % 12 || 12;
+          return h12 + suffix;
+        }
+        timeEl.textContent = toAmPm(startHour) + ' – ' + toAmPm(endHour);
+        wrap.style.display = 'inline-flex';
+      } catch(e) {
+        wrap.style.display = 'none';
+      }
     }
 
     /* ─── Update hero ────��──────────────────────────────────── */
