@@ -107,7 +107,32 @@
       { name: 'Praia do Sul',     lat: 38.9592, lon: -9.4163, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiadosulericeira/playlist.m3u8' },
       { name: 'Foz do Lizandro',  lat: 38.9421, lon: -9.4161, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/fozdolizandro/playlist.m3u8' },
       { name: 'São Julião',       lat: 38.9320, lon: -9.4197, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/bcsaojuliao/playlist.m3u8' },
-      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50, camUrl: 'Devin Easter Egg Pequena.mov', camType: 'video', camUrl2: 'Saras Cam.MP4', camType2: 'video', photos: ['Pequena 1.jpeg','Pequena 2.jpeg','Pequena 3.jpeg'] },
+      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50, camUrl: 'Devin Easter Egg Pequena.mov', camType: 'video', camUrl2: 'Saras Cam.MP4', camType2: 'video', photos: ['Pequena 4.JPG','Pequena 1.jpeg','Pequena 2.jpeg','Pequena 3.jpeg'],
+        guide: {
+          desc: 'The quieter neighbour of Praia Grande, tucked under dramatic cliffs on the Sintra coast 40km from Lisbon. Less exposed to northern winds than the beaches to the south, which means cleaner conditions when everywhere else is blown out. Powerful swells roll in out of deep water — expect heavy shorebreak and shifting rips when it\'s pumping. Worth the drive when the swell is right.',
+          ideal: [
+            { label: 'Swell Direction', value: 'WNW — wraps well into the bay' },
+            { label: 'Wind',            value: 'East / Southeast (offshore)' },
+            { label: 'Surf Height',     value: 'Waist-high to well overhead' },
+            { label: 'Tide',            value: 'All tides — mid tide usually best' }
+          ],
+          stats: [
+            { label: 'Ability Level',  value: 'Intermediate+', sub: 'Heavy shorebreak and rips make it tricky for beginners on bigger days.', bar: 0.65, range: ['Beg','Adv'] },
+            { label: 'Local Vibe',     value: 'Relaxed',       sub: 'Quieter crowd than Praia Grande — more locals, less tourists.',         bar: 0.25, range: ['Welcoming','Intimidating'] },
+            { label: 'Crowd Factor',   value: 'Low',           sub: 'Noticeably less busy than neighbouring Praia Grande.',                  bar: 0.25, range: ['Mellow','Heavy'] },
+            { label: 'Spot Rating',    value: 'Very Good',     sub: 'On its day with a solid WNW swell and easterly wind it can be world-class.', bar: 0.8, range: ['Poor','Perfect'] },
+            { label: 'Shoulder Burn',  value: 'High',          sub: 'Lots of duck dives when swell is up — powerful paddle-out.',            bar: 0.75, range: ['Light','Exhausting'] },
+            { label: 'Water Quality',  value: 'Clean',         sub: 'Far from the city — one of the cleanest stretches on the Lisbon coast.', bar: 0.1,  range: ['Clean','Dirty'] }
+          ],
+          info: [
+            { label: 'Hazards',      value: 'Heavy shorebreak, shifting rips, powerful duck-dive sections on bigger swells.' },
+            { label: 'Bring Your',   value: 'Shortboard, Fish, Funboard — longboard on smaller days' },
+            { label: 'Bottom',       value: 'Sand' },
+            { label: 'Best Season',  value: 'Autumn and Winter — October has swell 98% of the time. Summer is quieter but still fires on the right swell.' },
+            { label: 'Access',       value: 'Short drive from Sintra town centre. Limited parking in summer — arrive early.' }
+          ]
+        }
+      },
       { name: 'Praia Grande',     lat: 38.8131, lon: -9.4783, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiagrande/playlist.m3u8' },
       { name: 'Praia do Guincho', lat: 38.7324, lon: -9.4726, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiaguinchosul/playlist.m3u8' },
       { name: 'São Pedro do Estoril', lat: 38.6936, lon: -9.3694, scale: 0.45, camUrl: 'https://video-auth1.iol.pt/beachcam/saopedroestoria/playlist.m3u8' },
