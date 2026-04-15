@@ -551,6 +551,17 @@
 
     .sp-name-wrap   { order: 1; flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
     .sp-card-bottom { order: 2; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; padding: 0 1.8rem; }
+    .sp-card-sticker {
+      position: absolute;
+      left: 72%;
+      top: 50%;
+      transform: translateY(-50%) rotate(12deg);
+      height: 68px;
+      width: auto;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.18));
+    }
     .sp-badge-group { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
 
     /* FIRING badge */
