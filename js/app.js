@@ -2945,6 +2945,7 @@
           + '</div></div>'
           + '<div class="sp-name-wrap"><div class="sp-name">' + spot.name + '</div>'
           + '<div class="sp-coords">' + latStr + '</div></div>'
+          + (spot.name === 'Carcavelos' ? '<img src="carca sticker.webp" class="sp-card-sticker" alt="">' : '')
           + '<div class="sp-card-bottom">'
           + '<div class="sp-conditions" id="spConditions' + idx + '"><small>Fetching conditions…</small></div>'
           + '<div class="sp-wind" id="spWind' + idx + '"></div>'
