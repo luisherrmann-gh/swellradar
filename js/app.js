@@ -739,13 +739,31 @@
         .then(function(r) { return r.json(); })
         .then(function(d) {
           if (!d.text) { section.style.display = 'none'; return; }
-          var today = new Date().toISOString().split('T')[0];
-          if (d.date !== today) { section.style.display = 'none'; return; }
-          document.getElementById('aiBriefingText').textContent = d.text;
-          document.getElementById('aiBriefingDate').textContent = d.sunrise + ' – ' + d.sunset + ' daylight';
+          document.getElementById('aiBriefingText').innerHTML = _renderBriefingText(d.text);
+          document.getElementById('aiBriefingDate').textContent = d.sunrise + ' – ' + d.sunset;
           section.style.display = 'block';
         })
         .catch(function() { section.style.display = 'none'; });
+    }
+
+    function _renderBriefingText(raw) {
+      return raw
+        .split('\n')
+        .map(function(line) {
+          line = line.trim();
+          if (!line) return '';
+          /* # Heading → styled title */
+          if (/^#{1,3}\s/.test(line)) {
+            line = line.replace(/^#{1,3}\s/, '');
+            line = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            return '<div class="ai-briefing-title">' + line + '</div>';
+          }
+          /* **label:** at start → highlighted label */
+          line = line.replace(/\*\*(.*?)\*\*/g, '<strong class="ai-hl">$1</strong>');
+          return '<p>' + line + '</p>';
+        })
+        .filter(function(l) { return l !== ''; })
+        .join('');
     }
 
     /* ─── Update hero ────��──────────────────────────────────── */
