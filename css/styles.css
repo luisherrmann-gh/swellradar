@@ -149,7 +149,7 @@
     }
 
     .map-eyebrow {
-      padding: 0.58rem 1.4rem;
+      padding: 0.5rem 1rem;
       font-size: 0.5rem;
       letter-spacing: 0.28em;
       text-transform: uppercase;
@@ -158,13 +158,25 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 0.6rem;
       flex-shrink: 0;
       background: rgba(255,255,255,0.92);
       backdrop-filter: blur(6px);
     }
 
     .map-eyebrow .num { color: var(--accent); margin-right: 0.4em; }
-    #mapCamToggle { display: flex; gap: 3px; }
+    #mapCoordLabel {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.52rem; font-weight: 700; letter-spacing: 0.1em;
+      color: #5E60CE; text-transform: uppercase; white-space: nowrap;
+      flex-shrink: 0;
+    }
+    #mapCamToggle {
+      display: flex; gap: 3px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; max-width: 100%;
+    }
+    #mapCamToggle::-webkit-scrollbar { display: none; }
     .map-cam-tab {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.42rem; font-weight: 700; letter-spacing: 0.14em;
@@ -172,8 +184,15 @@
       border: 1px solid rgba(94,96,206,0.3);
       background: transparent; color: rgba(0,0,0,0.45);
       transition: background 0.15s, color 0.15s;
+      white-space: nowrap; flex-shrink: 0;
     }
     .map-cam-tab.active { background: #5E60CE; color: #fff; border-color: #5E60CE; }
+    @media (max-width: 768px) {
+      .map-eyebrow { padding: 0.42rem 0.6rem; gap: 0; }
+      #mapCoordLabel { display: none; }
+      #mapCamToggle { flex: 1; gap: 4px; }
+      .map-cam-tab { font-size: 0.4rem; padding: 4px 9px; }
+    }
 
     /* ═══ GUIDE VIEW ════════════════════════════════════════════ */
     .guide-view-scroll { scrollbar-width: thin; scrollbar-color: rgba(94,96,206,0.2) transparent; }
@@ -617,7 +636,7 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 2.1rem; font-weight: 800;
       letter-spacing: -0.04em; line-height: 1;
-      color: #fff; margin-top: 0;
+      color: #fff; margin-top: 1.1rem;
       text-shadow: 0 0 12px rgba(94,96,206,0.5);
     }
     .sp-coords { display: none; }
@@ -686,56 +705,33 @@
     }
     .wave-unit { font-family: 'Plus Jakarta Sans', sans-serif; font-size: clamp(1.2rem, 3.2vw, 2.6rem); font-weight: 400; color: var(--dim); align-self: flex-end; padding-bottom: 0.1em; }
     .wave-sub { margin-top: 0.85rem; font-size: 0.56rem; letter-spacing: 0.14em; color: var(--dim); font-style: italic; text-transform: uppercase; }
-    #waterTempWrap {
+    #waterTempWrap, #bestSessionWrap {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      background: rgba(94,96,206,0.07);
+      gap: 0.45rem;
+      background: rgba(94,96,206,0.06);
       border: 1px solid rgba(94,96,206,0.18);
       border-radius: 999px;
-      padding: 4px 12px 4px 10px;
+      padding: 5px 13px 5px 11px;
     }
-    .wtemp-temp {
+    .info-lbl {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.37rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: rgba(0,0,0,0.32);
+      text-transform: uppercase;
+    }
+    .info-val {
       font-family: 'Plus Jakarta Sans', sans-serif;
       font-size: 0.65rem;
       font-weight: 700;
       color: #5E60CE;
     }
-    .wtemp-divider {
+    .info-sep {
       font-family: 'DM Mono', monospace;
-      font-size: 0.55rem;
-      color: rgba(0,0,0,0.2);
-    }
-    .wtemp-wetsuit {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.42rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      color: rgba(0,0,0,0.45);
-      text-transform: uppercase;
-    }
-    #bestSessionWrap {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: rgba(94,96,206,0.07);
-      border: 1px solid rgba(94,96,206,0.18);
-      border-radius: 999px;
-      padding: 4px 12px 4px 10px;
-    }
-    .best-session-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.36rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      color: rgba(0,0,0,0.35);
-      text-transform: uppercase;
-    }
-    .best-session-time {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 700;
-      color: #5E60CE;
+      font-size: 0.5rem;
+      color: rgba(0,0,0,0.15);
     }
     .hero-condition-badge {
       display: inline-block;
@@ -1170,7 +1166,7 @@
     color: rgba(255,255,255,0.9);
   }
   .sp-card-bg-num .bg-unit { font-size: 1.05rem; }
-  .sp-name { font-size: 1.2rem; margin-top: 0; line-height: 1.1; }
+  .sp-name { font-size: 1.2rem; margin-top: 0.7rem; line-height: 1.1; }
   .sp-coords { display: none; }
   .sp-badge-group { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 3px; }
   .sp-quality-badge { font-size: 0.32rem !important; padding: 1px 5px !important; }
