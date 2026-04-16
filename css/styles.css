@@ -1161,7 +1161,7 @@
   }
   .sp-card-top    { position: absolute; top: 0.22rem; left: 0.9rem; }
   .sp-card-sticker { height: 40px; left: 30%; right: auto; top: 0.15rem; transform: rotate(12deg); }
-  .sp-card-sticker--pequena { height: 46px; left: 26%; top: 50%; transform: translateY(-50%) rotate(-10deg); }
+  .sp-card-sticker--pequena { height: 46px; left: 16%; top: 50%; transform: translateY(-50%) rotate(-10deg); }
   .sp-name-wrap   { order: 1; flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
   .sp-card-bottom { order: 2; flex: 0 0 auto; position: static; left: auto; top: auto; transform: none; display: flex; align-items: center; justify-content: center; padding: 0 0.75rem; }
   .sp-wind { gap: 0.05rem; }
