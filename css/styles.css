@@ -570,6 +570,17 @@
 
     .sp-name-wrap   { order: 1; flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
     .sp-card-bottom { order: 2; flex: 0 0 auto; display: flex; align-items: center; justify-content: center; padding: 0 1.8rem; }
+    .sp-card-sticker--pequena {
+      position: absolute;
+      left: 22%;
+      top: 50%;
+      transform: translateY(-50%) rotate(-10deg);
+      height: 72px;
+      width: auto;
+      object-fit: contain;
+      pointer-events: none;
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,0.18));
+    }
     .sp-card-sticker {
       position: absolute;
       left: 72%;
@@ -1150,6 +1161,7 @@
   }
   .sp-card-top    { position: absolute; top: 0.22rem; left: 0.9rem; }
   .sp-card-sticker { height: 40px; left: 30%; right: auto; top: 0.15rem; transform: rotate(12deg); }
+  .sp-card-sticker--pequena { height: 46px; left: 26%; top: 50%; transform: translateY(-50%) rotate(-10deg); }
   .sp-name-wrap   { order: 1; flex: 1 1 0; min-width: 0; display: flex; align-items: center; }
   .sp-card-bottom { order: 2; flex: 0 0 auto; position: static; left: auto; top: auto; transform: none; display: flex; align-items: center; justify-content: center; padding: 0 0.75rem; }
   .sp-wind { gap: 0.05rem; }
@@ -1167,7 +1179,7 @@
     color: rgba(255,255,255,0.9);
   }
   .sp-card-bg-num .bg-unit { font-size: 1.05rem; }
-  .sp-name { font-size: 1.2rem; margin-top: 0; line-height: 1.1; }
+  .sp-name { font-size: 1.2rem; margin-top: 0.35rem; line-height: 1.1; }
   .sp-coords { display: none; }
   .sp-badge-group { flex-direction: row; align-items: center; flex-wrap: wrap; gap: 3px; }
   .sp-quality-badge { font-size: 0.32rem !important; padding: 1px 5px !important; }
