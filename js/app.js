@@ -107,7 +107,7 @@
       { name: 'Praia do Sul',     lat: 38.9592, lon: -9.4163, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/praiadosulericeira/playlist.m3u8' },
       { name: 'Foz do Lizandro',  lat: 38.9421, lon: -9.4161, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/fozdolizandro/playlist.m3u8' },
       { name: 'São Julião',       lat: 38.9320, lon: -9.4197, scale: 0.50, camUrl: 'https://video-auth1.iol.pt/beachcam/bcsaojuliao/playlist.m3u8' },
-      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50, camUrl: 'Devin Easter Egg Pequena.mov', camType: 'video', camUrl2: 'Saras Cam.MP4', camType2: 'video', photos: ['Pequena 4.JPG','Pequena 1.jpeg','Pequena 2.jpeg','Pequena 3.jpeg'],
+      { name: 'Praia Pequena',    lat: 38.8199, lon: -9.4741, scale: 0.50, camUrl: 'Devin Easter Egg Pequena.mov', camType: 'video', camUrl2: 'Saras Cam.MP4', camType2: 'video', photos: ['Pequena 1.jpeg','Pequena 4.JPG','Pequena 2.jpeg','Pequena 3.jpeg'],
         guide: {
           desc: 'The quieter neighbour of Praia Grande, tucked under dramatic cliffs on the Sintra coast 40km from Lisbon. Less exposed to northern winds than the beaches to the south, which means cleaner conditions when everywhere else is blown out. Powerful swells roll in out of deep water — expect heavy shorebreak and shifting rips when it\'s pumping. Worth the drive when the swell is right.',
           ideal: [
